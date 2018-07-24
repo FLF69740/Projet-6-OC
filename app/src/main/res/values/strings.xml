@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Go4Lunch</string>
     <string name="sub_title">Find a nice restaurant and invite your co-workers for lunch</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
