@@ -1,7 +1,15 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Go4Lunch</string>
     <string name="sub_title">Find a nice restaurant and invite your co-workers for lunch</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- FACEBOOK PURPOSE -->
+    <string name="facebook_application_id" translatable="false">230792571092962</string>
+    <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb230792571092962</string>
+
+    <!-- TODO: Firebase auth message -->
+    <string name="connection_succeed">connection réussie</string>
+    <string name="connection_canceled">connection annulée</string>
+    <string name="error_no_internet">pas de connection internet</string>
+    <string name="error_unknown_error">erreur inconnue</string>
+
 </resources>
