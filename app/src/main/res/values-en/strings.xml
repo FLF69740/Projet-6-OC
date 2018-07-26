@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Go4Lunch</string>
+    <string name="sub_title">Find a nice restaurant and invite your co-workers for lunch</string>
+    <string name="connection_succeed">connection succeed</string>
+    <string name="connection_canceled">connection canceled</string>
+    <string name="error_no_internet">no internet connection</string>
+    <string name="error_unknown_error">unknown error</string>
+    <string name="general_toolbar_title">I\'m Hungry!</string>
+</resources>

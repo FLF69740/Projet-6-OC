@@ -28,6 +28,12 @@ public class MainActivity extends BaseActivity {
     protected int getFragmentLayout() {return (R.id.frame_layout_main);}
 
     @Override
+    protected int getToolbarView() {return R.id.activity_main_toolbar;}
+
+    @Override
+    protected int getToolbarTitle() {return R.string.general_toolbar_title;}
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.signInActivity();

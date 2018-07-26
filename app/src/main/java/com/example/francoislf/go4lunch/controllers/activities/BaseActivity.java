@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import com.example.francoislf.go4lunch.R;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -12,6 +15,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(this.getContentView());
         configureFragment(savedInstanceState);
+        configureToolbar();
     }
 
     // Load the view
@@ -32,4 +36,22 @@ public abstract class BaseActivity extends AppCompatActivity {
     // Load the layout id
     protected abstract int getFragmentLayout();
 
+    //Configure toolbar
+    protected void configureToolbar(){
+        Toolbar toolbar = findViewById(getToolbarView());
+        toolbar.setTitle(getToolbarTitle());
+        setSupportActionBar(toolbar);
+    }
+
+    // Load Toolbar View
+    protected abstract int getToolbarView();
+
+    // Load Toolbar Title
+    protected abstract int getToolbarTitle();
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
 }

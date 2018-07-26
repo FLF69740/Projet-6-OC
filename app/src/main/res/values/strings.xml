@@ -6,10 +6,13 @@
     <string name="facebook_application_id" translatable="false">230792571092962</string>
     <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb230792571092962</string>
 
-    <!-- TODO: Firebase auth message -->
+    <!-- Firebase auth message -->
     <string name="connection_succeed">connection réussie</string>
     <string name="connection_canceled">connection annulée</string>
     <string name="error_no_internet">pas de connection internet</string>
     <string name="error_unknown_error">erreur inconnue</string>
+
+    <!-- IHM String -->
+    <string name="general_toolbar_title">j ai faim!</string>
 
 </resources>
