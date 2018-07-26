@@ -10,4 +10,6 @@
     <string name="item_1">Your Lunch</string>
     <string name="item_2">Settings</string>
     <string name="item_3">LogOut</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>
