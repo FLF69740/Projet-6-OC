@@ -7,4 +7,7 @@
     <string name="error_no_internet">no internet connection</string>
     <string name="error_unknown_error">unknown error</string>
     <string name="general_toolbar_title">I\'m Hungry!</string>
+    <string name="item_1">Your Lunch</string>
+    <string name="item_2">Settings</string>
+    <string name="item_3">LogOut</string>
 </resources>

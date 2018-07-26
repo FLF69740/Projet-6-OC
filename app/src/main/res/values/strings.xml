@@ -13,6 +13,13 @@
     <string name="error_unknown_error">erreur inconnue</string>
 
     <!-- IHM String -->
-    <string name="general_toolbar_title">j ai faim!</string>
+    <string name="general_toolbar_title">j\'ai faim!</string>
+
+    <!-- Navigation drawer item -->
+    <string name="item_1">Votre déjeunez</string>
+    <string name="item_2">réglages</string>
+    <string name="item_3">déconnection</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
 </resources>
