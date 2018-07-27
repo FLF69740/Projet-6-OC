@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.widget.Toast;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.francoislf.go4lunch.R;
 import com.example.francoislf.go4lunch.controllers.fragments.MainFragment;
 import com.firebase.ui.auth.AuthUI;
@@ -12,11 +15,13 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import java.util.Arrays;
 import java.util.List;
-import butterknife.BindView;
+
 
 public class MainActivity extends BaseActivity {
 
     private static final int RC_SIGN_IN = 100;
+
+
 
     @Override
     protected int getContentView() {return R.layout.activity_main;}
@@ -37,6 +42,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.signInActivity();
+
     }
 
     @Override
@@ -46,7 +52,10 @@ public class MainActivity extends BaseActivity {
         IdpResponse idpResponse = IdpResponse.fromResultIntent(data);
 
         if (requestCode == RC_SIGN_IN){
-            if (resultCode == RESULT_OK) Toast.makeText(this, R.string.connection_succeed, Toast.LENGTH_SHORT).show();
+            if (resultCode == RESULT_OK){
+                Toast.makeText(this, R.string.connection_succeed, Toast.LENGTH_SHORT).show();
+                this.updateProfileInformations();
+            }
             else {
                 if (idpResponse == null) Toast.makeText(this, R.string.connection_canceled, Toast.LENGTH_SHORT).show();
                 else if (idpResponse.getError().equals(ErrorCodes.NO_NETWORK)) Toast.makeText(this, R.string.error_no_internet, Toast.LENGTH_SHORT).show();
@@ -79,6 +88,24 @@ public class MainActivity extends BaseActivity {
     }
 
 
+    // Update Nave_header informations about user informations
+    protected void updateProfileInformations() {
+        if (this.getCurrentUser() != null){
+            if (this.getCurrentUser().getPhotoUrl() != null){
+                Glide.with(this)
+                        .load(this.getCurrentUser().getPhotoUrl())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(mImageViewProfile);
+            }
+
+
+            String email = TextUtils.isEmpty(this.getCurrentUser().getEmail()) ? getString(R.string.info_no_email_found) : this.getCurrentUser().getEmail();
+            String username = TextUtils.isEmpty(this.getCurrentUser().getDisplayName()) ? getString(R.string.info_no_username_found) : this.getCurrentUser().getDisplayName();
+
+            this.mTextViewEmail.setText(email);
+            this.mTextViewName.setText(username);
+        }
+    }
 
 
 }

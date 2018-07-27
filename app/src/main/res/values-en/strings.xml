@@ -12,4 +12,8 @@
     <string name="item_3">LogOut</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="name">name</string>
+    <string name="mail">e-mail</string>
+    <string name="info_no_email_found">E-MAIL : Unknown</string>
+    <string name="info_no_username_found">NAME : Unknown</string>
 </resources>

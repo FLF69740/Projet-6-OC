@@ -11,6 +11,8 @@
     <string name="connection_canceled">connection annulée</string>
     <string name="error_no_internet">pas de connection internet</string>
     <string name="error_unknown_error">erreur inconnue</string>
+    <string name="info_no_email_found">E-MAIL : Inconnu</string>
+    <string name="info_no_username_found">NOM : Inconnu</string>
 
     <!-- IHM String -->
     <string name="general_toolbar_title">j\'ai faim!</string>
@@ -21,5 +23,7 @@
     <string name="item_3">déconnection</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="name">nom</string>
+    <string name="mail">e-mail</string>
 
 </resources>

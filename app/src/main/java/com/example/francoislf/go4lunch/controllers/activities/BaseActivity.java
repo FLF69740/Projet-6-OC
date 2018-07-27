@@ -12,23 +12,38 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import com.example.francoislf.go4lunch.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private Toolbar mToolbar;
-    private DrawerLayout mDrawerLayout;
-    private NavigationView mNavigationView;
+    @BindView(R.id.activity_main_nav_view) NavigationView mNavigationView;
+    @BindView(R.id.activity_main_drawer_layout) DrawerLayout mDrawerLayout;
+
+    protected View mViewHeader;
+    protected ImageView mImageViewProfile;
+    protected TextView mTextViewName;
+    protected TextView mTextViewEmail;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(this.getContentView());
         configureFragment(savedInstanceState);
+        ButterKnife.bind(this);
         configureToolbar();
         this.configureDrawerLayout();
         this.configureNavigationView();
+
     }
 
     // Load the view
@@ -77,16 +92,18 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
      */
 
     protected void configureDrawerLayout(){
-        this.mDrawerLayout = findViewById(R.id.activity_main_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }
 
     protected void configureNavigationView(){
-        this.mNavigationView = findViewById(R.id.activity_main_nav_view);
         mNavigationView.setItemIconTintList(null);
         mNavigationView.setNavigationItemSelectedListener(this);
+        mViewHeader = mNavigationView.getHeaderView(0);
+        mTextViewName = mViewHeader.findViewById(R.id.nave_header_name);
+        mTextViewEmail = mViewHeader.findViewById(R.id.nave_header_email);
+        mImageViewProfile = mViewHeader.findViewById(R.id.nave_header_picture);
     }
 
     @Override
@@ -110,4 +127,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
         return true;
     }
+
+    /**
+     * UTILS
+     */
+
+    @Nullable
+    protected FirebaseUser getCurrentUser(){return FirebaseAuth.getInstance().getCurrentUser();}
+
+
+
 }
