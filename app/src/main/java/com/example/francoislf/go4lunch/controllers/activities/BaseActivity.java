@@ -85,6 +85,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
     protected void configureNavigationView(){
         this.mNavigationView = findViewById(R.id.activity_main_nav_view);
+        mNavigationView.setItemIconTintList(null);
         mNavigationView.setNavigationItemSelectedListener(this);
     }
 
