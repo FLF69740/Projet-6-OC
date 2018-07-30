@@ -2,9 +2,13 @@ package com.example.francoislf.go4lunch.controllers.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -15,13 +19,15 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import java.util.Arrays;
 import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class MainActivity extends BaseActivity {
 
     private static final int RC_SIGN_IN = 100;
 
-
+    @BindView(R.id.bottom_navigation) BottomNavigationView mBottomNavigationView;
 
     @Override
     protected int getContentView() {return R.layout.activity_main;}
@@ -42,7 +48,8 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.signInActivity();
-
+        ButterKnife.bind(this);
+        this.configureBottomNavigationView();
     }
 
     @Override
@@ -105,6 +112,24 @@ public class MainActivity extends BaseActivity {
             this.mTextViewEmail.setText(email);
             this.mTextViewName.setText(username);
         }
+    }
+
+    /**
+     * BOTTOM NAVIGATION BAR
+     */
+
+    private void configureBottomNavigationView(){
+        mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.ic_onglet_map_view: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_1)); break;
+                    case R.id.ic_onglet_list_view: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_2)); break;
+                    case R.id.ic_onglet_workmates: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_3)); break;
+                }
+                return true;
+            }
+        });
     }
 
 

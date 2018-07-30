@@ -16,9 +16,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.francoislf.go4lunch.R;
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -33,6 +34,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     protected TextView mTextViewName;
     protected TextView mTextViewEmail;
 
+    private static final int SIGN_OUT_TASK = 10;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,12 +93,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
      * Navigation drawer
      */
 
+    // Configure Drawer Layout
     protected void configureDrawerLayout(){
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }
 
+    // Configure Navigation View
     protected void configureNavigationView(){
         mNavigationView.setItemIconTintList(null);
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -119,8 +123,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                 break;
             case R.id.settings :
                 break;
-            case  R.id.logout :
-                break;
+            case  R.id.logout : signOutFormFirebase(); break;
         }
 
         this.mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -134,6 +137,30 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
     @Nullable
     protected FirebaseUser getCurrentUser(){return FirebaseAuth.getInstance().getCurrentUser();}
+
+    /**
+     *  REST REQUEST
+     */
+
+    // Create OnCompleteListener called after tasks ended
+    private OnSuccessListener<Void> updateUIAfterRestRequestsCompleted(final int origin){
+        return new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                switch (origin){
+                    case SIGN_OUT_TASK: recreate();break;
+                    default: break;
+                }
+            }
+        };
+    }
+
+    // User LogOut
+    private void signOutFormFirebase(){
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnSuccessListener(this, updateUIAfterRestRequestsCompleted(SIGN_OUT_TASK));
+    }
 
 
 
