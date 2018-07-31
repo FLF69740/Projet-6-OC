@@ -1,5 +1,6 @@
 package com.example.francoislf.go4lunch.controllers.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -39,14 +40,18 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(this.getContentView());
-        configureFragment(savedInstanceState);
-        ButterKnife.bind(this);
-        configureToolbar();
-        this.configureDrawerLayout();
-        this.configureNavigationView();
-
+        if (getContentViewBoolean()){
+            setContentView(this.getContentView());
+            configureFragment(savedInstanceState);
+            ButterKnife.bind(this);
+            configureToolbar();
+            this.configureDrawerLayout();
+            this.configureNavigationView();
+        }
     }
+
+    // Apply or not setContentView
+    protected abstract boolean getContentViewBoolean();
 
     // Load the view
     protected abstract int getContentView();
@@ -148,7 +153,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             @Override
             public void onSuccess(Void aVoid) {
                 switch (origin){
-                    case SIGN_OUT_TASK: recreate();break;
+                    case SIGN_OUT_TASK:
+                        Intent intent = getBaseContext().getPackageManager()
+                                .getLaunchIntentForPackage(getBaseContext().getPackageName());
+                        startActivity(intent);
+                        break;
                     default: break;
                 }
             }
