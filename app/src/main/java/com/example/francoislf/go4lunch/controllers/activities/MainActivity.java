@@ -89,7 +89,7 @@ public class MainActivity extends BaseActivity {
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
                         .setTheme(R.style.LoginTheme)
-         //               .setLogo(R.drawable.logo_firebase_auth)
+                        .setLogo(R.drawable.logo_firebase_auth)
                         .setIsSmartLockEnabled(false, true)
                         .build(),
                 RC_SIGN_IN);
