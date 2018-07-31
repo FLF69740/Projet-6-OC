@@ -34,4 +34,7 @@
     <!-- Log TAG -->
     <string name="Log_i">TAGI</string>
 
+    <string name="twitter_consumer_key" translatable="false">0tUWaoU9cuLn0QAJWEyTftQcs</string>
+    <string name="twitter_consumer_secret" translatable="false">WXesOkR3mhAfcuRau7zqOJ8gsm64dx2De3L7byrEXSvyLP2XO6</string>
+
 </resources>

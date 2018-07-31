@@ -80,7 +80,8 @@ public class MainActivity extends BaseActivity {
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
                 new AuthUI.IdpConfig.GoogleBuilder().build(),
-                new AuthUI.IdpConfig.FacebookBuilder().build()
+                new AuthUI.IdpConfig.FacebookBuilder().build(),
+                new AuthUI.IdpConfig.TwitterBuilder().build()
         );
 
         startActivityForResult(
@@ -88,7 +89,7 @@ public class MainActivity extends BaseActivity {
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
                         .setTheme(R.style.LoginTheme)
-                        .setLogo(R.drawable.logo_firebase_auth)
+         //               .setLogo(R.drawable.logo_firebase_auth)
                         .setIsSmartLockEnabled(false, true)
                         .build(),
                 RC_SIGN_IN);
