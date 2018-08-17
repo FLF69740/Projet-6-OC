@@ -7,9 +7,9 @@
     <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb230792571092962</string>
 
     <!-- Firebase auth message -->
-    <string name="connection_succeed">connection réussie</string>
-    <string name="connection_canceled">connection annulée</string>
-    <string name="error_no_internet">pas de connection internet</string>
+    <string name="connection_succeed">connexion réussie</string>
+    <string name="connection_canceled">connexion annulée</string>
+    <string name="error_no_internet">pas de connexion internet</string>
     <string name="error_unknown_error">erreur inconnue</string>
     <string name="info_no_email_found">E-MAIL : Inconnu</string>
     <string name="info_no_username_found">NOM : Inconnu</string>
@@ -20,7 +20,7 @@
     <!-- Navigation drawer item -->
     <string name="item_1">Votre déjeunez</string>
     <string name="item_2">réglages</string>
-    <string name="item_3">déconnection</string>
+    <string name="item_3">déconnexion</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="name">nom</string>
