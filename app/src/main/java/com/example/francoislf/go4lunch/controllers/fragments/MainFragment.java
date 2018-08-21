@@ -14,14 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 import com.example.francoislf.go4lunch.R;
 import com.example.francoislf.go4lunch.business_service.GPSTracker;
 import com.example.francoislf.go4lunch.models.HttpRequest.GoogleStreams;
 import com.example.francoislf.go4lunch.models.HttpRequest.NearbySearch;
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -69,7 +65,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback {
             mLocation = mGPSTracker.getLocation(getContext());
             mLatitude = mLocation.getLatitude();
             mLongitude = mLocation.getLongitude();
-            
+
             mMapView = mView.findViewById(R.id.map);
             if (mMapView != null) {
                 mMapView.onCreate(null);
