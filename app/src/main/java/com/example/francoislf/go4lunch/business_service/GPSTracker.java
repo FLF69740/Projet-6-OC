@@ -1,4 +1,4 @@
-package com.example.francoislf.go4lunch.Utils;
+package com.example.francoislf.go4lunch.business_service;
 
 import android.Manifest;
 import android.app.Service;
@@ -18,7 +18,6 @@ import com.example.francoislf.go4lunch.R;
 
 public class GPSTracker extends Service implements LocationListener{
 
-    private final Context mContext;
 
     private boolean isGPSEnabled = false;
     private boolean isNetworkEnabled = false;
@@ -28,21 +27,19 @@ public class GPSTracker extends Service implements LocationListener{
     private Location mLocation;
     private LocationManager mLocationManager;
 
-    public GPSTracker(Context context){
-        this.mContext = context;
-    }
+    public GPSTracker(){}
 
     //GetLocation methods
 
 
-    public Location getLocation() {
+    public Location getLocation(Context context) {
         try{
-            mLocationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
+            mLocationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
             isGPSEnabled = mLocationManager.isProviderEnabled(mLocationManager.GPS_PROVIDER);
             isNetworkEnabled = mLocationManager.isProviderEnabled(mLocationManager.NETWORK_PROVIDER);
 
-            if (ContextCompat.checkSelfPermission(mContext, FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-            || ContextCompat.checkSelfPermission(mContext, COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            if (ContextCompat.checkSelfPermission(context, FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            || ContextCompat.checkSelfPermission(context, COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
 
                 if (isGPSEnabled){
                     if (mLocation == null){
