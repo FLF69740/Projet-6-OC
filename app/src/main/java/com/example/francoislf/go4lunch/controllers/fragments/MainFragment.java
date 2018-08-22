@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
+
 import com.example.francoislf.go4lunch.R;
 import com.example.francoislf.go4lunch.business_service.GPSTracker;
 import com.example.francoislf.go4lunch.models.HttpRequest.GoogleStreams;
@@ -23,14 +25,18 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 
 
-public class MainFragment extends Fragment implements OnMapReadyCallback {
+public class MainFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private MapView mMapView;
     private View mView;
@@ -46,6 +52,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback {
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private Boolean mLocationPermissionsGranted = false;
+    private Marker[] mListMarker;
 
     public MainFragment() {
     }
@@ -132,6 +139,30 @@ public class MainFragment extends Fragment implements OnMapReadyCallback {
         executeHttpRequestWithRetrofit();
     }
 
+    // Create marker from Observable
+    private void markersCreation(List<NearbySearch.Result> results){
+        mListMarker = new Marker[results.size()];
+        for (int i = 0 ; i < results.size() ; i++){
+            mListMarker[i] = mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(results.get(i).getGeometry().getLocation().getLat(), results.get(i).getGeometry().getLocation().getLng()))
+                    .title(results.get(i).getName())
+                    .snippet(results.get(i).getPlaceId())
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.punaise_orange)));
+            mListMarker[i].setTag(i);
+        }
+        mMap.setOnMarkerClickListener(this);
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Integer markerTag = (Integer) marker.getTag();
+        if (markerTag != null){
+            Toast.makeText(getContext(), "name : " + marker.getTitle().toString() +
+                    "\ninfo :" + marker.getSnippet().toString(), Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
+
     /**
      *  HTTP (RxJAVA)
      */
@@ -146,9 +177,9 @@ public class MainFragment extends Fragment implements OnMapReadyCallback {
                         if (!nearbySearch.getResults().isEmpty()) {
                             StringBuilder stringBuilder = new StringBuilder();
                             List<NearbySearch.Result> results = nearbySearch.getResults();
+                            markersCreation(results);
                             for (int i = 0 ; i < results.size() ; i++){
                                 stringBuilder.append("-" + results.get(i).getName().toString() + " ; ");
-
                             }
                             Log.i("TAGAA", "réponse chargée!");
                             Log.i("TAGAA", stringBuilder.toString());
@@ -173,4 +204,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback {
         super.onDestroy();
         if (this.mDisposable != null && !this.mDisposable.isDisposed()) this.mDisposable.dispose();
     }
+
+
 }
