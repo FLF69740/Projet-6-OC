@@ -24,11 +24,9 @@ import com.google.firebase.auth.FirebaseUser;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public abstract class BaseActivity extends AppCompatActivity {
 
-    private Toolbar mToolbar;
-    @BindView(R.id.activity_main_nav_view) NavigationView mNavigationView;
-    @BindView(R.id.activity_main_drawer_layout) DrawerLayout mDrawerLayout;
+
 
     protected View mViewHeader;
     protected ImageView mImageViewProfile;
@@ -44,9 +42,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             setContentView(this.getContentView());
             configureFragment(savedInstanceState);
             ButterKnife.bind(this);
-            configureToolbar();
-            this.configureDrawerLayout();
-            this.configureNavigationView();
         }
     }
 
@@ -71,70 +66,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     // Load the layout id
     protected abstract int getFragmentLayout();
 
-    /**
-     * Toolbar
-     */
 
-    //Configure toolbar
-    protected void configureToolbar(){
-        this.mToolbar = findViewById(getToolbarView());
-        mToolbar.setTitle(getToolbarTitle());
-        setSupportActionBar(mToolbar);
-    }
 
-    // Load Toolbar View
-    protected abstract int getToolbarView();
-
-    // Load Toolbar Title
-    protected abstract int getToolbarTitle();
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
-        return true;
-    }
-
-    /**
-     * Navigation drawer
-     */
-
-    // Configure Drawer Layout
-    protected void configureDrawerLayout(){
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-    }
-
-    // Configure Navigation View
-    protected void configureNavigationView(){
-        mNavigationView.setItemIconTintList(null);
-        mNavigationView.setNavigationItemSelectedListener(this);
-        mViewHeader = mNavigationView.getHeaderView(0);
-        mTextViewName = mViewHeader.findViewById(R.id.nave_header_name);
-        mTextViewEmail = mViewHeader.findViewById(R.id.nave_header_email);
-        mImageViewProfile = mViewHeader.findViewById(R.id.nave_header_picture);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (this.mDrawerLayout.isDrawerOpen(GravityCompat.START)) this.mDrawerLayout.closeDrawer(GravityCompat.START);
-        else super.onBackPressed();
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.your_lunch :
-                break;
-            case R.id.settings :
-                break;
-            case  R.id.logout : signOutFormFirebase(); break;
-        }
-
-        this.mDrawerLayout.closeDrawer(GravityCompat.START);
-
-        return true;
-    }
 
     /**
      * UTILS
@@ -165,7 +98,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     }
 
     // User LogOut
-    private void signOutFormFirebase(){
+    protected void signOutFormFirebase(){
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnSuccessListener(this, updateUIAfterRestRequestsCompleted(SIGN_OUT_TASK));

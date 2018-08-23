@@ -30,12 +30,6 @@ public class ConnectionActivity extends BaseActivity {
     protected int getFragmentLayout() {return 0;}
 
     @Override
-    protected int getToolbarView() {return 0;}
-
-    @Override
-    protected int getToolbarTitle() {return 0;}
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

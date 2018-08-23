@@ -24,12 +24,6 @@ public class StartActivity extends BaseActivity {
     @Override
     protected int getFragmentLayout() {return 0;}
 
-    @Override
-    protected int getToolbarView() {return 0;}
-
-    @Override
-    protected int getToolbarTitle() {return 0;}
-
     private void connectionVerification(){
         if (getCurrentUser() != null) {
             Intent intent = new Intent(this, MainActivity.class);
