@@ -39,4 +39,9 @@
     <string name="twitter_consumer_secret" translatable="false">WXesOkR3mhAfcuRau7zqOJ8gsm64dx2De3L7byrEXSvyLP2XO6</string>
     <string name="google_place_api_key" translatable="false">AIzaSyBop_LoznRWmdx8u9VjSFu0PVaAqO0mO8U</string>
 
+    <!-- File Restaurant words -->
+    <string name="call">APPEL</string>
+    <string name="LIKE">AIME</string>
+    <string name="WEBSITE">SITE WEB</string>
+
 </resources>

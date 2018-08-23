@@ -30,6 +30,9 @@
 
         <activity android:name=".controllers.activities.ConnectionActivity"></activity>
 
+        <activity android:name=".controllers.activities.FileRestaurantActivity"
+            android:parentActivityName=".controllers.activities.MainActivity"></activity>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA4qw6vq3oFD_Mg_FBc7yF7uMGKk_quuD8"/>

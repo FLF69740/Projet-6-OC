@@ -1,5 +1,6 @@
 package com.example.francoislf.go4lunch.controllers.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,15 +15,18 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.francoislf.go4lunch.R;
+import com.example.francoislf.go4lunch.controllers.fragments.FileRestaurantFragment;
 import com.example.francoislf.go4lunch.controllers.fragments.MainFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, MainFragment.OnClickedResultMarker {
 
 
     private Toolbar mToolbar;
@@ -151,5 +155,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
 
-
+    @Override
+    public void onResultMarkerTransmission(View view, String snippet) {
+        Intent intent = new Intent(this, FileRestaurantActivity.class);
+        intent.putExtra(FileRestaurantActivity.EXTRA_SNIPPET_MARKER, snippet);
+        startActivity(intent);
+    }
 }

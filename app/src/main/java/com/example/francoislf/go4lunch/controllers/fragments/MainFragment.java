@@ -1,6 +1,7 @@
 package com.example.francoislf.go4lunch.controllers.fragments;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -54,8 +55,28 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
     private Boolean mLocationPermissionsGranted = false;
     private Marker[] mListMarker;
 
-    public MainFragment() {
+    private OnClickedResultMarker mCallback;
+
+    public interface OnClickedResultMarker{
+        void onResultMarkerTransmission(View view, String snippet);
     }
+
+    //Parent activity will automatically subscribe to callback
+    private void createCallbackToParentActivity(){
+        try {
+            mCallback = (OnClickedResultMarker) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(e.toString()+ " must implement OnClickedResultMarker");
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.createCallbackToParentActivity();
+    }
+
+    public MainFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -159,6 +180,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
         if (markerTag != null){
             Toast.makeText(getContext(), "name : " + marker.getTitle().toString() +
                     "\ninfo :" + marker.getSnippet().toString(), Toast.LENGTH_SHORT).show();
+            mCallback.onResultMarkerTransmission(this.mView, marker.getSnippet().toString());
         }
         return false;
     }

@@ -20,4 +20,7 @@
     <string name="bottom_item_2">List View</string>
     <string name="bottom_item_3">Workmates</string>
     <string name="Log_i">TAGI</string>
+    <string name="call">CALL</string>
+    <string name="LIKE">LIKE</string>
+    <string name="WEBSITE">WEBSITE</string>
 </resources>
