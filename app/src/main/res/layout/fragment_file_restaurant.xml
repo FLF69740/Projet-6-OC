@@ -59,11 +59,11 @@
         android:id="@+id/button_restaurant_choice"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="16dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_resturant_information_divider"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:alpha="0"
+        app:layout_constraintBottom_toBottomOf="@+id/circularImageView"
+        app:layout_constraintEnd_toEndOf="@+id/circularImageView"
+        app:layout_constraintStart_toStartOf="@+id/circularImageView"
+        app:layout_constraintTop_toTopOf="@+id/circularImageView" />
 
     <ImageView
         android:id="@+id/restaurant_info_background"
@@ -83,6 +83,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toTopOf="@+id/guideline_resturant_information_divider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline_upper_divider" />
@@ -98,11 +100,13 @@
         app:srcCompat="@android:color/holo_orange_dark" />
 
     <TextView
-        android:id="@+id/restaurant_adress"
+        android:id="@+id/restaurant_localisation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="TextView"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline_resturant_information_divider" />
 
@@ -146,6 +150,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:text="@string/call"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/guideline_down_divider"
         app:layout_constraintEnd_toStartOf="@+id/guideline_first_vertical"
         app:layout_constraintStart_toStartOf="parent"
@@ -158,6 +163,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:text="@string/LIKE"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/guideline_down_divider"
         app:layout_constraintEnd_toStartOf="@+id/guideline_second_vertical"
         app:layout_constraintStart_toStartOf="@+id/guideline_first_vertical"
@@ -170,6 +176,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:text="@string/WEBSITE"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/guideline_down_divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline_second_vertical"
@@ -179,7 +186,7 @@
         android:id="@+id/button_call"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="invisible"
+        android:alpha="0"
         app:layout_constraintBottom_toTopOf="@+id/guideline_down_divider"
         app:layout_constraintEnd_toStartOf="@+id/guideline_first_vertical"
         app:layout_constraintStart_toStartOf="parent"
@@ -189,7 +196,7 @@
         android:id="@+id/button_like"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="invisible"
+        android:alpha="0"
         app:layout_constraintBottom_toTopOf="@+id/guideline_down_divider"
         app:layout_constraintEnd_toStartOf="@+id/guideline_second_vertical"
         app:layout_constraintStart_toEndOf="@+id/button_call"
@@ -199,13 +206,78 @@
         android:id="@+id/button_website"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="invisible"
+        android:alpha="0"
         app:layout_constraintBottom_toTopOf="@+id/guideline_down_divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/button_like"
         app:layout_constraintTop_toTopOf="@+id/guideline_middle" />
 
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/circularImageView"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:src="@drawable/baseline_check_circle_green_24"
+        app:civ_border_color="@android:color/white"
+        app:civ_border_width="32dp"
+        app:civ_shadow="false"
+        app:layout_constraintBottom_toBottomOf="@+id/restaurant_choice_validate"
+        app:layout_constraintDimensionRatio="w,1:1"
+        app:layout_constraintEnd_toEndOf="@+id/restaurant_choice_validate"
+        app:layout_constraintStart_toStartOf="@+id/restaurant_choice_validate"
+        app:layout_constraintTop_toTopOf="@+id/restaurant_choice_validate" />
 
+    <ImageView
+        android:id="@+id/restaurant_choice_validate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_upper_divider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline_upper_divider"
+        app:srcCompat="@drawable/baseline_check_circle_green_24" />
+
+    <ImageView
+        android:id="@+id/restaurant_choice_no_validate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_upper_divider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline_upper_divider"
+        app:srcCompat="@drawable/baseline_help_darkprimary_24" />
+
+    <ImageView
+        android:id="@+id/yellow_star_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/restaurant_name"
+        app:layout_constraintStart_toEndOf="@+id/restaurant_name"
+        app:srcCompat="@drawable/baseline_star_yellow_24" />
+
+    <ImageView
+        android:id="@+id/yellow_star_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/yellow_star_1"
+        app:layout_constraintStart_toEndOf="@+id/yellow_star_1"
+        app:srcCompat="@drawable/baseline_star_yellow_24" />
+
+    <ImageView
+        android:id="@+id/yellow_star_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/yellow_star_2"
+        app:layout_constraintStart_toEndOf="@+id/yellow_star_2"
+        app:srcCompat="@drawable/baseline_star_yellow_24" />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline_down_divider" />
 
 
 </android.support.constraint.ConstraintLayout>
