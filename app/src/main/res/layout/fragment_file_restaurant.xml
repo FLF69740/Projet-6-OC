@@ -34,27 +34,6 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.64"/>
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline_three_button_divider"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.57"/>
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline_first_vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.33"/>
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline_second_vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.66"/>
-
     <Button
         android:id="@+id/button_restaurant_choice"
         android:layout_width="60dp"
@@ -110,107 +89,53 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline_resturant_information_divider" />
 
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_three_button_divider"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_first_vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/baseline_call_black_24" />
-
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_three_button_divider"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_second_vertical"
-        app:layout_constraintStart_toStartOf="@+id/guideline_first_vertical"
-        app:srcCompat="@drawable/baseline_star_black_24" />
-
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_three_button_divider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline_second_vertical"
-        app:srcCompat="@drawable/baseline_vpn_lock_black_24" />
-
     <TextView
         android:id="@+id/CALL"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:drawableTop="@drawable/baseline_call_black_24"
+        android:gravity="center_vertical|center"
+        android:paddingTop="10dp"
         android:text="@string/call"
         android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/guideline_down_divider"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_first_vertical"
+        app:layout_constraintEnd_toStartOf="@+id/LIKE"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline_three_button_divider" />
+        app:layout_constraintTop_toTopOf="@+id/guideline_middle"
+        android:clickable="true"
+        android:background="?android:selectableItemBackground"/>
 
     <TextView
         android:id="@+id/LIKE"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:drawableTop="@drawable/baseline_star_black_24"
+        android:gravity="center"
+        android:paddingTop="10dp"
         android:text="@string/LIKE"
         android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/guideline_down_divider"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_second_vertical"
-        app:layout_constraintStart_toStartOf="@+id/guideline_first_vertical"
-        app:layout_constraintTop_toTopOf="@+id/guideline_three_button_divider" />
+        app:layout_constraintEnd_toStartOf="@+id/textView5"
+        app:layout_constraintStart_toEndOf="@+id/CALL"
+        app:layout_constraintTop_toTopOf="@+id/guideline_middle"
+        android:clickable="true"
+        android:background="?android:selectableItemBackground"/>
 
     <TextView
         android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:drawableTop="@drawable/baseline_vpn_lock_black_24"
+        android:gravity="center"
+        android:paddingTop="10dp"
         android:text="@string/WEBSITE"
         android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/guideline_down_divider"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline_second_vertical"
-        app:layout_constraintTop_toTopOf="@+id/guideline_three_button_divider" />
-
-    <Button
-        android:id="@+id/button_call"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:alpha="0"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_down_divider"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_first_vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline_middle" />
-
-    <Button
-        android:id="@+id/button_like"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:alpha="0"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_down_divider"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_second_vertical"
-        app:layout_constraintStart_toEndOf="@+id/button_call"
-        app:layout_constraintTop_toTopOf="@+id/guideline_middle" />
-
-    <Button
-        android:id="@+id/button_website"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:alpha="0"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_down_divider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/button_like"
-        app:layout_constraintTop_toTopOf="@+id/guideline_middle" />
+        app:layout_constraintStart_toEndOf="@+id/LIKE"
+        app:layout_constraintTop_toTopOf="@+id/guideline_middle"
+        android:clickable="true"
+        android:background="?android:selectableItemBackground"/>
 
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/circularImageView"

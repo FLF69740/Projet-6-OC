@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 
 import com.example.francoislf.go4lunch.R;
 import com.example.francoislf.go4lunch.controllers.fragments.FileRestaurantFragment;
+import com.example.francoislf.go4lunch.models.RestaurantProfile;
 
 public class FileRestaurantActivity extends BaseActivity {
 
@@ -40,6 +41,8 @@ public class FileRestaurantActivity extends BaseActivity {
     // Update UI
     private void snippetMarkerTransmissionToFragment(){
         String snippet = getIntent().getStringExtra(EXTRA_SNIPPET_MARKER);
-        mFileRestaurantFragment.setSnippetMarkerName(snippet);
+        RestaurantProfile restaurantProfile;
+        restaurantProfile = getJsonToPlace(snippet);
+        mFileRestaurantFragment.setSnippetMarkerName(restaurantProfile);
     }
 }

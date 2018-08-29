@@ -1,6 +1,7 @@
 package com.example.francoislf.go4lunch.controllers.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,10 +18,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.francoislf.go4lunch.R;
+import com.example.francoislf.go4lunch.models.RestaurantProfile;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -32,12 +38,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected ImageView mImageViewProfile;
     protected TextView mTextViewName;
     protected TextView mTextViewEmail;
+    protected SharedPreferences mSharedPreferences;
+    public static final String MY_PLACE = "MY_PLACE";
 
     private static final int SIGN_OUT_TASK = 10;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mSharedPreferences = getPreferences(MODE_PRIVATE);
         if (getContentViewBoolean()){
             setContentView(this.getContentView());
             configureFragment(savedInstanceState);
@@ -65,9 +74,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     // Load the layout id
     protected abstract int getFragmentLayout();
-
-
-
 
     /**
      * UTILS
@@ -102,6 +108,24 @@ public abstract class BaseActivity extends AppCompatActivity {
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnSuccessListener(this, updateUIAfterRestRequestsCompleted(SIGN_OUT_TASK));
+    }
+
+    private String mJson;
+
+    // Load JSon in order to create class object with Gson library
+    protected RestaurantProfile getJsonToPlace(String json){
+        RestaurantProfile restaurantProfile;
+        Gson gson = new Gson();
+        Type type = new TypeToken<RestaurantProfile>() {}.getType();
+        restaurantProfile = gson.fromJson(json, type);
+        return restaurantProfile;
+    }
+
+    // return the json of the RestaurantProfile object with Gson library (JSon format)
+    protected String getPlaceToJson(RestaurantProfile restaurantProfile){
+        Gson gson = new Gson();
+        String json = gson.toJson(restaurantProfile);
+        return json;
     }
 
 

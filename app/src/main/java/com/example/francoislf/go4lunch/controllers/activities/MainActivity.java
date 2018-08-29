@@ -16,29 +16,43 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.francoislf.go4lunch.R;
-import com.example.francoislf.go4lunch.controllers.fragments.FileRestaurantFragment;
 import com.example.francoislf.go4lunch.controllers.fragments.MainFragment;
+import com.example.francoislf.go4lunch.models.HttpRequest.GoogleStreams;
+import com.example.francoislf.go4lunch.models.HttpRequest.Places;
+import com.example.francoislf.go4lunch.models.PlacesExtractor;
+import com.example.francoislf.go4lunch.models.RestaurantProfile;
+import java.util.ArrayList;
+import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, MainFragment.OnClickedResultMarker {
-
 
     private Toolbar mToolbar;
     @BindView(R.id.activity_main_nav_view) NavigationView mNavigationView;
     @BindView(R.id.activity_main_drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.bottom_navigation) BottomNavigationView mBottomNavigationView;
+    private ArrayList<RestaurantProfile> mRestaurantProfileList;
+    PlacesExtractor mPlacesExtractor;
+    private Disposable mDisposable;
+    private static final String PARAMETER_PLACE_API_RADIUS = "1000";
+    private static final String PARAMETER_PLACE_API_TYPE = "restaurant";
+    String PARAMETER_PLACE_API_KEY;
+    private MainFragment mMainFragment;
 
     @Override
     protected int getContentView() {return R.layout.activity_main;}
 
     @Override
-    protected Fragment newInstance() {return new MainFragment();}
+    protected Fragment newInstance() {mMainFragment = new MainFragment();
+        return mMainFragment;
+    }
 
     @Override
     protected int getFragmentLayout() {return (R.id.frame_layout_main);}
@@ -50,6 +64,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
+        PARAMETER_PLACE_API_KEY = getString(R.string.google_place_api_key);
+        mRestaurantProfileList = new ArrayList<>();
+        mPlacesExtractor = new PlacesExtractor();
         configureToolbar();
         this.configureDrawerLayout();
         this.configureNavigationView();
@@ -66,10 +83,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                         .apply(RequestOptions.circleCropTransform())
                         .into(mImageViewProfile);
             }
-
             String email = TextUtils.isEmpty(this.getCurrentUser().getEmail()) ? getString(R.string.info_no_email_found) : this.getCurrentUser().getEmail();
             String username = TextUtils.isEmpty(this.getCurrentUser().getDisplayName()) ? getString(R.string.info_no_username_found) : this.getCurrentUser().getDisplayName();
-
             this.mTextViewEmail.setText(email);
             this.mTextViewName.setText(username);
         }
@@ -84,9 +99,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
-                    case R.id.ic_onglet_map_view:
-                        Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_1));
-                        break;
+                    case R.id.ic_onglet_map_view: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_1)); break;
                     case R.id.ic_onglet_list_view: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_2)); break;
                     case R.id.ic_onglet_workmates: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_3)); break;
                 }
@@ -154,11 +167,42 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return true;
     }
 
+    // Callback from MainFragment when a listener from a marker is activated : launch FileRestaurantActivity
+    @Override
+    public void onResultMarkerTransmission(View view, String title) {
+        Intent intent = new Intent(this, FileRestaurantActivity.class);
+        RestaurantProfile restaurantProfile = mPlacesExtractor.getRestaurantProfile(title);
+        intent.putExtra(FileRestaurantActivity.EXTRA_SNIPPET_MARKER, getPlaceToJson(restaurantProfile));
+        startActivity(intent);
+    }
+
+    /**
+     *  HTTP (RxJAVA)
+     */
+
+    public void executePlacesWithExtractor(View view, String coordinates){
+        this.mDisposable = GoogleStreams.streamListPlaces(coordinates,PARAMETER_PLACE_API_RADIUS, PARAMETER_PLACE_API_TYPE, PARAMETER_PLACE_API_KEY)
+                .subscribeWith(new DisposableObserver<List<Places>>() {
+                                   @Override
+                                   public void onNext(List<Places> places) {
+                                       mPlacesExtractor.setPlacesList(places);
+                                       mRestaurantProfileList = mPlacesExtractor.getRestaurantProfileList();
+                                       mMainFragment.markersCreation(mRestaurantProfileList);
+                                   }
+                                   @Override
+                                   public void onError(Throwable e) {}
+                                   @Override
+                                   public void onComplete() {
+                                       String verif = "list : ";
+                                       for (int i = 0 ; i < mRestaurantProfileList.size() ; i++) verif += mRestaurantProfileList.get(i).getName() + " ; ";
+                                       Log.i("TADAA", verif);
+                                   }
+                               });
+    }
 
     @Override
-    public void onResultMarkerTransmission(View view, String snippet) {
-        Intent intent = new Intent(this, FileRestaurantActivity.class);
-        intent.putExtra(FileRestaurantActivity.EXTRA_SNIPPET_MARKER, snippet);
-        startActivity(intent);
+    public void onDestroy() {
+        super.onDestroy();
+        if (this.mDisposable != null && !this.mDisposable.isDisposed()) this.mDisposable.dispose();
     }
 }

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.francoislf.go4lunch.R;
+import com.example.francoislf.go4lunch.models.RestaurantProfile;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,8 +37,8 @@ public class FileRestaurantFragment extends Fragment {
         return view;
     }
 
-    public void setSnippetMarkerName(String name){
-        mRestaurantName.setText(name);
+    public void setSnippetMarkerName(RestaurantProfile restaurantProfile){
+        mRestaurantName.setText(restaurantProfile.getName());
     }
 
     @OnClick(R.id.button_restaurant_choice)

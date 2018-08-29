@@ -21,6 +21,7 @@ import com.example.francoislf.go4lunch.R;
 import com.example.francoislf.go4lunch.business_service.GPSTracker;
 import com.example.francoislf.go4lunch.models.HttpRequest.GoogleStreams;
 import com.example.francoislf.go4lunch.models.HttpRequest.NearbySearch;
+import com.example.francoislf.go4lunch.models.RestaurantProfile;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -45,9 +46,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
     private GPSTracker mGPSTracker;
     private Location mLocation;
     private double mLatitude, mLongitude;
-    private static final String PARAMETER_PLACE_API_RADIUS = "1000";
-    private static final String PARAMETER_PLACE_API_TYPE = "restaurant";
-    private static final String PARAMETER_PLACE_API_KEY = "AIzaSyBop_LoznRWmdx8u9VjSFu0PVaAqO0mO8U";
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -58,7 +56,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
     private OnClickedResultMarker mCallback;
 
     public interface OnClickedResultMarker{
-        void onResultMarkerTransmission(View view, String snippet);
+        void onResultMarkerTransmission(View view, String title);
+        void executePlacesWithExtractor(View view, String coordinates);
     }
 
     //Parent activity will automatically subscribe to callback
@@ -157,17 +156,16 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
         rlp.setMargins(0, 0, 10, 30);
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(mLatitude, mLongitude)));
-        executeHttpRequestWithRetrofit();
+        mCallback.executePlacesWithExtractor(this.mView,String.valueOf(mLatitude)+","+String.valueOf(mLongitude));
     }
 
     // Create marker from Observable
-    private void markersCreation(List<NearbySearch.Result> results){
+    public void markersCreation(ArrayList<RestaurantProfile> results){
         mListMarker = new Marker[results.size()];
         for (int i = 0 ; i < results.size() ; i++){
             mListMarker[i] = mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(results.get(i).getGeometry().getLocation().getLat(), results.get(i).getGeometry().getLocation().getLng()))
+                    .position(new LatLng(results.get(i).getLat(), results.get(i).getLng()))
                     .title(results.get(i).getName())
-                    .snippet(results.get(i).getPlaceId())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.punaise_orange)));
             mListMarker[i].setTag(i);
         }
@@ -178,53 +176,10 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
     public boolean onMarkerClick(Marker marker) {
         Integer markerTag = (Integer) marker.getTag();
         if (markerTag != null){
-            Toast.makeText(getContext(), "name : " + marker.getTitle().toString() +
-                    "\ninfo :" + marker.getSnippet().toString(), Toast.LENGTH_SHORT).show();
-            mCallback.onResultMarkerTransmission(this.mView, marker.getSnippet().toString());
+            Toast.makeText(getContext(), "name : " + marker.getTitle().toString(), Toast.LENGTH_SHORT).show();
+            mCallback.onResultMarkerTransmission(this.mView, marker.getTitle().toString());
         }
         return false;
-    }
-
-    /**
-     *  HTTP (RxJAVA)
-     */
-
-    private Disposable mDisposable;
-
-    private void executeHttpRequestWithRetrofit(){
-        this.mDisposable = GoogleStreams.streamNearbySearch(String.valueOf(mLatitude)+","+String.valueOf(mLongitude),PARAMETER_PLACE_API_RADIUS, PARAMETER_PLACE_API_TYPE,PARAMETER_PLACE_API_KEY)
-                .subscribeWith(new DisposableObserver<NearbySearch>() {
-                    @Override
-                    public void onNext(NearbySearch nearbySearch) {
-                        if (!nearbySearch.getResults().isEmpty()) {
-                            StringBuilder stringBuilder = new StringBuilder();
-                            List<NearbySearch.Result> results = nearbySearch.getResults();
-                            markersCreation(results);
-                            for (int i = 0 ; i < results.size() ; i++){
-                                stringBuilder.append("-" + results.get(i).getName().toString() + " ; ");
-                            }
-                            Log.i("TAGAA", "réponse chargée!");
-                            Log.i("TAGAA", stringBuilder.toString());
-                        }
-                        else Log.i("TAGAA", "aucune réponse trouvée!");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (this.mDisposable != null && !this.mDisposable.isDisposed()) this.mDisposable.dispose();
     }
 
 
