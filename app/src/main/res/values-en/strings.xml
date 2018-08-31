@@ -23,4 +23,6 @@
     <string name="call">CALL</string>
     <string name="LIKE">LIKE</string>
     <string name="WEBSITE">WEBSITE</string>
+    <string name="callDisabled">PHONE NUMBER DISABLE</string>
+    <string name="websiteDisabled">WEB SITE DISABLE</string>
 </resources>

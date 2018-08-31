@@ -43,6 +43,6 @@ public class FileRestaurantActivity extends BaseActivity {
         String snippet = getIntent().getStringExtra(EXTRA_SNIPPET_MARKER);
         RestaurantProfile restaurantProfile;
         restaurantProfile = getJsonToPlace(snippet);
-        mFileRestaurantFragment.setSnippetMarkerName(restaurantProfile);
+        mFileRestaurantFragment.setRestaurantProfileInformation(restaurantProfile);
     }
 }

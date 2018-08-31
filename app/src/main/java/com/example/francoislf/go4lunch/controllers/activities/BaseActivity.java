@@ -39,7 +39,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected TextView mTextViewName;
     protected TextView mTextViewEmail;
     protected SharedPreferences mSharedPreferences;
-    public static final String MY_PLACE = "MY_PLACE";
+    private String mJson;
 
     private static final int SIGN_OUT_TASK = 10;
 
@@ -110,7 +110,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .addOnSuccessListener(this, updateUIAfterRestRequestsCompleted(SIGN_OUT_TASK));
     }
 
-    private String mJson;
+
 
     // Load JSon in order to create class object with Gson library
     protected RestaurantProfile getJsonToPlace(String json){

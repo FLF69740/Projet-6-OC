@@ -46,4 +46,20 @@ public class PlacesExtractor {
         }
         return mRestaurantProfileList.get(goodId);
     }
+
+    public List<String> organisePhotoAndProfile(ArrayList<RestaurantProfile> restaurantProfileList, List<String> stringList){
+        ArrayList<String> result = new ArrayList<>();
+        ArrayList<String> resultFinal = new ArrayList<>();
+        for (int i = 0 ; i < restaurantProfileList.size() ; i++){
+            for (int j = 0 ; j < stringList.size() ; j++){
+                if (stringList.get(j).startsWith(restaurantProfileList.get(i).getName())) result.add(stringList.get(j));
+            }
+        }
+
+        for (int i = 0 ; i < result.size() ; i++){
+            resultFinal.add(result.get(i).split("#")[1]);
+        }
+
+        return resultFinal;
+    }
 }

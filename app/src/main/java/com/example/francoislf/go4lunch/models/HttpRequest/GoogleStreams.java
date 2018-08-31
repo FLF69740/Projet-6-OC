@@ -47,5 +47,26 @@ public class GoogleStreams {
 
     }
 
+    public static Observable<List<String>> streamListPhotos(String localisation, String radius, String type, final String key){
+        return streamNearbySearch(localisation, radius, type, key)
+                .flatMap(new Function<NearbySearch, ObservableSource<NearbySearch.Result>>() {
+                    @Override
+                    public ObservableSource<NearbySearch.Result> apply(NearbySearch nearbySearch) throws Exception {
+                        return Observable.fromIterable(nearbySearch.getResults());
+                    }
+                })
+                .map(new Function<NearbySearch.Result, String>() {
+                    @Override
+                    public String apply(NearbySearch.Result result) throws Exception {
+                        if (result.getPhotos() != null)
+                        return result.getName() + "#https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + result.getPhotos().get(0).getPhotoReference()
+                                + "&key=" + key;
+                        else return result.getName() + "#Empty";
+                    }
+                })
+                .toList()
+                .toObservable();
+    }
+
 
 }

@@ -12,6 +12,7 @@ public class RestaurantProfile {
     private List<String> mWeekHour;
     private double lat;
     private double lng;
+    private String mPhoto;
 
 
     public RestaurantProfile(){}
@@ -79,5 +80,13 @@ public class RestaurantProfile {
 
     public void setLng(double lng) {
         this.lng = lng;
+    }
+
+    public String getPhoto() {
+        return mPhoto;
+    }
+
+    public void setPhoto(String photo) {
+        mPhoto = photo;
     }
 }

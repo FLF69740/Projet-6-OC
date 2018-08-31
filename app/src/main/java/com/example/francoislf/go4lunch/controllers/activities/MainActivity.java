@@ -40,26 +40,22 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @BindView(R.id.bottom_navigation) BottomNavigationView mBottomNavigationView;
     private ArrayList<RestaurantProfile> mRestaurantProfileList;
     PlacesExtractor mPlacesExtractor;
-    private Disposable mDisposable;
+    private Disposable mDisposable, mDisposable2;
     private static final String PARAMETER_PLACE_API_RADIUS = "1000";
     private static final String PARAMETER_PLACE_API_TYPE = "restaurant";
-    String PARAMETER_PLACE_API_KEY;
+    private String PARAMETER_PLACE_API_KEY;
     private MainFragment mMainFragment;
 
     @Override
     protected int getContentView() {return R.layout.activity_main;}
-
     @Override
     protected Fragment newInstance() {mMainFragment = new MainFragment();
         return mMainFragment;
     }
-
     @Override
     protected int getFragmentLayout() {return (R.id.frame_layout_main);}
-
     @Override
     protected boolean getContentViewBoolean() {return true;}
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,11 +151,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
-            case R.id.your_lunch :
-                break;
-            case R.id.settings :
-                break;
-            case  R.id.logout : signOutFormFirebase(); break;
+            case R.id.your_lunch : break;
+            case R.id.settings : break;
+            case R.id.logout : signOutFormFirebase(); break;
         }
 
         this.mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -180,7 +174,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      *  HTTP (RxJAVA)
      */
 
-    public void executePlacesWithExtractor(View view, String coordinates){
+    public void executePlacesWithExtractor(View view, final String coordinates){
         this.mDisposable = GoogleStreams.streamListPlaces(coordinates,PARAMETER_PLACE_API_RADIUS, PARAMETER_PLACE_API_TYPE, PARAMETER_PLACE_API_KEY)
                 .subscribeWith(new DisposableObserver<List<Places>>() {
                                    @Override
@@ -192,17 +186,29 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                                    @Override
                                    public void onError(Throwable e) {}
                                    @Override
-                                   public void onComplete() {
-                                       String verif = "list : ";
-                                       for (int i = 0 ; i < mRestaurantProfileList.size() ; i++) verif += mRestaurantProfileList.get(i).getName() + " ; ";
-                                       Log.i("TADAA", verif);
-                                   }
+                                   public void onComplete() {executePhotoWithExtractor(coordinates);}
                                });
+    }
+
+    private void executePhotoWithExtractor(String coordinates){
+        this.mDisposable2 = GoogleStreams.streamListPhotos(coordinates,PARAMETER_PLACE_API_RADIUS, PARAMETER_PLACE_API_TYPE, PARAMETER_PLACE_API_KEY)
+                .subscribeWith(new DisposableObserver<List<String>>() {
+                    @Override
+                    public void onNext(List<String> strings) {
+                        List<String> tempArrayList = new ArrayList<>(mPlacesExtractor.organisePhotoAndProfile(mRestaurantProfileList, strings));
+                        for (int i = 0 ; i < tempArrayList.size() ; i++) mRestaurantProfileList.get(i).setPhoto(tempArrayList.get(i));
+                    }
+                    @Override
+                    public void onError(Throwable e) {}
+                    @Override
+                    public void onComplete() {Log.i("TADAA", "Photo : " + mRestaurantProfileList.get(0).getPhoto());}
+                });
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         if (this.mDisposable != null && !this.mDisposable.isDisposed()) this.mDisposable.dispose();
+        if (this.mDisposable2 != null && !this.mDisposable2.isDisposed()) this.mDisposable2.dispose();
     }
 }

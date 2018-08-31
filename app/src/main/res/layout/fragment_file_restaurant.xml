@@ -76,7 +76,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:color/holo_orange_dark" />
+        android:src="@drawable/photo_background_blurring_nav_header"
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:id="@+id/restaurant_localisation"
@@ -115,14 +116,14 @@
         android:text="@string/LIKE"
         android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/guideline_down_divider"
-        app:layout_constraintEnd_toStartOf="@+id/textView5"
+        app:layout_constraintEnd_toStartOf="@+id/WEBSITE"
         app:layout_constraintStart_toEndOf="@+id/CALL"
         app:layout_constraintTop_toTopOf="@+id/guideline_middle"
         android:clickable="true"
         android:background="?android:selectableItemBackground"/>
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/WEBSITE"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:drawableTop="@drawable/baseline_vpn_lock_black_24"

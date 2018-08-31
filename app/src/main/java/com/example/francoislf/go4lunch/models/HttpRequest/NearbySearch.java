@@ -1,5 +1,7 @@
 package com.example.francoislf.go4lunch.models.HttpRequest;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
@@ -69,6 +71,7 @@ public class NearbySearch {
         private String name;
         @SerializedName("photos")
         @Expose
+        @Nullable
         private List<Photo> photos = null;
         @SerializedName("place_id")
         @Expose

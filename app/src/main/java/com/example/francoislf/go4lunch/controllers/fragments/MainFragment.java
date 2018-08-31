@@ -176,8 +176,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
     public boolean onMarkerClick(Marker marker) {
         Integer markerTag = (Integer) marker.getTag();
         if (markerTag != null){
-            Toast.makeText(getContext(), "name : " + marker.getTitle().toString(), Toast.LENGTH_SHORT).show();
-            mCallback.onResultMarkerTransmission(this.mView, marker.getTitle().toString());
+            mCallback.onResultMarkerTransmission(this.mView, marker.getTitle());
         }
         return false;
     }
