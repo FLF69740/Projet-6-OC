@@ -1,12 +1,12 @@
 package com.example.francoislf.go4lunch.controllers.activities;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,10 +16,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.francoislf.go4lunch.R;
+import com.example.francoislf.go4lunch.controllers.fragments.ListViewFragment;
 import com.example.francoislf.go4lunch.controllers.fragments.MainFragment;
+import com.example.francoislf.go4lunch.controllers.fragments.WorkmatesFragment;
 import com.example.francoislf.go4lunch.models.HttpRequest.GoogleStreams;
 import com.example.francoislf.go4lunch.models.HttpRequest.Places;
 import com.example.francoislf.go4lunch.models.PlacesExtractor;
@@ -45,11 +48,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private static final String PARAMETER_PLACE_API_TYPE = "restaurant";
     private String PARAMETER_PLACE_API_KEY;
     private MainFragment mMainFragment;
+    private ListViewFragment mListViewFragment;
+    private WorkmatesFragment mWorkmatesFragment;
+    private Fragment mCurrentFragment;
 
     @Override
     protected int getContentView() {return R.layout.activity_main;}
     @Override
-    protected Fragment newInstance() {mMainFragment = new MainFragment();
+    protected Fragment newInstance() {
+        mMainFragment = new MainFragment();
+        mListViewFragment = new ListViewFragment();
+        mWorkmatesFragment = new WorkmatesFragment();
         return mMainFragment;
     }
     @Override
@@ -68,6 +77,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         this.configureNavigationView();
         this.configureBottomNavigationView();
         this.updateProfileInformations();
+
     }
 
     // Update Nave_header informations about user informations
@@ -91,13 +101,26 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
 
     private void configureBottomNavigationView(){
+        getFragmentManager().beginTransaction().add(R.id.frame_layout_main, mListViewFragment).hide(mListViewFragment).commit();
+        getFragmentManager().beginTransaction().add(R.id.frame_layout_main, mWorkmatesFragment).hide(mWorkmatesFragment).commit();
+        mCurrentFragment = mMainFragment;
+
         mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
-                    case R.id.ic_onglet_map_view: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_1)); break;
-                    case R.id.ic_onglet_list_view: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_2)); break;
-                    case R.id.ic_onglet_workmates: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_3)); break;
+                    case R.id.ic_onglet_map_view: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_1));
+                        getFragmentManager().beginTransaction().hide(mCurrentFragment).show(mMainFragment).commit();
+                        mCurrentFragment = mMainFragment;
+                    break;
+                    case R.id.ic_onglet_list_view: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_2));
+                        getFragmentManager().beginTransaction().hide(mCurrentFragment).show(mListViewFragment).commit();
+                        mCurrentFragment = mListViewFragment;
+                    break;
+                    case R.id.ic_onglet_workmates: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_3));
+                        getFragmentManager().beginTransaction().hide(mCurrentFragment).show(mWorkmatesFragment).commit();
+                        mCurrentFragment = mWorkmatesFragment;
+                    break;
                 }
                 return true;
             }

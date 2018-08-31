@@ -45,4 +45,7 @@
     <string name="callDisabled">NUMERO DE TELEPHONE INEXISTANT</string>
     <string name="websiteDisabled">SITE WEB INEXISTANT</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

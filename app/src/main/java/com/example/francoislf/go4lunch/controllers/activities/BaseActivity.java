@@ -1,23 +1,15 @@
 package com.example.francoislf.go4lunch.controllers.activities;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.example.francoislf.go4lunch.R;
+
 import com.example.francoislf.go4lunch.models.RestaurantProfile;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,19 +19,15 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public abstract class BaseActivity extends AppCompatActivity {
-
-
 
     protected View mViewHeader;
     protected ImageView mImageViewProfile;
     protected TextView mTextViewName;
     protected TextView mTextViewEmail;
     protected SharedPreferences mSharedPreferences;
-    private String mJson;
 
     private static final int SIGN_OUT_TASK = 10;
 
@@ -63,8 +51,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     // Link the fragment to the View
     protected void configureFragment(Bundle savedInstanceState) {
         if (savedInstanceState == null){
-            getSupportFragmentManager().beginTransaction()
-                    .add(this.getFragmentLayout(), newInstance())
+            getFragmentManager().beginTransaction()
+                    .add(getFragmentLayout(),newInstance())
                     .commit();
         }
     }

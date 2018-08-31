@@ -1,7 +1,8 @@
 package com.example.francoislf.go4lunch.controllers.fragments;
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +53,6 @@ public class FileRestaurantFragment extends Fragment {
         mRestaurantLocalisation.setText(restaurantProfile.getAdress());
         mPhoneNumber = restaurantProfile.getPhoneNumber();
         mWebSite = restaurantProfile.getWebSite();
-        Toast.makeText(getContext(),"'" + restaurantProfile.getPhoto()+ "'",Toast.LENGTH_LONG).show();
         if (!restaurantProfile.getPhoto().equals("Empty")) {
             Glide.with(mView)
                     .load(restaurantProfile.getPhoto())

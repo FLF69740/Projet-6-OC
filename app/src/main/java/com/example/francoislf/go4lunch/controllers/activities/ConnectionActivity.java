@@ -1,7 +1,6 @@
 package com.example.francoislf.go4lunch.controllers.activities;
 
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -24,7 +23,7 @@ public class ConnectionActivity extends BaseActivity {
     protected int getContentView() {return 0;}
 
     @Override
-    protected Fragment newInstance() {return null;}
+    protected android.app.Fragment newInstance() {return null;}
 
     @Override
     protected int getFragmentLayout() {return 0;}

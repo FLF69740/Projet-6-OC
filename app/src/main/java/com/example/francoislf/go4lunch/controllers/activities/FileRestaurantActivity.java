@@ -1,7 +1,5 @@
 package com.example.francoislf.go4lunch.controllers.activities;
 
-import android.support.v4.app.Fragment;
-
 import com.example.francoislf.go4lunch.R;
 import com.example.francoislf.go4lunch.controllers.fragments.FileRestaurantFragment;
 import com.example.francoislf.go4lunch.models.RestaurantProfile;
@@ -22,7 +20,7 @@ public class FileRestaurantActivity extends BaseActivity {
     }
 
     @Override
-    protected Fragment newInstance() {
+    protected android.app.Fragment newInstance() {
         mFileRestaurantFragment = new FileRestaurantFragment();
         return mFileRestaurantFragment;
     }
