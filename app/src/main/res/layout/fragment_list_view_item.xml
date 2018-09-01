@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline_middle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8"/>
+
+
+    <TextView
+        android:id="@+id/opening"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="opening"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/adress" />
+
+    <TextView
+        android:id="@+id/adress"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="adress"
+        app:layout_constraintBottom_toTopOf="@+id/opening"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="Name"
+        app:layout_constraintBottom_toTopOf="@+id/adress"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="distance"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_middle"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/participant_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="(0)"
+        app:layout_constraintBottom_toTopOf="@+id/star_1"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_middle"
+        app:layout_constraintTop_toBottomOf="@+id/distance" />
+
+    <ImageView
+        android:id="@+id/star_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_middle"
+        app:layout_constraintTop_toBottomOf="@+id/participant_number"
+        app:srcCompat="@drawable/baseline_star_yellow_24" />
+
+    <ImageView
+        android:id="@+id/star_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/star_1"
+        app:layout_constraintEnd_toStartOf="@+id/star_1"
+        app:layout_constraintTop_toTopOf="@+id/star_1"
+        app:srcCompat="@drawable/baseline_star_yellow_24" />
+
+    <ImageView
+        android:id="@+id/star_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/star_2"
+        app:layout_constraintEnd_toStartOf="@+id/star_2"
+        app:layout_constraintTop_toTopOf="@+id/star_2"
+        app:srcCompat="@drawable/baseline_star_yellow_24" />
+
+    <ImageView
+        android:id="@+id/participant_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/participant_number"
+        app:layout_constraintEnd_toStartOf="@+id/participant_number"
+        app:layout_constraintTop_toBottomOf="@+id/distance"
+        app:srcCompat="@drawable/baseline_person_outline_black_24" />
+
+    <ImageView
+        android:id="@+id/restaurant_photo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline_middle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/photo_background_blurring_nav_header"
+        android:scaleType="centerCrop"/>
+
+
+</android.support.constraint.ConstraintLayout>
