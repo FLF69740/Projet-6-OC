@@ -220,6 +220,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     public void onNext(List<String> strings) {
                         List<String> tempArrayList = new ArrayList<>(mPlacesExtractor.organisePhotoAndProfile(mRestaurantProfileList, strings));
                         for (int i = 0 ; i < tempArrayList.size() ; i++) mRestaurantProfileList.get(i).setPhoto(tempArrayList.get(i));
+                        mListViewFragment.setRestaurantProfileList(mRestaurantProfileList);
                     }
                     @Override
                     public void onError(Throwable e) {}

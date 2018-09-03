@@ -1,6 +1,7 @@
 package com.example.francoislf.go4lunch.controllers.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -89,7 +90,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
         super.onViewCreated(view, savedInstanceState);
         if (mLocationPermissionsGranted) {
             mGPSTracker = new GPSTracker();
-            mLocation = mGPSTracker.getLocation(getContext());
+            mLocation = mGPSTracker.getLocation(this.getContext());
             mLatitude = mLocation.getLatitude();
             mLongitude = mLocation.getLongitude();
 
@@ -134,6 +135,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
         }
     }
 
+    @SuppressLint("NewApi")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         MapsInitializer.initialize(getContext());

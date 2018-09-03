@@ -1,5 +1,6 @@
 package com.example.francoislf.go4lunch.controllers.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.os.Bundle;
 
@@ -75,12 +76,14 @@ public class FileRestaurantFragment extends Fragment {
         else mImageViewRestaurantChoiceKO.setVisibility(View.VISIBLE);
     }
 
+    @SuppressLint("NewApi")
     @OnClick(R.id.CALL)
     public void launchRestaurantCall(){
         if (mPhoneNumber == null) Toast.makeText(getContext(),getString(R.string.callDisabled),Toast.LENGTH_LONG).show();
         else Toast.makeText(getContext(),mPhoneNumber,Toast.LENGTH_LONG).show();
     }
 
+    @SuppressLint("NewApi")
     @OnClick(R.id.WEBSITE)
     public void launchRestaurantWebSite(){
         if (mWebSite == null) Toast.makeText(getContext(), getString(R.string.websiteDisabled), Toast.LENGTH_LONG).show();
