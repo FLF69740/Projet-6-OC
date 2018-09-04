@@ -1,5 +1,8 @@
 package com.example.francoislf.go4lunch.models;
 
+import com.example.francoislf.go4lunch.models.HttpRequest.Places;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class RestaurantProfile {
@@ -15,7 +18,7 @@ public class RestaurantProfile {
     private String mPhoto;
 
 
-    public RestaurantProfile(){}
+    public RestaurantProfile(){mWeekHour = new ArrayList<>();}
 
 
     public String getPlaceId() {

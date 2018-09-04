@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="100dp">
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline_middle"
@@ -26,31 +25,43 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
+        android:gravity="center"
         android:text="opening"
+        android:textSize="13sp"
+        android:textStyle="italic"
         app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item_recyclerView_adress" />
 
     <TextView
         android:id="@+id/item_recyclerView_adress"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:gravity="start|center"
         android:text="adress"
+        android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@+id/item_recyclerView_opening"
+        app:layout_constraintEnd_toEndOf="@+id/barrier5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item_recyclerView_name" />
 
     <TextView
         android:id="@+id/item_recyclerView_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="10dp"
         android:text="Name"
+        android:textSize="15sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/item_recyclerView_adress"
+        app:layout_constraintEnd_toEndOf="@+id/barrier5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@android:color/black"/>
 
     <TextView
         android:id="@+id/item_recyclerView_distance"
@@ -58,7 +69,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="distance"
+        android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline_middle"
+        app:layout_constraintEnd_toEndOf="@id/barrier5"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -129,6 +142,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@color/browser_actions_title_color" />
+
+    <android.support.constraint.Barrier
+        android:id="@+id/barrier5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="left"
+        app:constraint_referenced_ids="item_recyclerView_distance"/>
 
 
 </android.support.constraint.ConstraintLayout>

@@ -1,8 +1,11 @@
 package com.example.francoislf.go4lunch;
 
 import com.example.francoislf.go4lunch.models.PlacesExtractor;
+import com.example.francoislf.go4lunch.models.RecyclerViewItemTransformer;
 import com.example.francoislf.go4lunch.models.RestaurantProfile;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeFieldType;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -80,6 +83,41 @@ public class ExampleUnitTest {
         assert(resultFinal.get(0).equals("Photo1"));
         assert(resultFinal.get(1).equals("Photo2"));
         assert(resultFinal.get(2).equals("Photo3"));
+
+    }
+
+    @Test
+    public void testGoodSectionLocalisationWithRecyclerViewItemTransformer(){
+        RecyclerViewItemTransformer recyclerViewItemTransformer = new RecyclerViewItemTransformer();
+
+        String string = "AAA Rue machin chose, 69000 Lyon, France";
+        String change = recyclerViewItemTransformer.getShortAdress(string);
+
+        assert (change.equals("AAA Rue machin chose"));
+
+        string = "BB C, Rue du truc, 69000 Lyon, France";
+        change = recyclerViewItemTransformer.getShortAdress(string);
+
+        assert (change.equals("BB C Rue du truc"));
+
+    }
+
+    @Test
+    public void testTimeSequence(){
+
+        DateTime dt = new DateTime();
+
+        int hour = dt.getHourOfDay();
+
+        int middle = dt.get(DateTimeFieldType.halfdayOfDay());
+
+        if (middle == 1) hour -= 12;
+
+        assert (hour == 10);
+
+        int day = dt.getDayOfWeek();
+
+     //   assert (day == 2);
 
     }
 }
