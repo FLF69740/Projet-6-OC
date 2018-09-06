@@ -1,5 +1,7 @@
 package com.example.francoislf.go4lunch;
 
+import android.content.Context;
+
 import com.example.francoislf.go4lunch.models.PlacesExtractor;
 import com.example.francoislf.go4lunch.models.RecyclerViewItemTransformer;
 import com.example.francoislf.go4lunch.models.RestaurantProfile;
@@ -103,21 +105,25 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void testTimeSequence(){
+    public void testAnOpenHour(){
 
-        DateTime dt = new DateTime();
+        RecyclerViewItemTransformer recyclerViewItemTransformer = new RecyclerViewItemTransformer();
+        List<String> list = new ArrayList<>();
+   //     list.add("close3,")
 
-        int hour = dt.getHourOfDay();
+   //     String myHour = recyclerViewItemTransformer.getOpeningAnswer()
 
-        int middle = dt.get(DateTimeFieldType.halfdayOfDay());
+    }
 
-        if (middle == 1) hour -= 12;
+    @Test
+    public void testMath(){
 
-        assert (hour == 10);
+        double lat1 = 47.074;
 
-        int day = dt.getDayOfWeek();
+        double sinLat1 = Math.sin(lat1);
+        sinLat1 = Math.toDegrees(sinLat1);
 
-     //   assert (day == 2);
-
+     //   assert (sinLat1 > 0.73);
+        assert (sinLat1 < 0.74);
     }
 }

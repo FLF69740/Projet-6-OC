@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -90,7 +91,9 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
         super.onViewCreated(view, savedInstanceState);
         if (mLocationPermissionsGranted) {
             mGPSTracker = new GPSTracker();
-            mLocation = mGPSTracker.getLocation(this.getContext());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                mLocation = mGPSTracker.getLocation(this.getContext());
+            }
             mLatitude = mLocation.getLatitude();
             mLongitude = mLocation.getLongitude();
 

@@ -2,6 +2,7 @@ package com.example.francoislf.go4lunch.controllers.activities;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -48,19 +49,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private static final String PARAMETER_PLACE_API_TYPE = "restaurant";
     private String PARAMETER_PLACE_API_KEY;
     private MainFragment mMainFragment;
-    private ListViewFragment mListViewFragment;
-    private WorkmatesFragment mWorkmatesFragment;
-    private Fragment mCurrentFragment;
 
     @Override
     protected int getContentView() {return R.layout.activity_main;}
+
     @Override
-    protected Fragment newInstance() {
-        mMainFragment = new MainFragment();
-        mListViewFragment = new ListViewFragment();
-        mWorkmatesFragment = new WorkmatesFragment();
-        return mMainFragment;
-    }
+    protected Fragment newInstance() {mMainFragment = new MainFragment(); return mMainFragment;}
     @Override
     protected int getFragmentLayout() {return (R.id.frame_layout_main);}
     @Override
@@ -71,13 +65,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         ButterKnife.bind(this);
         PARAMETER_PLACE_API_KEY = getString(R.string.google_place_api_key);
         mRestaurantProfileList = new ArrayList<>();
-        mPlacesExtractor = new PlacesExtractor();
+        mPlacesExtractor = new PlacesExtractor(this);
         configureToolbar();
         this.configureDrawerLayout();
         this.configureNavigationView();
         this.configureBottomNavigationView();
         this.updateProfileInformations();
-
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
     }
 
     // Update Nave_header informations about user informations
@@ -101,25 +95,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
 
     private void configureBottomNavigationView(){
-        getFragmentManager().beginTransaction().add(R.id.frame_layout_main, mListViewFragment).hide(mListViewFragment).commit();
-        getFragmentManager().beginTransaction().add(R.id.frame_layout_main, mWorkmatesFragment).hide(mWorkmatesFragment).commit();
-        mCurrentFragment = mMainFragment;
 
         mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.ic_onglet_map_view: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_1));
-                        getFragmentManager().beginTransaction().hide(mCurrentFragment).show(mMainFragment).commit();
-                        mCurrentFragment = mMainFragment;
+                        getFragmentManager().beginTransaction().replace(getFragmentLayout(), newInstance()).commit();
                     break;
                     case R.id.ic_onglet_list_view: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_2));
-                        getFragmentManager().beginTransaction().hide(mCurrentFragment).show(mListViewFragment).commit();
-                        mCurrentFragment = mListViewFragment;
+                        getFragmentManager().beginTransaction().replace(getFragmentLayout(), new ListViewFragment().newInstanceWithList(mRestaurantProfileList)).commit();
                     break;
                     case R.id.ic_onglet_workmates: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_3));
-                        getFragmentManager().beginTransaction().hide(mCurrentFragment).show(mWorkmatesFragment).commit();
-                        mCurrentFragment = mWorkmatesFragment;
+                        getFragmentManager().beginTransaction().replace(getFragmentLayout(), new WorkmatesFragment().newInstanceWorkmates()).commit();
                     break;
                 }
                 return true;
@@ -189,7 +177,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public void onResultMarkerTransmission(View view, String title) {
         Intent intent = new Intent(this, FileRestaurantActivity.class);
         RestaurantProfile restaurantProfile = mPlacesExtractor.getRestaurantProfile(title);
-        intent.putExtra(FileRestaurantActivity.EXTRA_SNIPPET_MARKER, getPlaceToJson(restaurantProfile));
+        intent.putExtra(FileRestaurantActivity.EXTRA_SNIPPET_MARKER, restaurantProfile);
         startActivity(intent);
     }
 
@@ -220,7 +208,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     public void onNext(List<String> strings) {
                         List<String> tempArrayList = new ArrayList<>(mPlacesExtractor.organisePhotoAndProfile(mRestaurantProfileList, strings));
                         for (int i = 0 ; i < tempArrayList.size() ; i++) mRestaurantProfileList.get(i).setPhoto(tempArrayList.get(i));
-                        mListViewFragment.setRestaurantProfileList(mRestaurantProfileList);
+//                        mListViewFragment.setRestaurantProfileList(mRestaurantProfileList);
                     }
                     @Override
                     public void onError(Throwable e) {}

@@ -107,6 +107,16 @@ public class Places {
         @Expose
         private String website;
 
+        private String photoUrl;
+
+        public String getPhotoUrl() {
+            return photoUrl;
+        }
+
+        public void setPhotoUrl(String photoUrl) {
+            this.photoUrl = photoUrl;
+        }
+
         public List<AddressComponent> getAddressComponents() {
             return addressComponents;
         }

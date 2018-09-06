@@ -1,6 +1,8 @@
 package com.example.francoislf.go4lunch.models;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
 import com.example.francoislf.go4lunch.models.HttpRequest.Places;
 
@@ -12,13 +14,14 @@ public class PlacesExtractor {
     private ArrayList<RestaurantProfile> mRestaurantProfileList;
     List<Places> mPlacesList;
     RecyclerViewItemTransformer mRecyclerViewItemTransformer;
+    Context mContext;
 
-    public PlacesExtractor(){}
+    public PlacesExtractor(Context context){mContext = context;}
 
     public void setPlacesList(List<Places> placesList){
         mRestaurantProfileList = new ArrayList<>();
         this.mPlacesList = placesList;
-        mRecyclerViewItemTransformer = new RecyclerViewItemTransformer();
+        mRecyclerViewItemTransformer = new RecyclerViewItemTransformer(mContext);
         extractData();
     }
 

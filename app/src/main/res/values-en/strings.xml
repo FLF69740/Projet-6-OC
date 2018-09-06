@@ -25,4 +25,8 @@
     <string name="WEBSITE">WEBSITE</string>
     <string name="callDisabled">PHONE NUMBER DISABLE</string>
     <string name="websiteDisabled">WEB SITE DISABLE</string>
+    <string name="ouvert">Open until </string>
+    <string name="fermé">Closed</string>
+    <string name="bientôt_fermé">Closing soon</string>
+    <string name="pause">will open at </string>
 </resources>

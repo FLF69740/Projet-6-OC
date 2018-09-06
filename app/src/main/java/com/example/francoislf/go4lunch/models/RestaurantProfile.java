@@ -1,11 +1,12 @@
 package com.example.francoislf.go4lunch.models;
 
-import com.example.francoislf.go4lunch.models.HttpRequest.Places;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RestaurantProfile {
+public class RestaurantProfile implements Parcelable {
 
     private String mPlaceId;
     private String mName;
@@ -20,6 +21,30 @@ public class RestaurantProfile {
 
     public RestaurantProfile(){mWeekHour = new ArrayList<>();}
 
+
+    protected RestaurantProfile(Parcel in) {
+        mPlaceId = in.readString();
+        mName = in.readString();
+        mPhoneNumber = in.readString();
+        mAdress = in.readString();
+        mWebSite = in.readString();
+        mWeekHour = in.createStringArrayList();
+        lat = in.readDouble();
+        lng = in.readDouble();
+        mPhoto = in.readString();
+    }
+
+    public static final Creator<RestaurantProfile> CREATOR = new Creator<RestaurantProfile>() {
+        @Override
+        public RestaurantProfile createFromParcel(Parcel in) {
+            return new RestaurantProfile(in);
+        }
+
+        @Override
+        public RestaurantProfile[] newArray(int size) {
+            return new RestaurantProfile[size];
+        }
+    };
 
     public String getPlaceId() {
         return mPlaceId;
@@ -91,5 +116,27 @@ public class RestaurantProfile {
 
     public void setPhoto(String photo) {
         mPhoto = photo;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mPlaceId);
+        dest.writeString(mName);
+        dest.writeString(mPhoneNumber);
+        dest.writeString(mAdress);
+        dest.writeString(mWebSite);
+        dest.writeStringList(mWeekHour);
+        dest.writeDouble(lat);
+        dest.writeDouble(lng);
+        dest.writeString(mPhoto);
+    }
+
+    public static Parcelable.Creator<RestaurantProfile> getCreator(){
+        return CREATOR;
     }
 }

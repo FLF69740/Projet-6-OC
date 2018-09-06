@@ -38,9 +38,7 @@ public class FileRestaurantActivity extends BaseActivity {
 
     // Update UI
     private void snippetMarkerTransmissionToFragment(){
-        String snippet = getIntent().getStringExtra(EXTRA_SNIPPET_MARKER);
-        RestaurantProfile restaurantProfile;
-        restaurantProfile = getJsonToPlace(snippet);
+        RestaurantProfile restaurantProfile = getIntent().getExtras().getParcelable(EXTRA_SNIPPET_MARKER);
         mFileRestaurantFragment.setRestaurantProfileInformation(restaurantProfile);
     }
 }

@@ -33,4 +33,10 @@
         <item name="android:layout_gravity">top</item>
     </style>
 
+    <!-- STYLE FOR CLOSING MENTION IN RECYCLERVIEW -->
+    <style name="red_text">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+    </style>
+
 </resources>

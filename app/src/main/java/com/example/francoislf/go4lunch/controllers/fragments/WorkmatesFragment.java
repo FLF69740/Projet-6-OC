@@ -8,12 +8,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.francoislf.go4lunch.R;
+import com.example.francoislf.go4lunch.models.RestaurantProfile;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class WorkmatesFragment extends Fragment {
 
+    public static WorkmatesFragment newInstanceWorkmates(){
+        WorkmatesFragment workmatesFragment = new WorkmatesFragment();
+        return workmatesFragment;
+    }
 
     public WorkmatesFragment() {
         // Required empty public constructor

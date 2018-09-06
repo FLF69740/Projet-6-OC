@@ -27,14 +27,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected ImageView mImageViewProfile;
     protected TextView mTextViewName;
     protected TextView mTextViewEmail;
-    protected SharedPreferences mSharedPreferences;
 
     private static final int SIGN_OUT_TASK = 10;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSharedPreferences = getPreferences(MODE_PRIVATE);
         if (getContentViewBoolean()){
             setContentView(this.getContentView());
             configureFragment(savedInstanceState);
@@ -96,24 +94,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnSuccessListener(this, updateUIAfterRestRequestsCompleted(SIGN_OUT_TASK));
-    }
-
-
-
-    // Load JSon in order to create class object with Gson library
-    protected RestaurantProfile getJsonToPlace(String json){
-        RestaurantProfile restaurantProfile;
-        Gson gson = new Gson();
-        Type type = new TypeToken<RestaurantProfile>() {}.getType();
-        restaurantProfile = gson.fromJson(json, type);
-        return restaurantProfile;
-    }
-
-    // return the json of the RestaurantProfile object with Gson library (JSon format)
-    protected String getPlaceToJson(RestaurantProfile restaurantProfile){
-        Gson gson = new Gson();
-        String json = gson.toJson(restaurantProfile);
-        return json;
     }
 
 

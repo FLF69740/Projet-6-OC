@@ -1,5 +1,6 @@
 package com.example.francoislf.go4lunch.Views;
 
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,6 +24,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.item_recyclerView_adress)TextView mTextViewAdress;
     @BindView(R.id.item_recyclerView_opening)TextView mTextViewOpening;
     @BindView(R.id.item_recyclerView_restaurant_photo)ImageView mImageViewPhoto;
+    @BindView(R.id.item_recyclerView_distance)TextView mTextViewDistance;
     View mItemView;
     RecyclerViewItemTransformer mRecyclerViewItemTransformer;
 
@@ -30,7 +32,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         mItemView = itemView;
         ButterKnife.bind(this, mItemView);
-        mRecyclerViewItemTransformer = new RecyclerViewItemTransformer();
+        mRecyclerViewItemTransformer = new RecyclerViewItemTransformer(this.mItemView.getContext());
     }
 
     public void updateWithRestaurantProfile(RestaurantProfile restaurantProfile){
@@ -39,6 +41,13 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
         List<String> openingList = new ArrayList<>(restaurantProfile.getWeekHour());
         this.mTextViewOpening.setText(mRecyclerViewItemTransformer.getOpeningAnswer(openingList));
+        if (mTextViewOpening.getText().equals(mItemView.getContext().getString(R.string.fermé)) ||
+                mTextViewOpening.getText().equals(mItemView.getContext().getString(R.string.bientôt_fermé))){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                mTextViewOpening.setTextAppearance(R.style.red_text);
+            }
+        }
+        this.mTextViewDistance.setText(mRecyclerViewItemTransformer.getDistance(restaurantProfile.getLat(), restaurantProfile.getLng()));
 
         if (!restaurantProfile.getPhoto().equals("Empty")){
             Glide.with(mItemView)
