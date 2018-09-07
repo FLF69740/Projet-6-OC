@@ -81,7 +81,6 @@ public class FileRestaurantFragment extends Fragment {
     public void launchRestaurantCall(){
         if (mPhoneNumber == null) Toast.makeText(getContext(),getString(R.string.callDisabled),Toast.LENGTH_LONG).show();
         else Toast.makeText(getContext(),mPhoneNumber,Toast.LENGTH_LONG).show();
-        Toast.makeText(getContext(), "\u003cspan", Toast.LENGTH_LONG).show();
     }
 
     @SuppressLint("NewApi")

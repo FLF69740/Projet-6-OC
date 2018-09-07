@@ -2,6 +2,7 @@ package com.example.francoislf.go4lunch.controllers.fragments;
 
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.francoislf.go4lunch.R;
+import com.example.francoislf.go4lunch.Utils.ItemClickSupport;
 import com.example.francoislf.go4lunch.Views.RestaurantAdapter;
 import com.example.francoislf.go4lunch.models.RestaurantProfile;
 
@@ -31,6 +33,7 @@ public class ListViewFragment extends Fragment {
 
     private List<RestaurantProfile> mRestaurantProfileList;
     private RestaurantAdapter mAdapter;
+    private View mView;
 
     public static ListViewFragment newInstanceWithList(List<RestaurantProfile> restaurantProfileList){
         ListViewFragment listViewFragment = new ListViewFragment();
@@ -40,6 +43,12 @@ public class ListViewFragment extends Fragment {
         return listViewFragment;
     }
 
+    private OnClickedResultItem mCallback;
+
+    public interface OnClickedResultItem{
+        void onResultItemTransmission(View view, String title);
+    }
+
     public ListViewFragment() {
         // Required empty public constructor
     }
@@ -47,17 +56,14 @@ public class ListViewFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_list_view, container, false);
-        ButterKnife.bind(this, view);
+        mView = inflater.inflate(R.layout.fragment_list_view, container, false);
+        ButterKnife.bind(this, mView);
         this.mRestaurantProfileList = new ArrayList<>();
         mRestaurantProfileList = (List<RestaurantProfile>) getArguments().getSerializable("list");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Toast.makeText(getContext(), mRestaurantProfileList.get(0).getName() + " : " +
-            mRestaurantProfileList.get(0).getWeekHour().get(0), Toast.LENGTH_LONG).show();
-        }
         if (mRestaurantProfileList.isEmpty()) this.setRestaurantProfileList(mRestaurantProfileList);
         this.configureRecyclerView();
-        return view;
+        this.configureOnClickRecyclerView();
+        return mView;
     }
 
 
@@ -71,6 +77,33 @@ public class ListViewFragment extends Fragment {
         this.mRecyclerView.setAdapter(this.mAdapter);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAdapter.notifyDataSetChanged();
+    }
+
+    // Configure item click on RecyclerView
+    private void configureOnClickRecyclerView() {
+        ItemClickSupport.addTo(mRecyclerView, R.layout.fragment_list_view_item)
+                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        RestaurantProfile restaurantProfile = mAdapter.getRestaurantProfile(position);
+                        mCallback.onResultItemTransmission(mView, restaurantProfile.getName());
+                    }
+                });
+    }
+
+    //Parent activity will automatically subscribe to callback
+    private void createCallbackToParentActivity(){
+        try {
+            mCallback = (OnClickedResultItem) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(e.toString()+ " must implement OnClickedResultMarker");
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.createCallbackToParentActivity();
     }
 
 }

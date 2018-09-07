@@ -134,5 +134,18 @@ public class RecyclerViewItemTransformer {
         return String.valueOf(result) + "m";
     }
 
+    // return a shorter string name if this one is too long
+    public String getGoodSizeName(String name){
+
+        if (name.toCharArray().length < 29) return name;
+        else {
+            String result = "";
+            char[] chars = name.toCharArray();
+            for (int i = 0 ; i < 29 ; i++) result += chars[i];
+            result += "...";
+            return result;
+        }
+    }
+
 
 }

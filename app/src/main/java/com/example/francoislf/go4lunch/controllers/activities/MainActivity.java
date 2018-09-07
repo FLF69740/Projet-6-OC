@@ -36,7 +36,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, MainFragment.OnClickedResultMarker {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, MainFragment.OnClickedResultMarker, ListViewFragment.OnClickedResultItem {
 
     private Toolbar mToolbar;
     @BindView(R.id.activity_main_nav_view) NavigationView mNavigationView;
@@ -181,6 +181,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         startActivity(intent);
     }
 
+    // Callback from ListViewFragment when a listener from an item is activated : launch FileRestaurantActivity
+    @Override
+    public void onResultItemTransmission(View view, String title) {
+        Intent intent = new Intent(this, FileRestaurantActivity.class);
+        RestaurantProfile restaurantProfile = mPlacesExtractor.getRestaurantProfile(title);
+        intent.putExtra(FileRestaurantActivity.EXTRA_SNIPPET_MARKER, restaurantProfile);
+        startActivity(intent);
+    }
+
     /**
      *  HTTP (RxJAVA)
      */
@@ -208,7 +217,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     public void onNext(List<String> strings) {
                         List<String> tempArrayList = new ArrayList<>(mPlacesExtractor.organisePhotoAndProfile(mRestaurantProfileList, strings));
                         for (int i = 0 ; i < tempArrayList.size() ; i++) mRestaurantProfileList.get(i).setPhoto(tempArrayList.get(i));
-//                        mListViewFragment.setRestaurantProfileList(mRestaurantProfileList);
                     }
                     @Override
                     public void onError(Throwable e) {}
