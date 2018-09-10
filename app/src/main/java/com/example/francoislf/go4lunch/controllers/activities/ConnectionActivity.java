@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.example.francoislf.go4lunch.R;
+import com.example.francoislf.go4lunch.api.UserHelper;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
@@ -60,6 +61,7 @@ public class ConnectionActivity extends BaseActivity {
 
         if (requestCode == RC_SIGN_IN){
             if (resultCode == RESULT_OK){
+                this.createUserInFirestore();
                 Toast.makeText(this, R.string.connection_succeed, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
@@ -72,4 +74,15 @@ public class ConnectionActivity extends BaseActivity {
             }
         }
     }
+
+    private void createUserInFirestore(){
+        if (this.getCurrentUser() != null){
+            String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
+            String username = this.getCurrentUser().getDisplayName();
+            String uid = this.getCurrentUser().getUid();
+
+            UserHelper.createUser(uid, username, urlPicture).addOnFailureListener(this.onFailureListener());
+        }
+    }
+
 }
