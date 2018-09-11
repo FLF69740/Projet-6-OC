@@ -20,6 +20,8 @@ public class User {
         this.mHourChoice = "Empty";
     }
 
+    public User(){}
+
     public String getUid() {
         return mUid;
     }

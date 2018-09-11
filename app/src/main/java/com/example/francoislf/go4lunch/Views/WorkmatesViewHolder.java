@@ -4,18 +4,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.francoislf.go4lunch.R;
 import com.example.francoislf.go4lunch.models.User;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class WorkmatesViewHolder extends RecyclerView.ViewHolder {
 
-    View mItemView;
+    private View mItemView;
     @BindView(R.id.avatar_situation)TextView mAvatarSituation;
     @BindView(R.id.avatar)ImageView mAvatar;
 
@@ -27,7 +25,6 @@ public class WorkmatesViewHolder extends RecyclerView.ViewHolder {
 
     public void updateWithWorkmatesProfile(User user){
 
-        Glide glide;
         String avatarSituationBuild = user.getUsername();
 
         if (user.getRestaurantChoice().equals("Empty")) avatarSituationBuild += " " + mItemView.getContext().getString(R.string.pas_de_decision);

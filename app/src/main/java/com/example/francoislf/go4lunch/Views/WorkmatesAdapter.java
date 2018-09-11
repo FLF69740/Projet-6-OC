@@ -20,6 +20,7 @@ public class WorkmatesAdapter extends FirestoreRecyclerAdapter<User, WorkmatesVi
     public WorkmatesAdapter(@NonNull FirestoreRecyclerOptions<User> options, Listener callback) {
         super(options);
         mCallback = callback;
+        startListening();
     }
 
     @Override

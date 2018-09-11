@@ -2,6 +2,7 @@ package com.example.francoislf.go4lunch.controllers.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -16,7 +17,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.francoislf.go4lunch.R;
+import com.example.francoislf.go4lunch.api.UserHelper;
 import com.example.francoislf.go4lunch.models.RestaurantProfile;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.w3c.dom.Text;
 
@@ -30,12 +33,20 @@ public class FileRestaurantFragment extends Fragment {
     @BindView(R.id.button_restaurant_choice)Button mButtonChoiceRestaurant;
     @BindView(R.id.restaurant_choice_no_validate)ImageView mImageViewRestaurantChoiceKO;
     @BindView(R.id.restaurant_choice_validate)ImageView mImageViewRestaurantChoiceOK;
+    private static final String BLANK_ANSWER = "Empty";
     ImageView mRestaurantImage;
     Boolean isRestaurantChosen;
     String mPhoneNumber, mWebSite;
     View mView;
+    RestaurantProfile mRestaurantProfile;
 
     public FileRestaurantFragment(){}
+
+    private OnClicChoiceRestaurant mCallback;
+
+    public interface OnClicChoiceRestaurant{
+        void onResultChoiceTransmission(View view, String name);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,13 +61,14 @@ public class FileRestaurantFragment extends Fragment {
     }
 
     public void setRestaurantProfileInformation(RestaurantProfile restaurantProfile){
-        mRestaurantName.setText(restaurantProfile.getName());
-        mRestaurantLocalisation.setText(restaurantProfile.getAdress());
-        mPhoneNumber = restaurantProfile.getPhoneNumber();
-        mWebSite = restaurantProfile.getWebSite();
-        if (!restaurantProfile.getPhoto().equals("Empty")) {
+        mRestaurantProfile = restaurantProfile;
+        mRestaurantName.setText(mRestaurantProfile.getName());
+        mRestaurantLocalisation.setText(mRestaurantProfile.getAdress());
+        mPhoneNumber = mRestaurantProfile.getPhoneNumber();
+        mWebSite = mRestaurantProfile.getWebSite();
+        if (!mRestaurantProfile.getPhoto().equals(BLANK_ANSWER)) {
             Glide.with(mView)
-                    .load(restaurantProfile.getPhoto())
+                    .load(mRestaurantProfile.getPhoto())
                     .apply(RequestOptions.centerCropTransform())
                     .into(mRestaurantImage);
         }
@@ -72,8 +84,13 @@ public class FileRestaurantFragment extends Fragment {
     private void setCircleLogoRestaurantChoice(boolean isChoosen){
         mImageViewRestaurantChoiceKO.setVisibility(View.INVISIBLE);
         mImageViewRestaurantChoiceOK.setVisibility(View.INVISIBLE);
-        if (isChoosen) mImageViewRestaurantChoiceOK.setVisibility(View.VISIBLE);
-        else mImageViewRestaurantChoiceKO.setVisibility(View.VISIBLE);
+        if (isChoosen){
+            mImageViewRestaurantChoiceOK.setVisibility(View.VISIBLE);
+            mCallback.onResultChoiceTransmission(mView, mRestaurantProfile.getName());
+        } else {
+            mImageViewRestaurantChoiceKO.setVisibility(View.VISIBLE);
+            mCallback.onResultChoiceTransmission(mView, BLANK_ANSWER);
+        }
     }
 
     @SuppressLint("NewApi")
@@ -89,5 +106,21 @@ public class FileRestaurantFragment extends Fragment {
         if (mWebSite == null) Toast.makeText(getContext(), getString(R.string.websiteDisabled), Toast.LENGTH_LONG).show();
         else Toast.makeText(getContext(),mWebSite,Toast.LENGTH_LONG).show();
     }
+
+    //Parent activity will automatically subscribe to callback
+    private void createCallbackToParentActivity(){
+        try {
+            mCallback = (OnClicChoiceRestaurant) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(e.toString()+ " must implement OnClickedResultMarker");
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.createCallbackToParentActivity();
+    }
+
 
 }

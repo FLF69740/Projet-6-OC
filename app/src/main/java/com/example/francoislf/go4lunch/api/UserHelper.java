@@ -58,6 +58,6 @@ public class UserHelper {
      */
 
     public static Task<Void> deleteUser(String uid){
-        return UserHelper.getUsersCollection().document(uid).delete();
+        return getUsersCollection().document(uid).delete();
     }
 }

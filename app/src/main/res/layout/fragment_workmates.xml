@@ -11,4 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <TextView
+        android:id="@+id/workmates_list_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/no_list"
+        android:gravity="center"
+        android:textStyle="bold"/>
+
 </FrameLayout>

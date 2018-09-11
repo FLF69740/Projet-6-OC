@@ -36,7 +36,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, MainFragment.OnClickedResultMarker, ListViewFragment.OnClickedResultItem {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
+        MainFragment.OnClickedResultMarker, ListViewFragment.OnClickedResultItem, WorkmatesFragment.OnClickedAvatarItem {
 
     private Toolbar mToolbar;
     @BindView(R.id.activity_main_nav_view) NavigationView mNavigationView;
@@ -198,6 +199,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         startActivity(intent);
     }
 
+    // Callback from WorkmatesFragment when a listener from an item is activated : launch FileRestaurantActivity
+    @Override
+    public void onResultAvatarTransmission(View view, String title) {
+        if (!title.equals("Empty")){
+            Intent intent = new Intent(this, FileRestaurantActivity.class);
+            RestaurantProfile restaurantProfile = mPlacesExtractor.getRestaurantProfile(title);
+            intent.putExtra(FileRestaurantActivity.EXTRA_SNIPPET_MARKER, restaurantProfile);
+            startActivity(intent);
+        }
+    }
+
     /**
      *  HTTP (RxJAVA)
      */
@@ -239,4 +251,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (this.mDisposable != null && !this.mDisposable.isDisposed()) this.mDisposable.dispose();
         if (this.mDisposable2 != null && !this.mDisposable2.isDisposed()) this.mDisposable2.dispose();
     }
+
+
 }
