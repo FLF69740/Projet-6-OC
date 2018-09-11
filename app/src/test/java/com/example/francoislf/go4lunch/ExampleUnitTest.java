@@ -104,26 +104,4 @@ public class ExampleUnitTest {
 
     }
 
-    @Test
-    public void testAnOpenHour(){
-
-        RecyclerViewItemTransformer recyclerViewItemTransformer = new RecyclerViewItemTransformer();
-        List<String> list = new ArrayList<>();
-   //     list.add("close3,")
-
-   //     String myHour = recyclerViewItemTransformer.getOpeningAnswer()
-
-    }
-
-    @Test
-    public void testMath(){
-
-        double lat1 = 47.074;
-
-        double sinLat1 = Math.sin(lat1);
-        sinLat1 = Math.toDegrees(sinLat1);
-
-     //   assert (sinLat1 > 0.73);
-        assert (sinLat1 < 0.74);
-    }
 }

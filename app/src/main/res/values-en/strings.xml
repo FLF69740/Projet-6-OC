@@ -29,4 +29,7 @@
     <string name="fermé">Closed</string>
     <string name="bientôt_fermé">Closing soon</string>
     <string name="pause">will open at </string>
+    <string name="toolbar_title_frag3">Available workmates</string>
+    <string name="pas_de_decision">hasn\'t decided yet</string>
+    <string name="decision">is eating at</string>
 </resources>

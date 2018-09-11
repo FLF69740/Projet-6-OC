@@ -5,6 +5,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 public class UserHelper {
 
@@ -21,7 +22,7 @@ public class UserHelper {
 
     public static Task<Void> createUser(String uid, String username, String urlPicture){
         User user = new User(uid,username,urlPicture);
-        return UserHelper.getUsersCollection().document(uid).set(user);
+        return getUsersCollection().document(uid).set(user);
     }
 
     /**
@@ -29,7 +30,11 @@ public class UserHelper {
      */
 
     public static Task<DocumentSnapshot> getUser(String uid){
-        return UserHelper.getUsersCollection().document(uid).get();
+        return getUsersCollection().document(uid).get();
+    }
+
+    public static Query getAllUserForRecyclerViewWorkmates(){
+        return getUsersCollection().orderBy("username");
     }
 
     /**
@@ -37,15 +42,15 @@ public class UserHelper {
      */
 
     public static Task<Void> updateRestaurantChoice(String restaurantChoice, String uid){
-        return UserHelper.getUsersCollection().document(uid).update("restaurantChoice" , restaurantChoice);
+        return getUsersCollection().document(uid).update("restaurantChoice" , restaurantChoice);
     }
 
     public static Task<Void> updateDateChoice(String dateChoice, String uid){
-        return UserHelper.getUsersCollection().document(uid).update("dateChoice", dateChoice);
+        return getUsersCollection().document(uid).update("dateChoice", dateChoice);
     }
 
     public static Task<Void> updateHourChoice(String hourChoice, String uid){
-        return UserHelper.getUsersCollection().document(uid).update("hourChoice", hourChoice);
+        return getUsersCollection().document(uid).update("hourChoice", hourChoice);
     }
 
     /**

@@ -16,6 +16,7 @@
 
     <!-- IHM String -->
     <string name="general_toolbar_title">j\'ai faim!</string>
+    <string name="toolbar_title_frag3">Collègues disponible</string>
 
     <!-- Navigation drawer item -->
     <string name="item_1">Votre déjeunez</string>
@@ -45,13 +46,14 @@
     <string name="callDisabled">NUMERO DE TELEPHONE INEXISTANT</string>
     <string name="websiteDisabled">SITE WEB INEXISTANT</string>
 
-    <!-- RecyclerView -->
+    <!-- RecyclerView restaurant-->
     <string name="ouvert">Ouvert jusqu\'à </string>
     <string name="pause">Ouvrira à </string>
     <string name="fermé">Fermé</string>
     <string name="bientôt_fermé">Bientôt fermé</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- RecyclerView workmates -->
+    <string name="pas_de_decision">n\'a pas encore décidé</string>
+    <string name="decision">mange à</string>
 
 </resources>

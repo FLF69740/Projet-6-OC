@@ -102,12 +102,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 switch (item.getItemId()){
                     case R.id.ic_onglet_map_view: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_1));
                         getFragmentManager().beginTransaction().replace(getFragmentLayout(), newInstance()).commit();
+                        configureToolbarTitle(1);
                     break;
                     case R.id.ic_onglet_list_view: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_2));
                         getFragmentManager().beginTransaction().replace(getFragmentLayout(), new ListViewFragment().newInstanceWithList(mRestaurantProfileList)).commit();
+                        configureToolbarTitle(2);
                     break;
                     case R.id.ic_onglet_workmates: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_3));
                         getFragmentManager().beginTransaction().replace(getFragmentLayout(), new WorkmatesFragment().newInstanceWorkmates()).commit();
+                        configureToolbarTitle(3);
                     break;
                 }
                 return true;
@@ -124,6 +127,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         this.mToolbar = findViewById(R.id.activity_main_toolbar);
         mToolbar.setTitle(R.string.general_toolbar_title);
         setSupportActionBar(mToolbar);
+    }
+
+    private void configureToolbarTitle(int index){
+        if (index == 3) mToolbar.setTitle(getString(R.string.toolbar_title_frag3));
+        else mToolbar.setTitle(getString(R.string.general_toolbar_title));
     }
 
     @Override
