@@ -61,7 +61,7 @@ public class WorkmatesFragment extends Fragment implements WorkmatesAdapter.List
     }
 
     private void configureRecyclerView(){
-        this.mWorkmatesAdapter = new WorkmatesAdapter(generateOptionsForAdapter(UserHelper.getAllUserForRecyclerViewWorkmates()), this);
+        this.mWorkmatesAdapter = new WorkmatesAdapter(generateOptionsForAdapter(UserHelper.getAllUsers()), this);
         mWorkmatesAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {

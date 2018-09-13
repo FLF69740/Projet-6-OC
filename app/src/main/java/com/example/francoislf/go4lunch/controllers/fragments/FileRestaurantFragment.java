@@ -55,8 +55,6 @@ public class FileRestaurantFragment extends Fragment {
         this.mRestaurantLocalisation = mView.findViewById(R.id.restaurant_localisation);
         this.mRestaurantImage = mView.findViewById(R.id.restaurant_photo);
         ButterKnife.bind(this, mView);
-        isRestaurantChosen = false;
-        setCircleLogoRestaurantChoice(isRestaurantChosen);
         return mView;
     }
 
@@ -74,22 +72,29 @@ public class FileRestaurantFragment extends Fragment {
         }
     }
 
+    // get the name of restaurant choice from activity to fragment for button choice Restaurant setting
+    public void setRestaurantChoiceForButton(String name){
+        if (mRestaurantName.getText().equals(name)) isRestaurantChosen = true;
+        else isRestaurantChosen = false;
+        setCircleLogoRestaurantChoice(isRestaurantChosen, false);
+    }
+
     @OnClick(R.id.button_restaurant_choice)
     public void changeRestaurantState(){
         isRestaurantChosen = !isRestaurantChosen;
-        setCircleLogoRestaurantChoice(isRestaurantChosen);
+        setCircleLogoRestaurantChoice(isRestaurantChosen, true);
     }
 
-    // define the logo of the circle customer restaurant choice
-    private void setCircleLogoRestaurantChoice(boolean isChoosen){
+    // define the logo of the circle customer restaurant choice (green or red flag)
+    private void setCircleLogoRestaurantChoice(boolean isChoosen, boolean isAction){
         mImageViewRestaurantChoiceKO.setVisibility(View.INVISIBLE);
         mImageViewRestaurantChoiceOK.setVisibility(View.INVISIBLE);
         if (isChoosen){
             mImageViewRestaurantChoiceOK.setVisibility(View.VISIBLE);
-            mCallback.onResultChoiceTransmission(mView, mRestaurantProfile.getName());
+            if (isAction) mCallback.onResultChoiceTransmission(mView, mRestaurantProfile.getName());
         } else {
             mImageViewRestaurantChoiceKO.setVisibility(View.VISIBLE);
-            mCallback.onResultChoiceTransmission(mView, BLANK_ANSWER);
+            if (isAction) mCallback.onResultChoiceTransmission(mView, BLANK_ANSWER);
         }
     }
 
@@ -121,6 +126,8 @@ public class FileRestaurantFragment extends Fragment {
         super.onAttach(context);
         this.createCallbackToParentActivity();
     }
+
+
 
 
 }

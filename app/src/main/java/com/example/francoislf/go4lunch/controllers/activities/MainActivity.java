@@ -17,17 +17,29 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.francoislf.go4lunch.R;
+import com.example.francoislf.go4lunch.api.UserHelper;
 import com.example.francoislf.go4lunch.controllers.fragments.ListViewFragment;
 import com.example.francoislf.go4lunch.controllers.fragments.MainFragment;
 import com.example.francoislf.go4lunch.controllers.fragments.WorkmatesFragment;
+import com.example.francoislf.go4lunch.models.ChoiceRestaurantCountdown;
 import com.example.francoislf.go4lunch.models.HttpRequest.GoogleStreams;
 import com.example.francoislf.go4lunch.models.HttpRequest.Places;
 import com.example.francoislf.go4lunch.models.PlacesExtractor;
 import com.example.francoislf.go4lunch.models.RestaurantProfile;
+import com.example.francoislf.go4lunch.models.User;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
@@ -44,6 +56,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @BindView(R.id.activity_main_drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.bottom_navigation) BottomNavigationView mBottomNavigationView;
     private ArrayList<RestaurantProfile> mRestaurantProfileList;
+    private static final String BLANK_ANSWER = "Empty";
     PlacesExtractor mPlacesExtractor;
     private Disposable mDisposable, mDisposable2;
     private static final String PARAMETER_PLACE_API_RADIUS = "1000";

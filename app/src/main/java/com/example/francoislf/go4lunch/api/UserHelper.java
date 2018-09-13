@@ -33,7 +33,7 @@ public class UserHelper {
         return getUsersCollection().document(uid).get();
     }
 
-    public static Query getAllUserForRecyclerViewWorkmates(){
+    public static Query getAllUsers(){
         return getUsersCollection().orderBy("username");
     }
 
