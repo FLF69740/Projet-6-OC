@@ -79,6 +79,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="(0)"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/item_recyclerView_star_1"
         app:layout_constraintEnd_toStartOf="@+id/guideline_middle"
         app:layout_constraintTop_toBottomOf="@+id/item_recyclerView_distance" />
@@ -115,6 +116,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/item_recyclerView_participant_number"
         app:layout_constraintEnd_toStartOf="@+id/item_recyclerView_participant_number"
         app:layout_constraintTop_toBottomOf="@+id/item_recyclerView_distance"

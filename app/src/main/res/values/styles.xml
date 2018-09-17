@@ -39,4 +39,10 @@
         <item name="android:textColor">@color/colorPrimaryDark</item>
     </style>
 
+    <!-- STYLE FOR CLOSING hasn't decided yet RECYCLERVIEW -->
+    <style name="italic_text">
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@android:color/darker_gray</item>
+    </style>
+
 </resources>

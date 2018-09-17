@@ -17,9 +17,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.francoislf.go4lunch.R;
+import com.example.francoislf.go4lunch.api.LikedHelper;
 import com.example.francoislf.go4lunch.api.UserHelper;
 import com.example.francoislf.go4lunch.models.RestaurantProfile;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import org.w3c.dom.Text;
 
@@ -39,13 +42,14 @@ public class FileRestaurantFragment extends Fragment {
     String mPhoneNumber, mWebSite;
     View mView;
     RestaurantProfile mRestaurantProfile;
+    int mHour, mDate, mParticipant;
 
     public FileRestaurantFragment(){}
 
     private OnClicChoiceRestaurant mCallback;
 
     public interface OnClicChoiceRestaurant{
-        void onResultChoiceTransmission(View view, String name);
+        void onResultChoiceTransmission(View view, String name, String placeId, int hour, int date, int participant);
     }
 
     @Override
@@ -70,6 +74,21 @@ public class FileRestaurantFragment extends Fragment {
                     .apply(RequestOptions.centerCropTransform())
                     .into(mRestaurantImage);
         }
+        LikedHelper.getLiked(restaurantProfile.getPlaceId()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    mHour = documentSnapshot.getLong("hourChoice").intValue();
+                    mDate = documentSnapshot.getLong("dateChoice").intValue();
+                    mParticipant = documentSnapshot.getLong("participantsOfTheDay").intValue();
+                }
+            }
+        });
+    }
+
+    // Update the number of participant after the activity upload for this one
+    public void setNumberOfParticipant(int number){
+        mParticipant = number;
     }
 
     // get the name of restaurant choice from activity to fragment for button choice Restaurant setting
@@ -91,10 +110,10 @@ public class FileRestaurantFragment extends Fragment {
         mImageViewRestaurantChoiceOK.setVisibility(View.INVISIBLE);
         if (isChoosen){
             mImageViewRestaurantChoiceOK.setVisibility(View.VISIBLE);
-            if (isAction) mCallback.onResultChoiceTransmission(mView, mRestaurantProfile.getName());
+            if (isAction) mCallback.onResultChoiceTransmission(mView, mRestaurantProfile.getName(), mRestaurantProfile.getPlaceId(), mHour, mDate, mParticipant);
         } else {
             mImageViewRestaurantChoiceKO.setVisibility(View.VISIBLE);
-            if (isAction) mCallback.onResultChoiceTransmission(mView, BLANK_ANSWER);
+            if (isAction) mCallback.onResultChoiceTransmission(mView, BLANK_ANSWER, mRestaurantProfile.getPlaceId(), mHour, mDate, mParticipant);
         }
     }
 

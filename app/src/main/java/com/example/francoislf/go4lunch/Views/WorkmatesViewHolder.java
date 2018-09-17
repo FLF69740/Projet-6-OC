@@ -1,5 +1,6 @@
 package com.example.francoislf.go4lunch.Views;
 
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,6 +10,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.francoislf.go4lunch.R;
 import com.example.francoislf.go4lunch.models.ChoiceRestaurantCountdown;
 import com.example.francoislf.go4lunch.models.User;
+
+import java.time.format.TextStyle;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -29,7 +33,12 @@ public class WorkmatesViewHolder extends RecyclerView.ViewHolder {
         String avatarSituationBuild = user.getUsername();
 
         if (user.getRestaurantChoice().equals("Empty") ||
-                new ChoiceRestaurantCountdown(user.getHourChoice(),user.getDateChoice()).getCountdownResult()) avatarSituationBuild += " " + mItemView.getContext().getString(R.string.pas_de_decision);
+                new ChoiceRestaurantCountdown(user.getHourChoice(),user.getDateChoice()).getCountdownResult()) {
+            avatarSituationBuild += " " + mItemView.getContext().getString(R.string.pas_de_decision);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                mAvatarSituation.setTextAppearance(R.style.italic_text);
+            }
+        }
         else avatarSituationBuild += " " + mItemView.getContext().getString(R.string.decision) + " " + user.getRestaurantChoice();
 
         mAvatarSituation.setText(avatarSituationBuild);

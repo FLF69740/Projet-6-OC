@@ -3,6 +3,8 @@ package com.example.francoislf.go4lunch.controllers.activities;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.francoislf.go4lunch.api.LikedHelper;
+
 public class StartActivity extends BaseActivity {
 
     @Override
