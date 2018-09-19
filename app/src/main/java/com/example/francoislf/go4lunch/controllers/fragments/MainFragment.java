@@ -17,12 +17,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-
 import com.example.francoislf.go4lunch.R;
+import com.example.francoislf.go4lunch.api.UserHelper;
 import com.example.francoislf.go4lunch.business_service.GPSTracker;
-import com.example.francoislf.go4lunch.models.HttpRequest.GoogleStreams;
-import com.example.francoislf.go4lunch.models.HttpRequest.NearbySearch;
+import com.example.francoislf.go4lunch.models.ChoiceRestaurantCountdown;
 import com.example.francoislf.go4lunch.models.RestaurantProfile;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,14 +31,14 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
-import java.util.List;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.DisposableObserver;
 
 
-public class MainFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class MainFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, EventListener<QuerySnapshot> {
 
     private MapView mMapView;
     private View mView;
@@ -48,12 +46,12 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
     private GPSTracker mGPSTracker;
     private Location mLocation;
     private double mLatitude, mLongitude;
-
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private Boolean mLocationPermissionsGranted = false;
     private Marker[] mListMarker;
+    private ArrayList<RestaurantProfile> mRestaurantProfileList;
 
     private OnClickedResultMarker mCallback;
 
@@ -64,11 +62,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
 
     //Parent activity will automatically subscribe to callback
     private void createCallbackToParentActivity(){
-        try {
-            mCallback = (OnClickedResultMarker) getActivity();
-        } catch (ClassCastException e) {
-            throw new ClassCastException(e.toString()+ " must implement OnClickedResultMarker");
-        }
+        try {mCallback = (OnClickedResultMarker) getActivity();}
+        catch (ClassCastException e) {throw new ClassCastException(e.toString()+ " must implement OnClickedResultMarker");}
     }
 
     @Override
@@ -91,9 +86,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
         super.onViewCreated(view, savedInstanceState);
         if (mLocationPermissionsGranted) {
             mGPSTracker = new GPSTracker();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                mLocation = mGPSTracker.getLocation(this.getContext());
-            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) mLocation = mGPSTracker.getLocation(this.getContext());
             mLatitude = mLocation.getLatitude();
             mLongitude = mLocation.getLongitude();
 
@@ -112,12 +105,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
         if (ContextCompat.checkSelfPermission(this.getActivity().getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(this.getActivity().getApplicationContext(), COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 mLocationPermissionsGranted = true;
-            } else {
-                ActivityCompat.requestPermissions(this.getActivity(), permissions, LOCATION_PERMISSION_REQUEST_CODE);
-            }
-        } else {
-            ActivityCompat.requestPermissions(this.getActivity(), permissions, LOCATION_PERMISSION_REQUEST_CODE);
-        }
+            } else {ActivityCompat.requestPermissions(this.getActivity(), permissions, LOCATION_PERMISSION_REQUEST_CODE);}
+        } else {ActivityCompat.requestPermissions(this.getActivity(), permissions, LOCATION_PERMISSION_REQUEST_CODE);}
     }
 
     @Override
@@ -129,49 +118,44 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
                     for (int i = 0; i < grantResults.length; i++) {
                         if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                             mLocationPermissionsGranted = false;
-                            return;
-                        }
+                            return;}
                     }
                     mLocationPermissionsGranted = true;
-                }
-            }
-        }
+                }}}
     }
 
     @SuppressLint("NewApi")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         MapsInitializer.initialize(getContext());
-
         mMap = googleMap;
-
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
+            return;}
         mMap.setMyLocationEnabled(true);
-
         View locationButton = ((View) mMapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
         RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
         rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
         rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
         rlp.setMargins(0, 0, 10, 30);
-
         mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(mLatitude, mLongitude)));
         mCallback.executePlacesWithExtractor(this.mView,String.valueOf(mLatitude)+","+String.valueOf(mLongitude));
     }
 
-    // Create marker from Observable
+    // Create markers from Observable
     public void markersCreation(ArrayList<RestaurantProfile> results){
+        mRestaurantProfileList = results;
         mListMarker = new Marker[results.size()];
+        mMap.clear();
         for (int i = 0 ; i < results.size() ; i++){
             mListMarker[i] = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(results.get(i).getLat(), results.get(i).getLng()))
                     .title(results.get(i).getName())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.punaise_orange)));
+            if (results.get(i).getNumberOfParticipant() == 0) mListMarker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.punaise_orange));
+            else mListMarker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.punaise_verte));
             mListMarker[i].setTag(i);
         }
         mMap.setOnMarkerClickListener(this);
@@ -186,5 +170,25 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
         return false;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        UserHelper.getUsersCollection().addSnapshotListener(this); // Add a listener when database FireStore change
+    }
 
+    @Override
+    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+        if (queryDocumentSnapshots != null) {
+            for (int i = 0; i < mRestaurantProfileList.size(); i++) mRestaurantProfileList.get(i).setNumberOfParticipant(0);
+            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                if (!document.getString("dateChoice").equals("Empty")) {
+                    if (!new ChoiceRestaurantCountdown(document.getString("hourChoice"), document.getString("dateChoice")).getCountdownResult()) {
+                        for (int i = 0; i < mRestaurantProfileList.size(); i++) {
+                            if (document.getString("restaurantChoice").equals(mRestaurantProfileList.get(i).getName())) {
+                                int newNumber = mRestaurantProfileList.get(i).getNumberOfParticipant() + 1;
+                                mRestaurantProfileList.get(i).setNumberOfParticipant(newNumber);
+                            }}}}}
+            this.markersCreation(mRestaurantProfileList);
+        }
+    }
 }

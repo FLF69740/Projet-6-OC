@@ -42,14 +42,14 @@ public class FileRestaurantFragment extends Fragment {
     String mPhoneNumber, mWebSite;
     View mView;
     RestaurantProfile mRestaurantProfile;
-    int mHour, mDate, mParticipant;
+    int mHour, mDate;
 
     public FileRestaurantFragment(){}
 
     private OnClicChoiceRestaurant mCallback;
 
     public interface OnClicChoiceRestaurant{
-        void onResultChoiceTransmission(View view, String name, String placeId, int hour, int date, int participant);
+        void onResultChoiceTransmission(View view, String name, String placeId, int hour, int date);
     }
 
     @Override
@@ -74,21 +74,6 @@ public class FileRestaurantFragment extends Fragment {
                     .apply(RequestOptions.centerCropTransform())
                     .into(mRestaurantImage);
         }
-        LikedHelper.getLiked(restaurantProfile.getPlaceId()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    mHour = documentSnapshot.getLong("hourChoice").intValue();
-                    mDate = documentSnapshot.getLong("dateChoice").intValue();
-                    mParticipant = documentSnapshot.getLong("participantsOfTheDay").intValue();
-                }
-            }
-        });
-    }
-
-    // Update the number of participant after the activity upload for this one
-    public void setNumberOfParticipant(int number){
-        mParticipant = number;
     }
 
     // get the name of restaurant choice from activity to fragment for button choice Restaurant setting
@@ -110,10 +95,10 @@ public class FileRestaurantFragment extends Fragment {
         mImageViewRestaurantChoiceOK.setVisibility(View.INVISIBLE);
         if (isChoosen){
             mImageViewRestaurantChoiceOK.setVisibility(View.VISIBLE);
-            if (isAction) mCallback.onResultChoiceTransmission(mView, mRestaurantProfile.getName(), mRestaurantProfile.getPlaceId(), mHour, mDate, mParticipant);
+            if (isAction) mCallback.onResultChoiceTransmission(mView, mRestaurantProfile.getName(), mRestaurantProfile.getPlaceId(), mHour, mDate);
         } else {
             mImageViewRestaurantChoiceKO.setVisibility(View.VISIBLE);
-            if (isAction) mCallback.onResultChoiceTransmission(mView, BLANK_ANSWER, mRestaurantProfile.getPlaceId(), mHour, mDate, mParticipant);
+            if (isAction) mCallback.onResultChoiceTransmission(mView, BLANK_ANSWER, mRestaurantProfile.getPlaceId(), mHour, mDate);
         }
     }
 

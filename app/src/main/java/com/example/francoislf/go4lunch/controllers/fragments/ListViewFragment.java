@@ -15,11 +15,20 @@ import android.widget.Toast;
 import com.example.francoislf.go4lunch.R;
 import com.example.francoislf.go4lunch.Utils.ItemClickSupport;
 import com.example.francoislf.go4lunch.Views.RestaurantAdapter;
+import com.example.francoislf.go4lunch.api.UserHelper;
+import com.example.francoislf.go4lunch.models.ChoiceRestaurantCountdown;
 import com.example.francoislf.go4lunch.models.RestaurantProfile;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,7 +36,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ListViewFragment extends Fragment {
+public class ListViewFragment extends Fragment implements EventListener<QuerySnapshot> {
 
     @BindView(R.id.fragment_list_view_recycler_view)RecyclerView mRecyclerView;
 
@@ -105,5 +114,28 @@ public class ListViewFragment extends Fragment {
         super.onAttach(context);
         this.createCallbackToParentActivity();
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        UserHelper.getUsersCollection().addSnapshotListener(this); // Add a listener when database FireStore change
+    }
+
+    @Override
+    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+        if (queryDocumentSnapshots != null) {
+            for (int i = 0; i < mRestaurantProfileList.size(); i++) mRestaurantProfileList.get(i).setNumberOfParticipant(0);
+            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                if (!document.getString("dateChoice").equals("Empty")) {
+                    if (!new ChoiceRestaurantCountdown(document.getString("hourChoice"), document.getString("dateChoice")).getCountdownResult()) {
+                        for (int i = 0; i < mRestaurantProfileList.size(); i++) {
+                            if (document.getString("restaurantChoice").equals(mRestaurantProfileList.get(i).getName())) {
+                                int newNumber = mRestaurantProfileList.get(i).getNumberOfParticipant() + 1;
+                                mRestaurantProfileList.get(i).setNumberOfParticipant(newNumber);
+                            }}}}}
+            this.configureRecyclerView();
+        }
+    }
+
 
 }

@@ -9,6 +9,8 @@ import com.example.francoislf.go4lunch.api.UserHelper;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Arrays;
 import java.util.List;
@@ -77,11 +79,17 @@ public class ConnectionActivity extends BaseActivity {
 
     private void createUserInFirestore(){
         if (this.getCurrentUser() != null){
-            String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
-            String username = this.getCurrentUser().getDisplayName();
-            String uid = this.getCurrentUser().getUid();
+            final String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
+            final String username = this.getCurrentUser().getDisplayName();
+            final String uid = this.getCurrentUser().getUid();
 
-            UserHelper.createUser(uid, username, urlPicture).addOnFailureListener(this.onFailureListener());
+            UserHelper.getUser(getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (!documentSnapshot.exists()) UserHelper.createUser(uid, username, urlPicture);
+                }
+            });
+
         }
     }
 

@@ -20,13 +20,19 @@ import android.view.View;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.francoislf.go4lunch.R;
+import com.example.francoislf.go4lunch.api.UserHelper;
 import com.example.francoislf.go4lunch.controllers.fragments.ListViewFragment;
 import com.example.francoislf.go4lunch.controllers.fragments.MainFragment;
 import com.example.francoislf.go4lunch.controllers.fragments.WorkmatesFragment;
+import com.example.francoislf.go4lunch.models.ChoiceRestaurantCountdown;
 import com.example.francoislf.go4lunch.models.HttpRequest.GoogleStreams;
 import com.example.francoislf.go4lunch.models.HttpRequest.Places;
 import com.example.francoislf.go4lunch.models.PlacesExtractor;
 import com.example.francoislf.go4lunch.models.RestaurantProfile;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
@@ -43,7 +49,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @BindView(R.id.activity_main_drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.bottom_navigation) BottomNavigationView mBottomNavigationView;
     private ArrayList<RestaurantProfile> mRestaurantProfileList;
-    private static final String BLANK_ANSWER = "Empty";
     PlacesExtractor mPlacesExtractor;
     private Disposable mDisposable, mDisposable2;
     private static final String PARAMETER_PLACE_API_RADIUS = "1000";
@@ -53,7 +58,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected int getContentView() {return R.layout.activity_main;}
-
     @Override
     protected Fragment newInstance() {mMainFragment = new MainFragment(); return mMainFragment;}
     @Override
@@ -78,12 +82,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     // Update Nave_header informations about user informations
     protected void updateProfileInformations() {
         if (this.getCurrentUser() != null){
-            if (this.getCurrentUser().getPhotoUrl() != null){
-                Glide.with(this)
-                        .load(this.getCurrentUser().getPhotoUrl())
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(mImageViewProfile);
-            }
+            if (this.getCurrentUser().getPhotoUrl() != null)
+                Glide.with(this).load(this.getCurrentUser().getPhotoUrl()).apply(RequestOptions.circleCropTransform()).into(mImageViewProfile);
+            else Glide.with(this).load(R.drawable.avatarobxlarge).apply(RequestOptions.circleCropTransform()).into(mImageViewProfile);
             String email = TextUtils.isEmpty(this.getCurrentUser().getEmail()) ? getString(R.string.info_no_email_found) : this.getCurrentUser().getEmail();
             String username = TextUtils.isEmpty(this.getCurrentUser().getDisplayName()) ? getString(R.string.info_no_username_found) : this.getCurrentUser().getDisplayName();
             this.mTextViewEmail.setText(email);
@@ -175,9 +176,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.settings : break;
             case R.id.logout : signOutFormFirebase(); break;
         }
-
         this.mDrawerLayout.closeDrawer(GravityCompat.START);
-
         return true;
     }
 
@@ -221,7 +220,24 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                                    public void onNext(List<Places> places) {
                                        mPlacesExtractor.setPlacesList(places);
                                        mRestaurantProfileList = mPlacesExtractor.getRestaurantProfileList();
-                                       mMainFragment.markersCreation(mRestaurantProfileList);
+                                       UserHelper.getAllUsers().get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                           @Override
+                                           public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                               if (task.isSuccessful()) {
+                                                   for (QueryDocumentSnapshot document : task.getResult()) {
+                                                       if (!document.getString("dateChoice").equals("Empty"))
+                                                           if (!new ChoiceRestaurantCountdown(document.getString("hourChoice"),
+                                                                       document.getString("dateChoice")).getCountdownResult()) {
+                                                           for (int i = 0; i < mRestaurantProfileList.size(); i++) {
+                                                               if (document.getString("restaurantChoice").equals(mRestaurantProfileList.get(i).getName())) {
+                                                                   int newNumber = mRestaurantProfileList.get(i).getNumberOfParticipant() + 1;
+                                                                   mRestaurantProfileList.get(i).setNumberOfParticipant(newNumber);
+                                                                   Log.i("TADAA", mRestaurantProfileList.get(i).getName() + " : " +
+                                                                   mRestaurantProfileList.get(i).getNumberOfParticipant());
+                                                               }}}}}
+                                               mMainFragment.markersCreation(mRestaurantProfileList);
+                                           }
+                                       });
                                    }
                                    @Override
                                    public void onError(Throwable e) {}
@@ -241,7 +257,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     @Override
                     public void onError(Throwable e) {}
                     @Override
-                    public void onComplete() {Log.i("TADAA", "Photo : " + mRestaurantProfileList.get(0).getPhoto());}
+                    public void onComplete() {}
                 });
     }
 

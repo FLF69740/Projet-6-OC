@@ -11,14 +11,22 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.francoislf.go4lunch.R;
 import com.example.francoislf.go4lunch.api.LikedHelper;
+import com.example.francoislf.go4lunch.api.UserHelper;
 import com.example.francoislf.go4lunch.models.ChoiceRestaurantCountdown;
 import com.example.francoislf.go4lunch.models.RecyclerViewItemTransformer;
 import com.example.francoislf.go4lunch.models.RestaurantProfile;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -42,7 +50,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
         mRecyclerViewItemTransformer = new RecyclerViewItemTransformer(this.mItemView.getContext());
     }
 
-    public void updateWithRestaurantProfile(RestaurantProfile restaurantProfile){
+    public void updateWithRestaurantProfile(final RestaurantProfile restaurantProfile){
         this.mTextViewName.setText(mRecyclerViewItemTransformer.getGoodSizeName(restaurantProfile.getName()));
         this.mTextViewAdress.setText(restaurantProfile.getAdress());
 
@@ -63,14 +71,17 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
                     .into(mImageViewPhoto);
         }
 
-        LikedHelper.getLiked(restaurantProfile.getPlaceId()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        UserHelper.getAllUsers().get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                String participantString = "(" + String.valueOf(documentSnapshot.getLong("participantsOfTheDay") + ")");
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                int numberOfParticipant = 0;
+                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                    if (restaurantProfile.getName().equals(document.getString("restaurantChoice"))) {
+                        if (!new ChoiceRestaurantCountdown(document.getString("hourChoice"), document.getString("dateChoice")).getCountdownResult())
+                            numberOfParticipant++;
+                    }
 
-                if (documentSnapshot.getLong("participantsOfTheDay") != null &&
-                        !new ChoiceRestaurantCountdown(String.valueOf(documentSnapshot.getLong("hourChoice")),String.valueOf(documentSnapshot.getLong("dateChoice")))
-                        .getCountdownResult()){
+                    String participantString = "(" + numberOfParticipant + ")";
                     if (!participantString.equals("(0)")) {
                         mTextViewParticipantNumber.setText(participantString);
                         mTextViewParticipantNumber.setVisibility(View.VISIBLE);
@@ -79,6 +90,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
                 }
             }
         });
+
     }
 
 }

@@ -17,6 +17,7 @@ public class RestaurantProfile implements Parcelable {
     private double lat;
     private double lng;
     private String mPhoto;
+    private int mNumberOfParticipant;
 
 
     public RestaurantProfile(){mWeekHour = new ArrayList<>();}
@@ -32,6 +33,7 @@ public class RestaurantProfile implements Parcelable {
         lat = in.readDouble();
         lng = in.readDouble();
         mPhoto = in.readString();
+        mNumberOfParticipant = 0;
     }
 
     public static final Creator<RestaurantProfile> CREATOR = new Creator<RestaurantProfile>() {
@@ -118,6 +120,14 @@ public class RestaurantProfile implements Parcelable {
         mPhoto = photo;
     }
 
+    public int getNumberOfParticipant() {
+        return mNumberOfParticipant;
+    }
+
+    public void setNumberOfParticipant(int numberOfParticipant) {
+        mNumberOfParticipant = numberOfParticipant;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -134,6 +144,7 @@ public class RestaurantProfile implements Parcelable {
         dest.writeDouble(lat);
         dest.writeDouble(lng);
         dest.writeString(mPhoto);
+        dest.writeInt(mNumberOfParticipant);
     }
 
     public static Parcelable.Creator<RestaurantProfile> getCreator(){
