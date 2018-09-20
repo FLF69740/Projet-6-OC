@@ -4,18 +4,15 @@ public class RestaurantLiked {
 
     private String mRestaurantName;
     private String mPlaceId;
-    private int mNumberOfLike;
-    private int mParticipantsOfTheDay;
-    private int mDateChoice;
-    private int mHourChoice;
+    private int mLike;
+    private String mParticipants;
 
-    public RestaurantLiked(String restaurantName, String placeId){
+
+    public RestaurantLiked(String restaurantName, String placeId, String user){
         this.mRestaurantName = restaurantName;
         this.mPlaceId = placeId;
-        this.mParticipantsOfTheDay = 0;
-        this.mNumberOfLike = 0;
-        this.mDateChoice = 0;
-        this.mHourChoice = 0;
+        this.mLike = 1;
+        this.mParticipants = user + ";";
     }
 
     public RestaurantLiked(){}
@@ -37,34 +34,18 @@ public class RestaurantLiked {
     }
 
     public int getNumberOfLike() {
-        return mNumberOfLike;
+        return mLike;
     }
 
-    public void setNumberOfLike(int numberOfLike) {
-        mNumberOfLike = numberOfLike;
+    public void setNumberOfLike(int like) {
+        mLike = like;
     }
 
-    public int getParticipantsOfTheDay() {
-        return mParticipantsOfTheDay;
+    public String getParticipants() {
+        return mParticipants;
     }
 
-    public void setParticipantsOfTheDay(int participantsOfTheDay) {
-        mParticipantsOfTheDay = participantsOfTheDay;
-    }
-
-    public int getDateChoice() {
-        return mDateChoice;
-    }
-
-    public void setDateChoice(int dateChoice) {
-        mDateChoice = dateChoice;
-    }
-
-    public int getHourChoice() {
-        return mHourChoice;
-    }
-
-    public void setHourChoice(int hourChoice) {
-        mHourChoice = hourChoice;
+    public void setParticipants(String participants) {
+        mParticipants = participants;
     }
 }

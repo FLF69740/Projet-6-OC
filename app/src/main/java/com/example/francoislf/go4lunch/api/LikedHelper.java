@@ -5,6 +5,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 public class LikedHelper {
 
@@ -19,8 +20,8 @@ public class LikedHelper {
      *  CREATE
      */
 
-    public static Task<Void> createLiked(String name, String placeId){
-        RestaurantLiked restaurantLiked = new RestaurantLiked(name, placeId);
+    public static Task<Void> createLiked(String name, String placeId, String user){
+        RestaurantLiked restaurantLiked = new RestaurantLiked(name, placeId, user);
         return getLikedCollection().document(placeId).set(restaurantLiked);
     }
 
@@ -32,22 +33,21 @@ public class LikedHelper {
         return getLikedCollection().document(placeId).get();
     }
 
+    public static Query getAllLiked(){
+        return getLikedCollection().orderBy("restaurantName");
+    }
+
     /**
      *  UPDATE
      */
 
-    public static Task<Void> updateParticipant(String placeId, int number){
-        return getLikedCollection().document(placeId).update("participantsOfTheDay", number);
+    public static Task<Void> updateLiked(String placeId, int like){
+        return getLikedCollection().document(placeId).update("numberOfLike", like);
     }
 
-    public static Task<Void> updateHourChoice(String placeId, int hour){
-        return getLikedCollection().document(placeId).update("hourChoice", hour);
+    public static Task<Void> updateParticipants(String placeId, String participants){
+        return getLikedCollection().document(placeId).update("participants", participants);
     }
-
-    public static Task<Void> updateDateChoice(String placeId, int date){
-        return getLikedCollection().document(placeId).update("dateChoice", date);
-    }
-
 
     /*
      *  DELETE

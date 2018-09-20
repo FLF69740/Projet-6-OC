@@ -1,38 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline_middle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.5"/>
+        app:layout_constraintGuide_percent="0.5" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline_upper_divider"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.36"/>
+        app:layout_constraintGuide_percent="0.36" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline_resturant_information_divider"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.43"/>
+        app:layout_constraintGuide_percent="0.43" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline_down_divider"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.64"/>
+        app:layout_constraintGuide_percent="0.64" />
 
     <Button
         android:id="@+id/button_restaurant_choice"
@@ -62,8 +61,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
-        android:textSize="18sp"
         android:textColor="@android:color/white"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline_resturant_information_divider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline_upper_divider" />
@@ -72,12 +71,12 @@
         android:id="@+id/restaurant_photo"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/photo_background_blurring_nav_header"
         app:layout_constraintBottom_toTopOf="@+id/guideline_upper_divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/photo_background_blurring_nav_header"
-        android:scaleType="centerCrop"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/restaurant_localisation"
@@ -94,22 +93,24 @@
         android:id="@+id/CALL"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="?android:selectableItemBackground"
+        android:clickable="true"
         android:drawableTop="@drawable/baseline_call_black_24"
         android:gravity="center_vertical|center"
         android:paddingTop="10dp"
         android:text="@string/call"
         android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/guideline_down_divider"
-        app:layout_constraintEnd_toStartOf="@+id/LIKE"
+        app:layout_constraintEnd_toStartOf="@+id/Like"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline_middle"
-        android:clickable="true"
-        android:background="?android:selectableItemBackground"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline_middle" />
 
     <TextView
-        android:id="@+id/LIKE"
+        android:id="@+id/Like"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="?android:selectableItemBackground"
+        android:clickable="true"
         android:drawableTop="@drawable/baseline_star_black_24"
         android:gravity="center"
         android:paddingTop="10dp"
@@ -118,14 +119,14 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline_down_divider"
         app:layout_constraintEnd_toStartOf="@+id/WEBSITE"
         app:layout_constraintStart_toEndOf="@+id/CALL"
-        app:layout_constraintTop_toTopOf="@+id/guideline_middle"
-        android:clickable="true"
-        android:background="?android:selectableItemBackground"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline_middle" />
 
     <TextView
         android:id="@+id/WEBSITE"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="?android:selectableItemBackground"
+        android:clickable="true"
         android:drawableTop="@drawable/baseline_vpn_lock_black_24"
         android:gravity="center"
         android:paddingTop="10dp"
@@ -133,10 +134,8 @@
         android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/guideline_down_divider"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/LIKE"
-        app:layout_constraintTop_toTopOf="@+id/guideline_middle"
-        android:clickable="true"
-        android:background="?android:selectableItemBackground"/>
+        app:layout_constraintStart_toEndOf="@+id/Like"
+        app:layout_constraintTop_toTopOf="@+id/guideline_middle" />
 
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/circularImageView"
@@ -177,6 +176,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/restaurant_name"
         app:layout_constraintStart_toEndOf="@+id/restaurant_name"
         app:srcCompat="@drawable/baseline_star_yellow_24" />
@@ -185,6 +185,7 @@
         android:id="@+id/yellow_star_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/yellow_star_1"
         app:layout_constraintStart_toEndOf="@+id/yellow_star_1"
         app:srcCompat="@drawable/baseline_star_yellow_24" />
@@ -193,6 +194,7 @@
         android:id="@+id/yellow_star_3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/yellow_star_2"
         app:layout_constraintStart_toEndOf="@+id/yellow_star_2"
         app:srcCompat="@drawable/baseline_star_yellow_24" />

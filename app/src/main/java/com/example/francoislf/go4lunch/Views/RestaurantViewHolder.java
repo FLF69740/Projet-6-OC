@@ -39,9 +39,11 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.item_recyclerView_distance)TextView mTextViewDistance;
     @BindView(R.id.item_recyclerView_participant_number)TextView mTextViewParticipantNumber;
     @BindView(R.id.participant_icon)ImageView mImageViewParticipantIcon;
+    @BindView(R.id.item_recyclerView_star_1)ImageView mYellowStarOne;
+    @BindView(R.id.item_recyclerView_star_2)ImageView mYellowStarTwo;
+    @BindView(R.id.item_recyclerView_star_3)ImageView mYellowStarThree;
     View mItemView;
     RecyclerViewItemTransformer mRecyclerViewItemTransformer;
-    Long mParticipantNumber;
 
     public RestaurantViewHolder(View itemView) {
         super(itemView);
@@ -88,6 +90,25 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
                         mImageViewParticipantIcon.setVisibility(View.VISIBLE);
                     }
                 }
+            }
+        });
+
+        LikedHelper.getAllLiked().get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                int numberOfLike = 0;
+                for (QueryDocumentSnapshot document : queryDocumentSnapshots){
+                    if (restaurantProfile.getPlaceId().equals(document.getString("placeId"))){
+                        numberOfLike = document.getLong("numberOfLike").intValue();
+                    }
+                }
+
+                if (numberOfLike >= 1) mYellowStarOne.setVisibility(View.VISIBLE);
+                else mYellowStarOne.setVisibility(View.INVISIBLE);
+                if (numberOfLike >= 5) mYellowStarTwo.setVisibility(View.VISIBLE);
+                else mYellowStarTwo.setVisibility(View.INVISIBLE);
+                if (numberOfLike >= 10) mYellowStarThree.setVisibility(View.VISIBLE);
+                else mYellowStarThree.setVisibility(View.INVISIBLE);
             }
         });
 

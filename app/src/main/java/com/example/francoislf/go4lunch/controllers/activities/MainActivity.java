@@ -232,8 +232,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                                                                if (document.getString("restaurantChoice").equals(mRestaurantProfileList.get(i).getName())) {
                                                                    int newNumber = mRestaurantProfileList.get(i).getNumberOfParticipant() + 1;
                                                                    mRestaurantProfileList.get(i).setNumberOfParticipant(newNumber);
-                                                                   Log.i("TADAA", mRestaurantProfileList.get(i).getName() + " : " +
-                                                                   mRestaurantProfileList.get(i).getNumberOfParticipant());
                                                                }}}}}
                                                mMainFragment.markersCreation(mRestaurantProfileList);
                                            }

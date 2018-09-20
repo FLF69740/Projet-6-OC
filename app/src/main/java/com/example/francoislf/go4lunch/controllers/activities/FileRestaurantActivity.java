@@ -1,7 +1,8 @@
 package com.example.francoislf.go4lunch.controllers.activities;
 
+import android.support.annotation.NonNull;
 import android.view.View;
-
+import android.widget.Toast;
 import com.example.francoislf.go4lunch.R;
 import com.example.francoislf.go4lunch.api.LikedHelper;
 import com.example.francoislf.go4lunch.api.UserHelper;
@@ -9,16 +10,21 @@ import com.example.francoislf.go4lunch.controllers.fragments.FileRestaurantFragm
 import com.example.francoislf.go4lunch.models.ChoiceRestaurantCountdown;
 import com.example.francoislf.go4lunch.models.RestaurantProfile;
 import com.example.francoislf.go4lunch.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
-
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import org.joda.time.DateTime;
+
 
 public class FileRestaurantActivity extends BaseActivity implements FileRestaurantFragment.OnClicChoiceRestaurant{
 
     public static final String EXTRA_SNIPPET_MARKER = "EXTRA_SNIPPET_MARKER";
     private static final String BLANK_ANSWER = "Empty";
     private FileRestaurantFragment mFileRestaurantFragment;
+    RestaurantProfile mRestaurantProfile;
 
     @Override
     protected boolean getContentViewBoolean() {
@@ -45,12 +51,13 @@ public class FileRestaurantActivity extends BaseActivity implements FileRestaura
     protected void onResume() {
         super.onResume();
         this.snippetMarkerTransmissionToFragment();
+        this.snippetLikeTransmissionToFragment();
     }
 
-    // Update UI
+    // Update fragment UI about choice button
     private void snippetMarkerTransmissionToFragment(){
-        RestaurantProfile restaurantProfile = getIntent().getExtras().getParcelable(EXTRA_SNIPPET_MARKER);
-        mFileRestaurantFragment.setRestaurantProfileInformation(restaurantProfile);
+        mRestaurantProfile = getIntent().getExtras().getParcelable(EXTRA_SNIPPET_MARKER);
+        mFileRestaurantFragment.setRestaurantProfileInformation(mRestaurantProfile);
         UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -64,7 +71,32 @@ public class FileRestaurantActivity extends BaseActivity implements FileRestaura
         });
     }
 
-    // callback from fragment child
+    // Update fragment UI about Like button and database restaurants collection update if necessary
+    private void snippetLikeTransmissionToFragment(){
+        LikedHelper.getLikedCollection().get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (!task.getResult().isEmpty()) {
+                        boolean toCreate = true;
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            if (document.getString("placeId").equals(mRestaurantProfile.getPlaceId())) {
+                                toCreate = false;
+                                if (document.getString("participants").contains(getCurrentUser().getUid()))
+                                    mFileRestaurantFragment.setLikeButton(true, document.getLong("numberOfLike").intValue(), document.getString("participants"), toCreate);
+                                else
+                                    mFileRestaurantFragment.setLikeButton(false, document.getLong("numberOfLike").intValue(), document.getString("participants"), toCreate);
+                            }
+                        }
+                        if (toCreate) mFileRestaurantFragment.setLikeButton(false, 0, "", toCreate);
+                    }
+                    else mFileRestaurantFragment.setLikeButton(false, 0, "", true);
+                }
+            }
+        });
+    }
+
+    // callback from fragment child about User update
     @Override
     public void onResultChoiceTransmission(View view, String name, String placeId, int hour, int date) {
         final DateTime dt = new DateTime();
@@ -79,5 +111,35 @@ public class FileRestaurantActivity extends BaseActivity implements FileRestaura
             UserHelper.updateDateChoice(BLANK_ANSWER, getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener());
             UserHelper.updateHourChoice(BLANK_ANSWER, getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener());
         }
+    }
+
+    // callback from fragment child about Restaurant Like update
+    @Override
+    public void onResultLikeTransmission(View view, String listOfParticipant, String placeId, String decision, int like, boolean toCreate) {
+        boolean boolLike;
+        if (toCreate) {
+            LikedHelper.createLiked(mRestaurantProfile.getName(), placeId, this.getCurrentUser().getUid());
+            like = 1;
+            listOfParticipant = this.getCurrentUser().getUid() + ";";
+            boolLike = true;
+        }
+        else {
+            if (decision.equals(getString(R.string.LIKE))) {
+                boolLike = true;
+                listOfParticipant += getCurrentUser().getUid() + ";";
+                LikedHelper.updateParticipants(placeId, listOfParticipant);
+                like++;
+                LikedHelper.updateLiked(placeId, like);
+                Toast.makeText(this, getString(R.string.LIKE) + " + 1",Toast.LENGTH_LONG).show();
+            } else {
+                boolLike = false;
+                listOfParticipant = listOfParticipant.replace(getCurrentUser().getUid() + ";", "");
+                LikedHelper.updateParticipants(placeId, listOfParticipant);
+                like--;
+                LikedHelper.updateLiked(placeId, like);
+                Toast.makeText(this, getString(R.string.LIKE) + " - 1",Toast.LENGTH_LONG).show();
+            }
+        }
+        mFileRestaurantFragment.setLikeButton(boolLike, like, listOfParticipant,false);
     }
 }

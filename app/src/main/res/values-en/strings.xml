@@ -33,4 +33,5 @@
     <string name="pas_de_decision">hasn\'t decided yet</string>
     <string name="decision">is eating at</string>
     <string name="no_list">NO LIST AVAILABLE</string>
+    <string name="DISLIKE">DISLIKE</string>
 </resources>

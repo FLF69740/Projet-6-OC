@@ -36,6 +36,10 @@ public class FileRestaurantFragment extends Fragment {
     @BindView(R.id.button_restaurant_choice)Button mButtonChoiceRestaurant;
     @BindView(R.id.restaurant_choice_no_validate)ImageView mImageViewRestaurantChoiceKO;
     @BindView(R.id.restaurant_choice_validate)ImageView mImageViewRestaurantChoiceOK;
+    @BindView(R.id.Like)TextView mLikeTextViewButton;
+    @BindView(R.id.yellow_star_1)ImageView mYellowStarOne;
+    @BindView(R.id.yellow_star_2)ImageView mYellowStarTwo;
+    @BindView(R.id.yellow_star_3)ImageView mYellowStarThree;
     private static final String BLANK_ANSWER = "Empty";
     ImageView mRestaurantImage;
     Boolean isRestaurantChosen;
@@ -43,6 +47,9 @@ public class FileRestaurantFragment extends Fragment {
     View mView;
     RestaurantProfile mRestaurantProfile;
     int mHour, mDate;
+    int mNumberOfLike;
+    String mListOfParticipant;
+    boolean mToCreate;
 
     public FileRestaurantFragment(){}
 
@@ -50,6 +57,7 @@ public class FileRestaurantFragment extends Fragment {
 
     public interface OnClicChoiceRestaurant{
         void onResultChoiceTransmission(View view, String name, String placeId, int hour, int date);
+        void onResultLikeTransmission(View view, String listOfParticipant, String placeId, String decision, int like, boolean toCreate);
     }
 
     @Override
@@ -81,6 +89,21 @@ public class FileRestaurantFragment extends Fragment {
         if (mRestaurantName.getText().equals(name)) isRestaurantChosen = true;
         else isRestaurantChosen = false;
         setCircleLogoRestaurantChoice(isRestaurantChosen, false);
+    }
+
+    // get the state of Like Button from activity to fragment
+    public void setLikeButton(boolean like, int numberOfLike, String listOfParticipant, boolean toCreate){
+        mNumberOfLike = numberOfLike;
+        mListOfParticipant = listOfParticipant;
+        mToCreate = toCreate;
+        if (like) mLikeTextViewButton.setText(mView.getContext().getString(R.string.DISLIKE));
+        else mLikeTextViewButton.setText(mView.getContext().getString(R.string.LIKE));
+        if (numberOfLike >= 1) mYellowStarOne.setVisibility(View.VISIBLE);
+        else mYellowStarOne.setVisibility(View.INVISIBLE);
+        if (numberOfLike >= 5) mYellowStarTwo.setVisibility(View.VISIBLE);
+        else mYellowStarTwo.setVisibility(View.INVISIBLE);
+        if (numberOfLike >= 10) mYellowStarThree.setVisibility(View.VISIBLE);
+        else mYellowStarThree.setVisibility(View.INVISIBLE);
     }
 
     @OnClick(R.id.button_restaurant_choice)
@@ -129,6 +152,11 @@ public class FileRestaurantFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.createCallbackToParentActivity();
+    }
+
+    @OnClick(R.id.Like)
+    public void registrationLike(){
+        mCallback.onResultLikeTransmission(mView, mListOfParticipant, mRestaurantProfile.getPlaceId(), mLikeTextViewButton.getText().toString(), mNumberOfLike, mToCreate);
     }
 
 

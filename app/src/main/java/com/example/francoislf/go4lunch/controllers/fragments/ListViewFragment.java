@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.francoislf.go4lunch.R;
 import com.example.francoislf.go4lunch.Utils.ItemClickSupport;
 import com.example.francoislf.go4lunch.Views.RestaurantAdapter;
+import com.example.francoislf.go4lunch.api.LikedHelper;
 import com.example.francoislf.go4lunch.api.UserHelper;
 import com.example.francoislf.go4lunch.models.ChoiceRestaurantCountdown;
 import com.example.francoislf.go4lunch.models.RestaurantProfile;
@@ -119,6 +120,12 @@ public class ListViewFragment extends Fragment implements EventListener<QuerySna
     public void onPause() {
         super.onPause();
         UserHelper.getUsersCollection().addSnapshotListener(this); // Add a listener when database FireStore change
+        LikedHelper.getLikedCollection().addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                configureRecyclerView();
+            }
+        });
     }
 
     @Override
