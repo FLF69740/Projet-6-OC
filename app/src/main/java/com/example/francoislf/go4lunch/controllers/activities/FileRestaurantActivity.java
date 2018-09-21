@@ -169,7 +169,8 @@ public class FileRestaurantActivity extends BaseActivity implements FileRestaura
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         if (document.getString(USER_RESTAURANT_CHOICE) != null) {
                             if (document.getString(USER_RESTAURANT_CHOICE).equals(mRestaurantProfile.getName())
-                                    && !document.getString(USER_UID).equals(getCurrentUser().getUid())) {
+                                    && !document.getString(USER_UID).equals(getCurrentUser().getUid())
+                                    && !new ChoiceRestaurantCountdown(document.getString(USER_HOUR_CHOICE), document.getString(USER_DATE_CHOICE)).getCountdownResult()) {
                                 userList.add(document.toObject(User.class));
                             }
                         }

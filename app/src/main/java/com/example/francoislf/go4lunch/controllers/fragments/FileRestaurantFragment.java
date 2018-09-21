@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -72,6 +73,7 @@ public class FileRestaurantFragment extends Fragment {
         mRestaurantName.setText(mRestaurantProfile.getName());
         mRestaurantLocalisation.setText(mRestaurantProfile.getAdress());
         mPhoneNumber = mRestaurantProfile.getPhoneNumber();
+        mPhoneNumber = mPhoneNumber.replace(" ","");
         mWebSite = mRestaurantProfile.getWebSite();
         if (!mRestaurantProfile.getPhoto().equals(BLANK_ANSWER)) {
             Glide.with(mView)
@@ -126,14 +128,16 @@ public class FileRestaurantFragment extends Fragment {
     @OnClick(R.id.CALL)
     public void launchRestaurantCall(){
         if (mPhoneNumber == null) Toast.makeText(getContext(),getString(R.string.callDisabled),Toast.LENGTH_LONG).show();
-        else Toast.makeText(getContext(),mPhoneNumber,Toast.LENGTH_LONG).show();
+        else {
+            Intent appel = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mPhoneNumber));
+            startActivity(appel);
+        }
     }
 
     @SuppressLint("NewApi")
     @OnClick(R.id.WEBSITE)
     public void launchRestaurantWebSite(){
         if (mWebSite == null) Toast.makeText(getContext(), getString(R.string.websiteDisabled), Toast.LENGTH_LONG).show();
-      //  else Toast.makeText(getContext(),mWebSite,Toast.LENGTH_LONG).show();
         else mCallback.webSiteVisiting(this.mView, mWebSite);
     }
 
