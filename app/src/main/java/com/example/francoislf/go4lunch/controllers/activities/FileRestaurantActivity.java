@@ -14,9 +14,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import org.joda.time.DateTime;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nullable;
 
 
 public class FileRestaurantActivity extends BaseActivity implements FileRestaurantFragment.OnClicChoiceRestaurant{
@@ -52,6 +59,7 @@ public class FileRestaurantActivity extends BaseActivity implements FileRestaura
         super.onResume();
         this.snippetMarkerTransmissionToFragment();
         this.snippetLikeTransmissionToFragment();
+        this.creationListOfJoiningWorkmates();
     }
 
     // Update fragment UI about choice button
@@ -142,4 +150,28 @@ public class FileRestaurantActivity extends BaseActivity implements FileRestaura
         }
         mFileRestaurantFragment.setLikeButton(boolLike, like, listOfParticipant,false);
     }
+
+    // define the list of workmates participation for the restaurant
+    private void creationListOfJoiningWorkmates(){
+        UserHelper.getAllUsers().addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (queryDocumentSnapshots != null) {
+                    List<User> userList = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        if (document.getString("restaurantChoice") != null) {
+                            if (document.getString("restaurantChoice").equals(mRestaurantProfile.getName())
+                                    && !document.getString("uid").equals(getCurrentUser().getUid())) {
+                                userList.add(document.toObject(User.class));
+                            }
+                        }
+                    }
+                    mFileRestaurantFragment.configureRecyclerView(userList);
+                }
+            }
+        });
+    }
+
+
+
 }

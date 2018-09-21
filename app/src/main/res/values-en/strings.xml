@@ -34,4 +34,5 @@
     <string name="decision">is eating at</string>
     <string name="no_list">NO LIST AVAILABLE</string>
     <string name="DISLIKE">DISLIKE</string>
+    <string name="is_joining">is joining!</string>
 </resources>

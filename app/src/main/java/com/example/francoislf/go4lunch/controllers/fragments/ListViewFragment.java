@@ -3,15 +3,12 @@ package com.example.francoislf.go4lunch.controllers.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.example.francoislf.go4lunch.R;
 import com.example.francoislf.go4lunch.Utils.ItemClickSupport;
 import com.example.francoislf.go4lunch.Views.RestaurantAdapter;
@@ -19,18 +16,14 @@ import com.example.francoislf.go4lunch.api.LikedHelper;
 import com.example.francoislf.go4lunch.api.UserHelper;
 import com.example.francoislf.go4lunch.models.ChoiceRestaurantCountdown;
 import com.example.francoislf.go4lunch.models.RestaurantProfile;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.Nullable;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

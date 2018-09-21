@@ -5,6 +5,8 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +19,27 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.francoislf.go4lunch.R;
+import com.example.francoislf.go4lunch.Views.IsJoiningAdapter;
+import com.example.francoislf.go4lunch.Views.WorkmatesAdapter;
 import com.example.francoislf.go4lunch.api.LikedHelper;
 import com.example.francoislf.go4lunch.api.UserHelper;
 import com.example.francoislf.go4lunch.models.RestaurantProfile;
+import com.example.francoislf.go4lunch.models.User;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Text;
+
+import java.util.List;
+
+import javax.annotation.Nullable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +55,7 @@ public class FileRestaurantFragment extends Fragment {
     @BindView(R.id.yellow_star_1)ImageView mYellowStarOne;
     @BindView(R.id.yellow_star_2)ImageView mYellowStarTwo;
     @BindView(R.id.yellow_star_3)ImageView mYellowStarThree;
+    @BindView(R.id.recyclerview_joining)RecyclerView mRecyclerView;
     private static final String BLANK_ANSWER = "Empty";
     ImageView mRestaurantImage;
     Boolean isRestaurantChosen;
@@ -158,6 +174,15 @@ public class FileRestaurantFragment extends Fragment {
     public void registrationLike(){
         mCallback.onResultLikeTransmission(mView, mListOfParticipant, mRestaurantProfile.getPlaceId(), mLikeTextViewButton.getText().toString(), mNumberOfLike, mToCreate);
     }
+
+    // configure recyclerView with workmates participation for the restaurant
+    public void configureRecyclerView(List<User> userList){
+        IsJoiningAdapter isJoiningAdapter = new IsJoiningAdapter(userList);
+        this.mRecyclerView.setAdapter(isJoiningAdapter);
+        this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        isJoiningAdapter.notifyDataSetChanged();
+    }
+
 
 
 

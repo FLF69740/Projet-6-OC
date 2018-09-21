@@ -57,5 +57,6 @@
     <string name="pas_de_decision">n\'a pas encore décidé</string>
     <string name="decision">mange à</string>
     <string name="no_list">PAS DE LISTE DISPONIBLE</string>
+    <string name="is_joining">participe!</string>
 
 </resources>
