@@ -181,7 +181,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
 
     @Override
     public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-        if (queryDocumentSnapshots != null) {
+        if (queryDocumentSnapshots != null && mRestaurantProfileList != null) {
             for (int i = 0; i < mRestaurantProfileList.size(); i++) mRestaurantProfileList.get(i).setNumberOfParticipant(0);
             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                 if (!document.getString(USER_DATE_CHOICE).equals(BLANK_ANSWER)) {

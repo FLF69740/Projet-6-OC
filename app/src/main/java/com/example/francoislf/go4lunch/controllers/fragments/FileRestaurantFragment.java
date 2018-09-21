@@ -3,6 +3,7 @@ package com.example.francoislf.go4lunch.controllers.fragments;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -53,6 +54,7 @@ public class FileRestaurantFragment extends Fragment {
     public interface OnClicChoiceRestaurant{
         void onResultChoiceTransmission(View view, String name, String placeId, int hour, int date);
         void onResultLikeTransmission(View view, String listOfParticipant, String placeId, String decision, int like, boolean toCreate);
+        void webSiteVisiting(View view, String url);
     }
 
     @Override
@@ -131,7 +133,8 @@ public class FileRestaurantFragment extends Fragment {
     @OnClick(R.id.WEBSITE)
     public void launchRestaurantWebSite(){
         if (mWebSite == null) Toast.makeText(getContext(), getString(R.string.websiteDisabled), Toast.LENGTH_LONG).show();
-        else Toast.makeText(getContext(),mWebSite,Toast.LENGTH_LONG).show();
+      //  else Toast.makeText(getContext(),mWebSite,Toast.LENGTH_LONG).show();
+        else mCallback.webSiteVisiting(this.mView, mWebSite);
     }
 
     //Parent activity will automatically subscribe to callback

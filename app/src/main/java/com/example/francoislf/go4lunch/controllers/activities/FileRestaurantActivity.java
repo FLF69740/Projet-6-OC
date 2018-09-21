@@ -1,5 +1,6 @@
 package com.example.francoislf.go4lunch.controllers.activities;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Toast;
@@ -149,6 +150,13 @@ public class FileRestaurantActivity extends BaseActivity implements FileRestaura
             }
         }
         mFileRestaurantFragment.setLikeButton(boolLike, like, listOfParticipant,false);
+    }
+
+    @Override
+    public void webSiteVisiting(View view, String url) {
+        Intent intent = new Intent(this, WebViewActivity.class);
+        intent.putExtra(WebViewActivity.LINK_WEBVIEW, url);
+        startActivity(intent);
     }
 
     // define the list of workmates participation for the restaurant

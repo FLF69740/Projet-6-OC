@@ -31,6 +31,8 @@
 
         <activity android:name=".controllers.activities.ConnectionActivity"></activity>
 
+        <activity android:name=".controllers.activities.WebViewActivity"></activity>
+
         <activity android:name=".controllers.activities.FileRestaurantActivity"
             android:parentActivityName=".controllers.activities.MainActivity"></activity>
 
