@@ -6,6 +6,9 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.USER_DATE_CHOICE;
+import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.USER_HOUR_CHOICE;
+import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.USER_RESTAURANT_CHOICE;
 
 public class UserHelper {
 
@@ -42,15 +45,15 @@ public class UserHelper {
      */
 
     public static Task<Void> updateRestaurantChoice(String restaurantChoice, String uid){
-        return getUsersCollection().document(uid).update("restaurantChoice" , restaurantChoice);
+        return getUsersCollection().document(uid).update(USER_RESTAURANT_CHOICE , restaurantChoice);
     }
 
     public static Task<Void> updateDateChoice(String dateChoice, String uid){
-        return getUsersCollection().document(uid).update("dateChoice", dateChoice);
+        return getUsersCollection().document(uid).update(USER_DATE_CHOICE, dateChoice);
     }
 
     public static Task<Void> updateHourChoice(String hourChoice, String uid){
-        return getUsersCollection().document(uid).update("hourChoice", hourChoice);
+        return getUsersCollection().document(uid).update(USER_HOUR_CHOICE, hourChoice);
     }
 
     /**

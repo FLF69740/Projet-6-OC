@@ -17,6 +17,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.francoislf.go4lunch.R;
@@ -30,7 +32,9 @@ import com.example.francoislf.go4lunch.models.HttpRequest.Places;
 import com.example.francoislf.go4lunch.models.PlacesExtractor;
 import com.example.francoislf.go4lunch.models.RestaurantProfile;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
@@ -172,12 +176,24 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
-            case R.id.your_lunch : break;
+            case R.id.your_lunch : findChoiceRestaurant(); break;
             case R.id.settings : break;
             case R.id.logout : signOutFormFirebase(); break;
         }
         this.mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    // Find the choice restaurant from user
+    private void findChoiceRestaurant(){
+        UserHelper.getUser(getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (!documentSnapshot.getString(USER_RESTAURANT_CHOICE).equals(BLANK_ANSWER)) onResultItemTransmission(getCurrentFocus(), documentSnapshot.getString(USER_RESTAURANT_CHOICE));
+                else Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.your_lunch), Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
     // Callback from MainFragment when a listener from a marker is activated : launch FileRestaurantActivity
@@ -201,7 +217,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     // Callback from WorkmatesFragment when a listener from an item is activated : launch FileRestaurantActivity
     @Override
     public void onResultAvatarTransmission(View view, String title) {
-        if (!title.equals("Empty")){
+        if (!title.equals(BLANK_ANSWER)){
             Intent intent = new Intent(this, FileRestaurantActivity.class);
             RestaurantProfile restaurantProfile = mPlacesExtractor.getRestaurantProfile(title);
             intent.putExtra(FileRestaurantActivity.EXTRA_SNIPPET_MARKER, restaurantProfile);
@@ -225,11 +241,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                if (task.isSuccessful()) {
                                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                                       if (!document.getString("dateChoice").equals("Empty"))
-                                                           if (!new ChoiceRestaurantCountdown(document.getString("hourChoice"),
-                                                                       document.getString("dateChoice")).getCountdownResult()) {
+                                                       if (!document.getString(USER_DATE_CHOICE).equals(BLANK_ANSWER))
+                                                           if (!new ChoiceRestaurantCountdown(document.getString(USER_HOUR_CHOICE),
+                                                                       document.getString(USER_DATE_CHOICE)).getCountdownResult()) {
                                                            for (int i = 0; i < mRestaurantProfileList.size(); i++) {
-                                                               if (document.getString("restaurantChoice").equals(mRestaurantProfileList.get(i).getName())) {
+                                                               if (document.getString(USER_RESTAURANT_CHOICE).equals(mRestaurantProfileList.get(i).getName())) {
                                                                    int newNumber = mRestaurantProfileList.get(i).getNumberOfParticipant() + 1;
                                                                    mRestaurantProfileList.get(i).setNumberOfParticipant(newNumber);
                                                                }}}}}

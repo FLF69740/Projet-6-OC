@@ -2,6 +2,8 @@ package com.example.francoislf.go4lunch.models;
 
 import android.support.annotation.Nullable;
 
+import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.BLANK_ANSWER;
+
 public class User {
 
     private String mUid;
@@ -15,9 +17,9 @@ public class User {
         this.mUid = uid;
         this.mUsername = username;
         this.mUrlPicture = urlPicture;
-        this.mRestaurantChoice = "Empty";
-        this.mDateChoice = "Empty";
-        this.mHourChoice = "Empty";
+        this.mRestaurantChoice = BLANK_ANSWER;
+        this.mDateChoice = BLANK_ANSWER;
+        this.mHourChoice = BLANK_ANSWER;
     }
 
     public User(){}

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,36 +13,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.francoislf.go4lunch.R;
 import com.example.francoislf.go4lunch.Views.IsJoiningAdapter;
-import com.example.francoislf.go4lunch.Views.WorkmatesAdapter;
-import com.example.francoislf.go4lunch.api.LikedHelper;
-import com.example.francoislf.go4lunch.api.UserHelper;
 import com.example.francoislf.go4lunch.models.RestaurantProfile;
 import com.example.francoislf.go4lunch.models.User;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import org.w3c.dom.Text;
-
 import java.util.List;
-
-import javax.annotation.Nullable;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.BLANK_ANSWER;
 
 public class FileRestaurantFragment extends Fragment {
 
@@ -56,7 +36,6 @@ public class FileRestaurantFragment extends Fragment {
     @BindView(R.id.yellow_star_2)ImageView mYellowStarTwo;
     @BindView(R.id.yellow_star_3)ImageView mYellowStarThree;
     @BindView(R.id.recyclerview_joining)RecyclerView mRecyclerView;
-    private static final String BLANK_ANSWER = "Empty";
     ImageView mRestaurantImage;
     Boolean isRestaurantChosen;
     String mPhoneNumber, mWebSite;
@@ -182,9 +161,4 @@ public class FileRestaurantFragment extends Fragment {
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         isJoiningAdapter.notifyDataSetChanged();
     }
-
-
-
-
-
 }

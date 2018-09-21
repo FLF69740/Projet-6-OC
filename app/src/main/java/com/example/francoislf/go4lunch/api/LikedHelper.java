@@ -7,6 +7,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.LIKE_NUMBER_OF_LIKE;
+import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.LIKE_PARTICIPANTS;
+import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.LIKE_RESTAURANT_NAME;
+
 public class LikedHelper {
 
     private static final String COLLECTION_LIKED = "restaurants";
@@ -34,7 +38,7 @@ public class LikedHelper {
     }
 
     public static Query getAllLiked(){
-        return getLikedCollection().orderBy("restaurantName");
+        return getLikedCollection().orderBy(LIKE_RESTAURANT_NAME);
     }
 
     /**
@@ -42,11 +46,11 @@ public class LikedHelper {
      */
 
     public static Task<Void> updateLiked(String placeId, int like){
-        return getLikedCollection().document(placeId).update("numberOfLike", like);
+        return getLikedCollection().document(placeId).update(LIKE_NUMBER_OF_LIKE, like);
     }
 
     public static Task<Void> updateParticipants(String placeId, String participants){
-        return getLikedCollection().document(placeId).update("participants", participants);
+        return getLikedCollection().document(placeId).update(LIKE_PARTICIPANTS, participants);
     }
 
     /*

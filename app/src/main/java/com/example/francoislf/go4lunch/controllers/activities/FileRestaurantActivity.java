@@ -88,12 +88,12 @@ public class FileRestaurantActivity extends BaseActivity implements FileRestaura
                     if (!task.getResult().isEmpty()) {
                         boolean toCreate = true;
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            if (document.getString("placeId").equals(mRestaurantProfile.getPlaceId())) {
+                            if (document.getString(LIKE_PLACEID).equals(mRestaurantProfile.getPlaceId())) {
                                 toCreate = false;
-                                if (document.getString("participants").contains(getCurrentUser().getUid()))
-                                    mFileRestaurantFragment.setLikeButton(true, document.getLong("numberOfLike").intValue(), document.getString("participants"), toCreate);
+                                if (document.getString(LIKE_PARTICIPANTS).contains(getCurrentUser().getUid()))
+                                    mFileRestaurantFragment.setLikeButton(true, document.getLong(LIKE_NUMBER_OF_LIKE).intValue(), document.getString(LIKE_PARTICIPANTS), toCreate);
                                 else
-                                    mFileRestaurantFragment.setLikeButton(false, document.getLong("numberOfLike").intValue(), document.getString("participants"), toCreate);
+                                    mFileRestaurantFragment.setLikeButton(false, document.getLong(LIKE_NUMBER_OF_LIKE).intValue(), document.getString(LIKE_PARTICIPANTS), toCreate);
                             }
                         }
                         if (toCreate) mFileRestaurantFragment.setLikeButton(false, 0, "", toCreate);
@@ -159,9 +159,9 @@ public class FileRestaurantActivity extends BaseActivity implements FileRestaura
                 if (queryDocumentSnapshots != null) {
                     List<User> userList = new ArrayList<>();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        if (document.getString("restaurantChoice") != null) {
-                            if (document.getString("restaurantChoice").equals(mRestaurantProfile.getName())
-                                    && !document.getString("uid").equals(getCurrentUser().getUid())) {
+                        if (document.getString(USER_RESTAURANT_CHOICE) != null) {
+                            if (document.getString(USER_RESTAURANT_CHOICE).equals(mRestaurantProfile.getName())
+                                    && !document.getString(USER_UID).equals(getCurrentUser().getUid())) {
                                 userList.add(document.toObject(User.class));
                             }
                         }

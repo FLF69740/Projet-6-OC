@@ -30,6 +30,13 @@ import javax.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.BLANK_ANSWER;
+import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.LIKE_NUMBER_OF_LIKE;
+import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.LIKE_PLACEID;
+import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.USER_DATE_CHOICE;
+import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.USER_HOUR_CHOICE;
+import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.USER_RESTAURANT_CHOICE;
+
 public class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.item_recyclerView_name)TextView mTextViewName;
@@ -66,7 +73,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
         }
         this.mTextViewDistance.setText(mRecyclerViewItemTransformer.getDistance(restaurantProfile.getLat(), restaurantProfile.getLng()));
 
-        if (!restaurantProfile.getPhoto().equals("Empty")){
+        if (!restaurantProfile.getPhoto().equals(BLANK_ANSWER)){
             Glide.with(mItemView)
                     .load(restaurantProfile.getPhoto())
                     .apply(RequestOptions.centerCropTransform())
@@ -78,8 +85,8 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 int numberOfParticipant = 0;
                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                    if (restaurantProfile.getName().equals(document.getString("restaurantChoice"))) {
-                        if (!new ChoiceRestaurantCountdown(document.getString("hourChoice"), document.getString("dateChoice")).getCountdownResult())
+                    if (restaurantProfile.getName().equals(document.getString(USER_RESTAURANT_CHOICE))) {
+                        if (!new ChoiceRestaurantCountdown(document.getString(USER_HOUR_CHOICE), document.getString(USER_DATE_CHOICE)).getCountdownResult())
                             numberOfParticipant++;
                     }
 
@@ -98,8 +105,8 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 int numberOfLike = 0;
                 for (QueryDocumentSnapshot document : queryDocumentSnapshots){
-                    if (restaurantProfile.getPlaceId().equals(document.getString("placeId"))){
-                        numberOfLike = document.getLong("numberOfLike").intValue();
+                    if (restaurantProfile.getPlaceId().equals(document.getString(LIKE_PLACEID))){
+                        numberOfLike = document.getLong(LIKE_NUMBER_OF_LIKE).intValue();
                     }
                 }
 

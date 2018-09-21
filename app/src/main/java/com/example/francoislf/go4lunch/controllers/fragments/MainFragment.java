@@ -12,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +35,10 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
+import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.BLANK_ANSWER;
+import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.USER_DATE_CHOICE;
+import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.USER_HOUR_CHOICE;
+import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.USER_RESTAURANT_CHOICE;
 
 
 public class MainFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, EventListener<QuerySnapshot> {
@@ -181,10 +184,10 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
         if (queryDocumentSnapshots != null) {
             for (int i = 0; i < mRestaurantProfileList.size(); i++) mRestaurantProfileList.get(i).setNumberOfParticipant(0);
             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                if (!document.getString("dateChoice").equals("Empty")) {
-                    if (!new ChoiceRestaurantCountdown(document.getString("hourChoice"), document.getString("dateChoice")).getCountdownResult()) {
+                if (!document.getString(USER_DATE_CHOICE).equals(BLANK_ANSWER)) {
+                    if (!new ChoiceRestaurantCountdown(document.getString(USER_HOUR_CHOICE), document.getString(USER_DATE_CHOICE)).getCountdownResult()) {
                         for (int i = 0; i < mRestaurantProfileList.size(); i++) {
-                            if (document.getString("restaurantChoice").equals(mRestaurantProfileList.get(i).getName())) {
+                            if (document.getString(USER_RESTAURANT_CHOICE).equals(mRestaurantProfileList.get(i).getName())) {
                                 int newNumber = mRestaurantProfileList.get(i).getNumberOfParticipant() + 1;
                                 mRestaurantProfileList.get(i).setNumberOfParticipant(newNumber);
                             }}}}}

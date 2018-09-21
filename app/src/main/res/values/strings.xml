@@ -26,6 +26,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="name">nom</string>
     <string name="mail">e-mail</string>
+    <string name="your_lunch">Aucune validation de restaurant</string>
 
     <!-- bottom navigation bar -->
     <string name="bottom_item_1">Carte</string>

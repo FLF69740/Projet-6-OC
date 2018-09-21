@@ -31,6 +31,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected ImageView mImageViewProfile;
     protected TextView mTextViewName;
     protected TextView mTextViewEmail;
+    public static final String USER_RESTAURANT_CHOICE = "restaurantChoice";
+    public static final String USER_DATE_CHOICE = "dateChoice";
+    public static final String USER_HOUR_CHOICE = "hourChoice";
+    public static final String USER_UID = "uid";
+    public static final String BLANK_ANSWER = "Empty";
+    public static final String LIKE_NUMBER_OF_LIKE = "numberOfLike";
+    public static final String LIKE_PARTICIPANTS = "participants";
+    public static final String LIKE_PLACEID = "placeId";
+    public static final String LIKE_RESTAURANT_NAME = "restaurantName";
 
     private static final int SIGN_OUT_TASK = 10;
 

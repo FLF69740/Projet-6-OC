@@ -13,6 +13,8 @@ import com.example.francoislf.go4lunch.models.User;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.BLANK_ANSWER;
+
 public class WorkmatesViewHolder extends RecyclerView.ViewHolder {
 
     private View mItemView;
@@ -29,7 +31,7 @@ public class WorkmatesViewHolder extends RecyclerView.ViewHolder {
 
         String avatarSituationBuild = user.getUsername();
 
-        if (user.getRestaurantChoice().equals("Empty") ||
+        if (user.getRestaurantChoice().equals(BLANK_ANSWER) ||
                 new ChoiceRestaurantCountdown(user.getHourChoice(),user.getDateChoice()).getCountdownResult()) {
             avatarSituationBuild += " " + mItemView.getContext().getString(R.string.pas_de_decision);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
