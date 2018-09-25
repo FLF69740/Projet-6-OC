@@ -20,13 +20,6 @@
         app:layout_constraintGuide_percent="0.36" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/guideline_resturant_information_divider"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.43" />
-
-    <android.support.constraint.Guideline
         android:id="@+id/guideline_down_divider"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -55,15 +48,16 @@
 
     <TextView
         android:id="@+id/restaurant_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:layout_marginEnd="8dp"
+        android:text="MacDonald"
         android:textColor="@android:color/white"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_resturant_information_divider"
+        android:textSize="@dimen/restaurant_profile_title"
+        app:layout_constraintEnd_toStartOf="@+id/website"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline_upper_divider" />
 
@@ -83,11 +77,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="TextView"
+        android:text="rue de la malbouffe"
         android:textColor="@android:color/white"
-        android:textSize="12sp"
+        android:textSize="@dimen/restaurant_profile_localisation"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_middle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline_resturant_information_divider" />
+        app:layout_constraintTop_toBottomOf="@+id/restaurant_name" />
 
     <TextView
         android:id="@+id/CALL"
@@ -117,12 +112,12 @@
         android:text="@string/LIKE"
         android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/guideline_down_divider"
-        app:layout_constraintEnd_toStartOf="@+id/WEBSITE"
+        app:layout_constraintEnd_toStartOf="@+id/website"
         app:layout_constraintStart_toEndOf="@+id/CALL"
         app:layout_constraintTop_toTopOf="@+id/guideline_middle" />
 
     <TextView
-        android:id="@+id/WEBSITE"
+        android:id="@+id/website"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="?android:selectableItemBackground"
@@ -185,18 +180,21 @@
         android:id="@+id/yellow_star_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/yellow_star_1"
         app:layout_constraintStart_toEndOf="@+id/yellow_star_1"
+        app:layout_constraintTop_toTopOf="@+id/guideline_upper_divider"
         app:srcCompat="@drawable/baseline_star_yellow_24" />
 
     <ImageView
         android:id="@+id/yellow_star_3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/yellow_star_2"
         app:layout_constraintStart_toEndOf="@+id/yellow_star_2"
+        app:layout_constraintTop_toTopOf="@+id/guideline_upper_divider"
         app:srcCompat="@drawable/baseline_star_yellow_24" />
 
     <android.support.v7.widget.RecyclerView

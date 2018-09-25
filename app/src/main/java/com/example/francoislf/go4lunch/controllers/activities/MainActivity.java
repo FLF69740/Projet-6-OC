@@ -2,7 +2,6 @@ package com.example.francoislf.go4lunch.controllers.activities;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.francoislf.go4lunch.R;
@@ -80,7 +78,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         this.configureNavigationView();
         this.configureBottomNavigationView();
         this.updateProfileInformations();
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
     }
 
     // Update Nave_header informations about user informations
@@ -177,7 +174,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.your_lunch : findChoiceRestaurant(); break;
-            case R.id.settings : break;
+            case R.id.settings : startSettings(); break;
             case R.id.logout : signOutFormFirebase(); break;
         }
         this.mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -189,12 +186,20 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         UserHelper.getUser(getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (!documentSnapshot.getString(USER_RESTAURANT_CHOICE).equals(BLANK_ANSWER)) onResultItemTransmission(getCurrentFocus(), documentSnapshot.getString(USER_RESTAURANT_CHOICE));
-                else Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.your_lunch), Toast.LENGTH_LONG).show();
+                if (!documentSnapshot.getString(USER_RESTAURANT_CHOICE).equals(BLANK_ANSWER)){
+                        if (!new ChoiceRestaurantCountdown(documentSnapshot.getString(USER_HOUR_CHOICE), documentSnapshot.getString(USER_DATE_CHOICE)).getCountdownResult())
+                            onResultItemTransmission(getCurrentFocus(), documentSnapshot.getString(USER_RESTAURANT_CHOICE));
+                        else Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.your_lunch), Toast.LENGTH_LONG).show();
+                } else Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.your_lunch), Toast.LENGTH_LONG).show();
             }
         });
-
     }
+
+    // start settings activity
+    private void startSettings(){
+        startActivity(new Intent(this, SettingsActivity.class));
+    }
+
 
     // Callback from MainFragment when a listener from a marker is activated : launch FileRestaurantActivity
     @Override

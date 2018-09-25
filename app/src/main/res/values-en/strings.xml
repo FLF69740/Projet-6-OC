@@ -36,4 +36,8 @@
     <string name="DISLIKE">DISLIKE</string>
     <string name="is_joining">is joining!</string>
     <string name="your_lunch">no restaurant validation</string>
+    <string name="settings_title">SETTINGS</string>
+    <string name="settings_profile">PROFILE</string>
+    <string name="settings_notifications">Enabled notifications</string>
+    <string name="settings_button">DELETE ACCOUNT</string>
 </resources>

@@ -1,0 +1,6 @@
+<resources>
+    <dimen name="restaurant_viewholder_item_title">14sp</dimen>
+    <dimen name="restaurant_viewholder_item_adress">12sp</dimen>
+    <dimen name="restaurant_profile_title">16sp</dimen>
+    <dimen name="restaurant_profile_localisation">10sp</dimen>
+</resources>

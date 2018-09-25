@@ -10,6 +10,7 @@ import com.example.francoislf.go4lunch.business_service.GPSTracker;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeFieldType;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class RecyclerViewItemTransformer {
@@ -70,7 +71,7 @@ public class RecyclerViewItemTransformer {
 
 
             return period;
-        } else return "";
+        } else return "24h/24";
     }
 
     // transform the state of the schedules (exemple from 13h00 to 1:00pm)
@@ -84,9 +85,10 @@ public class RecyclerViewItemTransformer {
 
         if (hour >= 0 && hour < 1) hourChange = 12;
 
-        result = String.valueOf(hourChange);
+        DecimalFormat numberFormat = new DecimalFormat("#.00");
+
+        result = String.valueOf(numberFormat.format(hourChange));
         result = result.replace('.',':');
-        if (result.contains(":0")) result += "0";
 
         if (hour >= 1200 && hour < 1300) result = "12:00pm";
         else if (!inverse) {
@@ -94,14 +96,18 @@ public class RecyclerViewItemTransformer {
                 result += "am";
             }
             else {
-                result = String.valueOf(hourChange - 12);
+                result = String.valueOf(numberFormat.format(hourChange - 12));
                 result = result.replace('.',':');
-                if (result.contains(":0")) result += "0";
                 result += "pm";
             }
         } else {
             result += "am";
         }
+
+        if (result.charAt(0) == ':') result = "00" + result;
+        if (result.charAt(1) == ':') result = "0" + result;
+        if (result.charAt(4) == 'a') result = result.replace("am", "0am");
+        if (result.charAt(4) == 'p') result = result.replace("pm", "0pm");
 
         return result;
     }

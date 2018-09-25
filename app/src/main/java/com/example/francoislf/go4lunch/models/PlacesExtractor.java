@@ -47,15 +47,16 @@ public class PlacesExtractor {
     private List<String> getOpeningHours(Places places){
         List<String> results = new ArrayList<>();
 
-        for (int i = 0 ; i < places.getResult().getOpeningHours().getPeriods().size() ; i++) {
+        if (places.getResult().getOpeningHours().getPeriods().get(0).getClose() != null) {
+            for (int i = 0; i < places.getResult().getOpeningHours().getPeriods().size(); i++) {
 
-            results.add("Close" + String.valueOf(places.getResult().getOpeningHours().getPeriods().get(i).getClose().getDay()) + "," +
-                    places.getResult().getOpeningHours().getPeriods().get(i).getClose().getTime());
+                results.add("Close" + String.valueOf(places.getResult().getOpeningHours().getPeriods().get(i).getClose().getDay()) + "," +
+                        places.getResult().getOpeningHours().getPeriods().get(i).getClose().getTime());
 
-            results.add("Open" + String.valueOf(places.getResult().getOpeningHours().getPeriods().get(i).getOpen().getDay()) + "," +
-                    places.getResult().getOpeningHours().getPeriods().get(i).getOpen().getTime());
+                results.add("Open" + String.valueOf(places.getResult().getOpeningHours().getPeriods().get(i).getOpen().getDay()) + "," +
+                        places.getResult().getOpeningHours().getPeriods().get(i).getOpen().getTime());
+            }
         }
-
 
         return results;
     }

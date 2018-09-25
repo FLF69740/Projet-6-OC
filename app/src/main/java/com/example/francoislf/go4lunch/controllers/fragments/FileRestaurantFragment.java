@@ -135,7 +135,7 @@ public class FileRestaurantFragment extends Fragment {
     }
 
     @SuppressLint("NewApi")
-    @OnClick(R.id.WEBSITE)
+    @OnClick(R.id.website)
     public void launchRestaurantWebSite(){
         if (mWebSite == null) Toast.makeText(getContext(), getString(R.string.websiteDisabled), Toast.LENGTH_LONG).show();
         else mCallback.webSiteVisiting(this.mView, mWebSite);

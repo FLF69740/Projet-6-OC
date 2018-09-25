@@ -60,4 +60,10 @@
     <string name="no_list">PAS DE LISTE DISPONIBLE</string>
     <string name="is_joining">participe!</string>
 
+    <!-- Settings Activity -->
+    <string name="settings_title">REGLAGES</string>
+    <string name="settings_profile">PROFIL</string>
+    <string name="settings_notifications">Notifications activées</string>
+    <string name="settings_button">EFFACER COMPTE</string>
+
 </resources>
