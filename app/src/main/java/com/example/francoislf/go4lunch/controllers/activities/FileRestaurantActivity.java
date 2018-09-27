@@ -107,18 +107,20 @@ public class FileRestaurantActivity extends BaseActivity implements FileRestaura
 
     // callback from fragment child about User update
     @Override
-    public void onResultChoiceTransmission(View view, String name, String placeId, int hour, int date) {
+    public void onResultChoiceTransmission(View view, String name, String adress, String placeId, int hour, int date) {
         final DateTime dt = new DateTime();
         if (!name.equals(BLANK_ANSWER)) {
             // add the restaurant choice to user Firestore dataBase
             UserHelper.updateRestaurantChoice(name, getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener());
             UserHelper.updateHourChoice(String.valueOf(dt.getHourOfDay()), getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener());
             UserHelper.updateDateChoice(String.valueOf(dt.getDayOfYear()), getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener());
+            UserHelper.updateAdressRestaurant(adress, getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener());
         }
         else { // delete daily choice from user after retractation
             UserHelper.updateRestaurantChoice(BLANK_ANSWER, getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener());
             UserHelper.updateDateChoice(BLANK_ANSWER, getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener());
             UserHelper.updateHourChoice(BLANK_ANSWER, getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener());
+            UserHelper.updateAdressRestaurant(BLANK_ANSWER, getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener());
         }
     }
 

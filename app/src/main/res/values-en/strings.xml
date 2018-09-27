@@ -40,4 +40,8 @@
     <string name="settings_profile">PROFILE</string>
     <string name="settings_notifications">Enabled notifications</string>
     <string name="settings_button">DELETE ACCOUNT</string>
+    <string name="settings_name">NAME :</string>
+    <string name="content_text">Your lunch for today :</string>
+    <string name="adress_notification">Adress :</string>
+    <string name="participation_notification">workmates :</string>
 </resources>

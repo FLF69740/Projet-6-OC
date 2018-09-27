@@ -53,7 +53,7 @@ public class FileRestaurantFragment extends Fragment {
     private OnClicChoiceRestaurant mCallback;
 
     public interface OnClicChoiceRestaurant{
-        void onResultChoiceTransmission(View view, String name, String placeId, int hour, int date);
+        void onResultChoiceTransmission(View view, String name, String adress, String placeId, int hour, int date);
         void onResultLikeTransmission(View view, String listOfParticipant, String placeId, String decision, int like, boolean toCreate);
         void webSiteVisiting(View view, String url);
     }
@@ -117,10 +117,10 @@ public class FileRestaurantFragment extends Fragment {
         mImageViewRestaurantChoiceOK.setVisibility(View.INVISIBLE);
         if (isChoosen){
             mImageViewRestaurantChoiceOK.setVisibility(View.VISIBLE);
-            if (isAction) mCallback.onResultChoiceTransmission(mView, mRestaurantProfile.getName(), mRestaurantProfile.getPlaceId(), mHour, mDate);
+            if (isAction) mCallback.onResultChoiceTransmission(mView, mRestaurantProfile.getName(), mRestaurantProfile.getAdress(), mRestaurantProfile.getPlaceId(), mHour, mDate);
         } else {
             mImageViewRestaurantChoiceKO.setVisibility(View.VISIBLE);
-            if (isAction) mCallback.onResultChoiceTransmission(mView, BLANK_ANSWER, mRestaurantProfile.getPlaceId(), mHour, mDate);
+            if (isAction) mCallback.onResultChoiceTransmission(mView, BLANK_ANSWER, BLANK_ANSWER, mRestaurantProfile.getPlaceId(), mHour, mDate);
         }
     }
 

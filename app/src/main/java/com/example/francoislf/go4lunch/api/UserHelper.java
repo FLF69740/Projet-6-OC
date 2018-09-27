@@ -8,6 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.USER_DATE_CHOICE;
 import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.USER_HOUR_CHOICE;
+import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.USER_RESTAURANT_ADRESS;
 import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.USER_RESTAURANT_CHOICE;
 
 public class UserHelper {
@@ -54,6 +55,10 @@ public class UserHelper {
 
     public static Task<Void> updateHourChoice(String hourChoice, String uid){
         return getUsersCollection().document(uid).update(USER_HOUR_CHOICE, hourChoice);
+    }
+
+    public static Task<Void> updateAdressRestaurant(String adressRestaurant, String uid){
+        return getUsersCollection().document(uid).update(USER_RESTAURANT_ADRESS, adressRestaurant);
     }
 
     /**

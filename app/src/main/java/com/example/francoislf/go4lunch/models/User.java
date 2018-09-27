@@ -11,6 +11,7 @@ public class User {
     private String mRestaurantChoice;
     private String mDateChoice;
     private String mHourChoice;
+    private String mAdressRestaurant;
     @Nullable private String mUrlPicture;
 
     public User(String uid, String username, String urlPicture){
@@ -20,6 +21,7 @@ public class User {
         this.mRestaurantChoice = BLANK_ANSWER;
         this.mDateChoice = BLANK_ANSWER;
         this.mHourChoice = BLANK_ANSWER;
+        this.mAdressRestaurant = BLANK_ANSWER;
     }
 
     public User(){}
@@ -71,5 +73,13 @@ public class User {
 
     public void setUrlPicture(@Nullable String urlPicture) {
         mUrlPicture = urlPicture;
+    }
+
+    public String getAdressRestaurant() {
+        return mAdressRestaurant;
+    }
+
+    public void setAdressRestaurant(String adressRestaurant) {
+        mAdressRestaurant = adressRestaurant;
     }
 }

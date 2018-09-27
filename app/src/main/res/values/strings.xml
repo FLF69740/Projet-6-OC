@@ -65,5 +65,11 @@
     <string name="settings_profile">PROFIL</string>
     <string name="settings_notifications">Notifications activées</string>
     <string name="settings_button">EFFACER COMPTE</string>
+    <string name="settings_name">NOM :</string>
+
+    <!-- Notification -->
+    <string name="content_text">Votre restaurant d\'aujourd\'hui :</string>
+    <string name="adress_notification">Adresse :</string>
+    <string name="participation_notification">collègues :</string>
 
 </resources>

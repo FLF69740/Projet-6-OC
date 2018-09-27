@@ -36,6 +36,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     public static final String USER_DATE_CHOICE = "dateChoice";
     public static final String USER_HOUR_CHOICE = "hourChoice";
     public static final String USER_UID = "uid";
+    public static final String USER_NAME = "username";
+    public static final String USER_RESTAURANT_ADRESS = "adressRestaurant";
     public static final String BLANK_ANSWER = "Empty";
     public static final String LIKE_NUMBER_OF_LIKE = "numberOfLike";
     public static final String LIKE_PARTICIPANTS = "participants";
@@ -43,6 +45,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public static final String LIKE_RESTAURANT_NAME = "restaurantName";
 
     private static final int SIGN_OUT_TASK = 10;
+    private static final int DELETE_USER_TASK = 20;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,6 +101,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 .getLaunchIntentForPackage(getBaseContext().getPackageName());
                         startActivity(intent);
                         break;
+                    case DELETE_USER_TASK:
+                        finish();
+                        break;
                     default: break;
                 }
             }
@@ -109,6 +115,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnSuccessListener(this, updateUIAfterRestRequestsCompleted(SIGN_OUT_TASK));
+    }
+
+    // User deleting
+    protected void deleteUserFromFirebase(){
+        if (getCurrentUser() != null){
+            AuthUI.getInstance().delete(this).addOnSuccessListener(this, this.updateUIAfterRestRequestsCompleted(DELETE_USER_TASK));
+        }
     }
 
     /**
