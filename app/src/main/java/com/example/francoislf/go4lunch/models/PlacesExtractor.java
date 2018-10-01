@@ -46,9 +46,6 @@ public class PlacesExtractor {
 
             if (mPlacesList.get(i).getResult().getWebsite() != null)
                 mRestaurantProfileList.get(i).setWebSite(mPlacesList.get(i).getResult().getWebsite());
-
-
-
         }
     }
 

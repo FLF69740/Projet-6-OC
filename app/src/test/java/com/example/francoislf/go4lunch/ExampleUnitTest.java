@@ -1,18 +1,9 @@
 package com.example.francoislf.go4lunch;
 
-import android.content.Context;
-
-import com.example.francoislf.go4lunch.models.PlacesExtractor;
+import com.example.francoislf.go4lunch.models.ChoiceRestaurantCountdown;
 import com.example.francoislf.go4lunch.models.RecyclerViewItemTransformer;
-import com.example.francoislf.go4lunch.models.RestaurantProfile;
-
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeFieldType;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.Assert.*;
 
 /**
@@ -27,66 +18,58 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void testPhotoAndPlaceOrganisation(){
+    public void testChoiceRestaurantCountdownWithYesterdayPm(){
 
-        ArrayList<String> restaurantProfileList = new ArrayList<>();
-        List<String> stringList = new ArrayList<String>();
+        DateTime dt = new DateTime();
+        String date = String.valueOf(dt.getDayOfYear() -1);
+        String hour = "14";
 
-        restaurantProfileList.add("AAA");
-        restaurantProfileList.add("BBB");
-        restaurantProfileList.add("CCC");
+        boolean isWaiting = new ChoiceRestaurantCountdown(hour,date).getCountdownResult();
 
-        stringList.add("CCC#Photo3");
-        stringList.add("AAA#Photo2");
-        stringList.add("BBB#Photo1");
-
-        ArrayList<String> result = new ArrayList<>();
-
-        for (int i = 0 ; i < restaurantProfileList.size() ; i++){
-            for (int j = 0 ; j < stringList.size() ; j++){
-                if (stringList.get(j).startsWith(restaurantProfileList.get(i))) result.add(stringList.get(j));
-            }
-        }
-
-        assert(result.get(0).contains("AAA"));
-        assert(result.get(1).contains("BBB"));
-        assert(result.get(2).contains("CCC"));
-
+        if (dt.getHourOfDay() > 13) assertTrue(isWaiting);
+        else assertFalse(isWaiting);
     }
 
     @Test
-    public void testPhotoSplitSection(){
+    public void testChoiceRestaurantCountdownWithTodayPm(){
 
-        ArrayList<String> restaurantProfileList = new ArrayList<>();
-        List<String> stringList = new ArrayList<String>();
+        DateTime dt = new DateTime();
+        String date = String.valueOf(dt.getDayOfYear());
+        String hour = "13";
 
-        restaurantProfileList.add("AAA");
-        restaurantProfileList.add("BBB");
-        restaurantProfileList.add("CCC");
+        boolean isWaiting = new ChoiceRestaurantCountdown(hour,date).getCountdownResult();
 
-        stringList.add("CCC#Photo3");
-        stringList.add("AAA#Photo1");
-        stringList.add("BBB#Photo2");
-
-        ArrayList<String> result = new ArrayList<>();
-
-        for (int i = 0 ; i < restaurantProfileList.size() ; i++){
-            for (int j = 0 ; j < stringList.size() ; j++){
-                if (stringList.get(j).startsWith(restaurantProfileList.get(i))) result.add(stringList.get(j));
-            }
-        }
-
-        ArrayList<String> resultFinal = new ArrayList<>();
-
-        for (int i = 0 ; i < result.size() ; i++){
-            resultFinal.add(result.get(i).split("#")[1]);
-        }
-
-        assert(resultFinal.get(0).equals("Photo1"));
-        assert(resultFinal.get(1).equals("Photo2"));
-        assert(resultFinal.get(2).equals("Photo3"));
-
+        if (dt.getHourOfDay() >= 14) assertFalse(isWaiting);
     }
+
+    @Test
+    public void testChoiceRestaurantCountdownWithTodayAm(){
+
+        DateTime dt = new DateTime();
+        String date = String.valueOf(dt.getDayOfYear());
+        String hour = "9";
+
+        boolean isWaiting = new ChoiceRestaurantCountdown(hour,date).getCountdownResult();
+
+        if (dt.getHourOfDay() >= 13) assertTrue(isWaiting);
+        else assertFalse(isWaiting);
+    }
+
+    @Test
+    public void testChoiceRestaurantCountdownWithBeforeYesterday(){
+
+        DateTime dt = new DateTime();
+        String date = String.valueOf(dt.getDayOfYear() -2);
+        String hour = "14";
+
+        boolean isWaiting = new ChoiceRestaurantCountdown(hour,date).getCountdownResult();
+
+        assertTrue(isWaiting);
+    }
+
+    /**
+     *  TEST ABOUT RECYCLERVIEW ITEM TRANSFORMER
+     */
 
     @Test
     public void testGoodSectionLocalisationWithRecyclerViewItemTransformer(){
@@ -101,7 +84,54 @@ public class ExampleUnitTest {
         change = recyclerViewItemTransformer.getShortAdress(string);
 
         assert (change.equals("BB C Rue du truc"));
+    }
 
+    @Test
+    public void testChangeHourFormatFor16h(){
+        RecyclerViewItemTransformer recyclerViewItemTransformer = new RecyclerViewItemTransformer();
+
+        double numeric = 1600;
+        String hour = recyclerViewItemTransformer.changeHourFormat(numeric, false);
+        assertEquals ("04:00pm", hour);
+    }
+
+    @Test
+    public void testChangeHourFormatFor1h(){
+        RecyclerViewItemTransformer recyclerViewItemTransformer = new RecyclerViewItemTransformer();
+
+        double numeric = 100;
+        String hour = recyclerViewItemTransformer.changeHourFormat(numeric, true);
+        assertEquals ("01:00am", hour);
+    }
+
+    @Test
+    public void testChangeHourFormatForMidnight(){
+        RecyclerViewItemTransformer recyclerViewItemTransformer = new RecyclerViewItemTransformer();
+
+        double numeric = 0;
+        String hour = recyclerViewItemTransformer.changeHourFormat(numeric, true);
+        assertEquals ("12:00am", hour);
+    }
+
+    @Test
+    public void testChangeHourFormatFor12h(){
+        RecyclerViewItemTransformer recyclerViewItemTransformer = new RecyclerViewItemTransformer();
+
+        double numeric = 1200;
+        String hour = recyclerViewItemTransformer.changeHourFormat(numeric, true);
+        assertEquals ("12:00pm", hour);
+    }
+
+    @Test
+    public void testSizeStringMoreMaximum(){
+        RecyclerViewItemTransformer recyclerViewItemTransformer = new RecyclerViewItemTransformer();
+
+        StringBuilder before = new StringBuilder();
+        for (int i = 0 ; i < 40 ; i++) before.append(i);
+        String name = recyclerViewItemTransformer.getGoodSizeName(before.toString());
+
+        assert(before.toString().length() > 32);
+        assertEquals(32, name.length());
     }
 
 }

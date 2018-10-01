@@ -75,7 +75,7 @@ public class RecyclerViewItemTransformer {
     }
 
     // transform the state of the schedules (exemple from 13h00 to 1:00pm)
-    private String changeHourFormat(double hour, boolean inverse){
+    public String changeHourFormat(double hour, boolean inverse){
 
         String result;
         DateTime dt = new DateTime();
@@ -88,7 +88,8 @@ public class RecyclerViewItemTransformer {
         DecimalFormat numberFormat = new DecimalFormat("#.00");
 
         result = String.valueOf(numberFormat.format(hourChange));
-        result = result.replace('.',':');
+        if (result.contains(".")) result = result.replace('.',':');
+        if (result.contains(",")) result = result.replace(',',':');
 
         if (hour >= 1200 && hour < 1300) result = "12:00pm";
         else if (!inverse) {
@@ -97,7 +98,8 @@ public class RecyclerViewItemTransformer {
             }
             else {
                 result = String.valueOf(numberFormat.format(hourChange - 12));
-                result = result.replace('.',':');
+                if (result.contains(".")) result = result.replace('.',':');
+                if (result.contains(",")) result = result.replace(',',':');
                 result += "pm";
             }
         } else {

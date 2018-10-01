@@ -45,4 +45,9 @@
         <item name="android:textColor">@android:color/darker_gray</item>
     </style>
 
+    <!-- STYLE FOR PROGRESSBAR -->
+    <style name="progressbar_color">
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+    </style>
+
 </resources>

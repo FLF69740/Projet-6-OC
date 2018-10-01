@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import com.example.francoislf.go4lunch.R;
 import com.example.francoislf.go4lunch.api.UserHelper;
@@ -40,7 +41,6 @@ import static com.example.francoislf.go4lunch.controllers.activities.BaseActivit
 import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.USER_HOUR_CHOICE;
 import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.USER_RESTAURANT_CHOICE;
 
-
 public class MainFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, EventListener<QuerySnapshot> {
 
     private MapView mMapView;
@@ -53,6 +53,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private Boolean mLocationPermissionsGranted = false;
     private ArrayList<RestaurantProfile> mRestaurantProfileList;
+    private ProgressBar mProgressBar;
 
     private OnClickedResultMarker mCallback;
 
@@ -85,14 +86,16 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mProgressBar = mView.findViewById(R.id.main_progressbar);
         if (mLocationPermissionsGranted) {
             GPSTracker GPSTracker = new GPSTracker();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) mLocation = GPSTracker.getLocation(this.getContext());
             mLatitude = mLocation.getLatitude();
             mLongitude = mLocation.getLongitude();
-
             mMapView = mView.findViewById(R.id.map);
             if (mMapView != null) {
+                mProgressBar.setVisibility(View.VISIBLE);
+                mMapView.setVisibility(View.INVISIBLE);
                 mMapView.onCreate(null);
                 mMapView.onResume();
                 mMapView.getMapAsync(this);
@@ -160,6 +163,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
             listMarker[i].setTag(i);
         }
         mMap.setOnMarkerClickListener(this);
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mMapView.setVisibility(View.VISIBLE);
     }
 
     @Override

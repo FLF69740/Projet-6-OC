@@ -11,6 +11,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/map"
-        map:cameraZoom="16"/>
+        map:cameraZoom="16"
+        android:visibility="invisible"/>
+
+
+    <ProgressBar
+        android:id="@+id/main_progressbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:progress="40"
+        android:max="100"
+        android:theme="@style/progressbar_color"
+        android:indeterminate="true"
+        android:visibility="invisible"/>
+
 
 </FrameLayout>
