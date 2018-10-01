@@ -56,6 +56,11 @@ public class FileRestaurantActivity extends BaseActivity implements FileRestaura
     }
 
     @Override
+    protected String getFragmentTag() {
+        return TAG_FILE_RESTAURANT_FRAGMENT;
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         this.snippetMarkerTransmissionToFragment();

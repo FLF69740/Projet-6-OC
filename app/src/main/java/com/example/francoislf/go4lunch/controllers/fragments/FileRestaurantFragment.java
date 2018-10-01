@@ -65,6 +65,7 @@ public class FileRestaurantFragment extends Fragment {
         this.mRestaurantLocalisation = mView.findViewById(R.id.restaurant_localisation);
         this.mRestaurantImage = mView.findViewById(R.id.restaurant_photo);
         ButterKnife.bind(this, mView);
+        mButtonChoiceRestaurant.setEnabled(false);
         return mView;
     }
 
@@ -73,13 +74,15 @@ public class FileRestaurantFragment extends Fragment {
         mRestaurantName.setText(mRestaurantProfile.getName());
         mRestaurantLocalisation.setText(mRestaurantProfile.getAdress());
         mPhoneNumber = mRestaurantProfile.getPhoneNumber();
-        mPhoneNumber = mPhoneNumber.replace(" ","");
+        if (mPhoneNumber != null) mPhoneNumber = mPhoneNumber.replace(" ","");
         mWebSite = mRestaurantProfile.getWebSite();
-        if (!mRestaurantProfile.getPhoto().equals(BLANK_ANSWER)) {
-            Glide.with(mView)
-                    .load(mRestaurantProfile.getPhoto())
-                    .apply(RequestOptions.centerCropTransform())
-                    .into(mRestaurantImage);
+        if (mRestaurantProfile.getPhoto() != null) {
+            if (!mRestaurantProfile.getPhoto().equals(BLANK_ANSWER)) {
+                Glide.with(mView)
+                        .load(mRestaurantProfile.getPhoto())
+                        .apply(RequestOptions.centerCropTransform())
+                        .into(mRestaurantImage);
+            }
         }
     }
 
@@ -88,6 +91,7 @@ public class FileRestaurantFragment extends Fragment {
         if (mRestaurantName.getText().equals(name)) isRestaurantChosen = true;
         else isRestaurantChosen = false;
         setCircleLogoRestaurantChoice(isRestaurantChosen, false);
+        mButtonChoiceRestaurant.setEnabled(true);
     }
 
     // get the state of Like Button from activity to fragment

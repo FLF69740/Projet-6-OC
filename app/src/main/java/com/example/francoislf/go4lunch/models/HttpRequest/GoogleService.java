@@ -20,6 +20,13 @@ public interface GoogleService {
     Observable<Places> getPlaces(@Query("placeid") String placeid,
                                  @Query("key") String key);
 
+    @GET("autocomplete/json?strictbounds")
+    Observable<Prediction> getPredictions(@Query("input") String input,
+                                          @Query("location") String localisation,
+                                          @Query("radius") String radius,
+                                          @Query("type") String type,
+                                          @Query("key") String key);
+
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://maps.googleapis.com/maps/api/place/")
             .addConverterFactory(GsonConverterFactory.create())

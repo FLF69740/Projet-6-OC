@@ -73,17 +73,21 @@ public class ListViewFragment extends Fragment implements EventListener<QuerySna
         return mView;
     }
 
-
+    // refresh the list of restaurant for the recyclerView creation
     public void setRestaurantProfileList(List<RestaurantProfile> restaurantProfileList){
         this.mRestaurantProfileList.addAll(restaurantProfileList);
     }
 
-    private void configureRecyclerView(){
+    // update recyclerView with autocomplete process
+    public  void updateRecycler(){
+        mAdapter.notifyDataSetChanged();
+    }
 
+    private void configureRecyclerView(){
         this.mAdapter = new RestaurantAdapter(this.mRestaurantProfileList);
         this.mRecyclerView.setAdapter(this.mAdapter);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapter.notifyDataSetChanged();
+        this.updateRecycler();
     }
 
     // Configure item click on RecyclerView

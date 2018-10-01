@@ -73,11 +73,13 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
         }
         this.mTextViewDistance.setText(mRecyclerViewItemTransformer.getDistance(restaurantProfile.getLat(), restaurantProfile.getLng()));
 
-        if (!restaurantProfile.getPhoto().equals(BLANK_ANSWER)){
-            Glide.with(mItemView)
-                    .load(restaurantProfile.getPhoto())
-                    .apply(RequestOptions.centerCropTransform())
-                    .into(mImageViewPhoto);
+        if (restaurantProfile.getPhoto() != null) {
+            if (!restaurantProfile.getPhoto().equals(BLANK_ANSWER)) {
+                Glide.with(mItemView)
+                        .load(restaurantProfile.getPhoto())
+                        .apply(RequestOptions.centerCropTransform())
+                        .into(mImageViewPhoto);
+            }
         }
 
         UserHelper.getAllUsers().get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {

@@ -25,6 +25,11 @@ public class StartActivity extends BaseActivity {
     @Override
     protected int getFragmentLayout() {return 0;}
 
+    @Override
+    protected String getFragmentTag() {
+        return "start";
+    }
+
     private void connectionVerification(){
         if (getCurrentUser() != null) {
             Intent intent = new Intent(this, MainActivity.class);

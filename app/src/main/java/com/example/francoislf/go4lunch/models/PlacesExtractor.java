@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
+import com.example.francoislf.go4lunch.R;
 import com.example.francoislf.go4lunch.models.HttpRequest.Places;
 
 import java.util.ArrayList;
@@ -38,8 +39,16 @@ public class PlacesExtractor {
                 mRestaurantProfileList.get(i).setWeekHour(getOpeningHours(mPlacesList.get(i)));
             if (mPlacesList.get(i).getResult().getFormattedPhoneNumber() != null)
                 mRestaurantProfileList.get(i).setPhoneNumber(mPlacesList.get(i).getResult().getFormattedPhoneNumber());
+
+            if (mPlacesList.get(i).getResult().getPhotos() != null)
+            mRestaurantProfileList.get(i).setPhoto("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+                    mPlacesList.get(i).getResult().getPhotos().get(0).getPhotoReference() + "&key=" + mContext.getString(R.string.google_place_api_key));
+
             if (mPlacesList.get(i).getResult().getWebsite() != null)
                 mRestaurantProfileList.get(i).setWebSite(mPlacesList.get(i).getResult().getWebsite());
+
+
+
         }
     }
 
@@ -76,20 +85,4 @@ public class PlacesExtractor {
         return mRestaurantProfileList.get(goodId);
     }
 
-    // synchronise the organisations of the 2 Lists (Photo and RestaurantProfile) in order to have the good photo corresponding with the good ProfileRestaurant
-    public List<String> organisePhotoAndProfile(ArrayList<RestaurantProfile> restaurantProfileList, List<String> stringList){
-        ArrayList<String> result = new ArrayList<>();
-        ArrayList<String> resultFinal = new ArrayList<>();
-        for (int i = 0 ; i < restaurantProfileList.size() ; i++){
-            for (int j = 0 ; j < stringList.size() ; j++){
-                if (stringList.get(j).startsWith(restaurantProfileList.get(i).getName())) result.add(stringList.get(j));
-            }
-        }
-
-        for (int i = 0 ; i < result.size() ; i++){
-            resultFinal.add(result.get(i).split("#")[1]);
-        }
-
-        return resultFinal;
-    }
 }

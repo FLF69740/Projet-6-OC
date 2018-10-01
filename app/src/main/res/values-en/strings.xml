@@ -44,4 +44,5 @@
     <string name="content_text">Your lunch for today :</string>
     <string name="adress_notification">Adress :</string>
     <string name="participation_notification">workmates :</string>
+    <string name="toolbar_edit_text_hint">Search restaurants</string>
 </resources>

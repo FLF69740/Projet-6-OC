@@ -55,7 +55,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="10dp"
         android:text="Name"
-        android:textSize="@dimen/restaurant_viewholder_item_adress"
+        android:textSize="@dimen/restaurant_viewholder_item_title"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/item_recyclerView_adress"
         app:layout_constraintEnd_toEndOf="@+id/barrier5"

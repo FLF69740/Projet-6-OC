@@ -32,6 +32,11 @@ public class ConnectionActivity extends BaseActivity {
     protected int getFragmentLayout() {return 0;}
 
     @Override
+    protected String getFragmentTag() {
+        return "connection";
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

@@ -46,21 +46,19 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
     private MapView mMapView;
     private View mView;
     private GoogleMap mMap;
-    private GPSTracker mGPSTracker;
     private Location mLocation;
     private double mLatitude, mLongitude;
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private Boolean mLocationPermissionsGranted = false;
-    private Marker[] mListMarker;
     private ArrayList<RestaurantProfile> mRestaurantProfileList;
 
     private OnClickedResultMarker mCallback;
 
     public interface OnClickedResultMarker{
         void onResultMarkerTransmission(View view, String title);
-        void executePlacesWithExtractor(View view, String coordinates);
+        void executePlacesCallback(View view, String coordinates);
     }
 
     //Parent activity will automatically subscribe to callback
@@ -88,8 +86,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (mLocationPermissionsGranted) {
-            mGPSTracker = new GPSTracker();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) mLocation = mGPSTracker.getLocation(this.getContext());
+            GPSTracker GPSTracker = new GPSTracker();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) mLocation = GPSTracker.getLocation(this.getContext());
             mLatitude = mLocation.getLatitude();
             mLongitude = mLocation.getLongitude();
 
@@ -144,22 +142,22 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
         rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
         rlp.setMargins(0, 0, 10, 30);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(mLatitude, mLongitude)));
-        mCallback.executePlacesWithExtractor(this.mView,String.valueOf(mLatitude)+","+String.valueOf(mLongitude));
+        mCallback.executePlacesCallback(this.mView,String.valueOf(mLatitude)+","+String.valueOf(mLongitude));
     }
 
     // Create markers from Observable
     public void markersCreation(ArrayList<RestaurantProfile> results){
         mRestaurantProfileList = results;
-        mListMarker = new Marker[results.size()];
+        Marker[] listMarker = new Marker[results.size()];
         mMap.clear();
         for (int i = 0 ; i < results.size() ; i++){
-            mListMarker[i] = mMap.addMarker(new MarkerOptions()
+            listMarker[i] = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(results.get(i).getLat(), results.get(i).getLng()))
                     .title(results.get(i).getName())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.punaise_orange)));
-            if (results.get(i).getNumberOfParticipant() == 0) mListMarker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.punaise_orange));
-            else mListMarker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.punaise_verte));
-            mListMarker[i].setTag(i);
+            if (results.get(i).getNumberOfParticipant() == 0) listMarker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.punaise_orange));
+            else listMarker[i].setIcon(BitmapDescriptorFactory.fromResource(R.drawable.punaise_verte));
+            listMarker[i].setTag(i);
         }
         mMap.setOnMarkerClickListener(this);
     }

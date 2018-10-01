@@ -11,11 +11,16 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -39,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 
@@ -50,13 +56,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @BindView(R.id.activity_main_nav_view) NavigationView mNavigationView;
     @BindView(R.id.activity_main_drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.bottom_navigation) BottomNavigationView mBottomNavigationView;
+    @BindView(R.id.toolbar_edit_text) EditText mToolbarEditText;
+    @BindView(R.id.toolbar_button) TextView mToolBarButton;
+    @BindView(R.id.imageView4) ImageView mToolbarSeparator;
     private ArrayList<RestaurantProfile> mRestaurantProfileList;
     PlacesExtractor mPlacesExtractor;
     private Disposable mDisposable, mDisposable2;
     private static final String PARAMETER_PLACE_API_RADIUS = "1000";
     private static final String PARAMETER_PLACE_API_TYPE = "restaurant";
+    private static final String PARAMETER_AUTOCOMPLETE_TYPE = "establishment";
     private String PARAMETER_PLACE_API_KEY;
     private MainFragment mMainFragment;
+    private ListViewFragment mListViewFragment;
+    private String mCoordinates;
 
     @Override
     protected int getContentView() {return R.layout.activity_main;}
@@ -64,6 +76,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected Fragment newInstance() {mMainFragment = new MainFragment(); return mMainFragment;}
     @Override
     protected int getFragmentLayout() {return (R.id.frame_layout_main);}
+    @Override
+    protected String getFragmentTag() {return TAG_MAIN_FRAGMENT;}
+
     @Override
     protected boolean getContentViewBoolean() {return true;}
     @Override
@@ -73,11 +88,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         PARAMETER_PLACE_API_KEY = getString(R.string.google_place_api_key);
         mRestaurantProfileList = new ArrayList<>();
         mPlacesExtractor = new PlacesExtractor(this);
+        mToolbarEditText.setText("");
         configureToolbar();
         this.configureDrawerLayout();
         this.configureNavigationView();
         this.configureBottomNavigationView();
         this.updateProfileInformations();
+        this.configureEditTextToolbarListener();
     }
 
     // Update Nave_header informations about user informations
@@ -104,15 +121,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.ic_onglet_map_view: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_1));
-                        getFragmentManager().beginTransaction().replace(getFragmentLayout(), newInstance()).commit();
+                        getFragmentManager().beginTransaction().replace(getFragmentLayout(), newInstance(), TAG_MAIN_FRAGMENT).commit();
                         configureToolbarTitle(1);
                     break;
                     case R.id.ic_onglet_list_view: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_2));
-                        getFragmentManager().beginTransaction().replace(getFragmentLayout(), new ListViewFragment().newInstanceWithList(mRestaurantProfileList)).commit();
+                        mListViewFragment = new ListViewFragment();
+                        getFragmentManager().beginTransaction().replace(getFragmentLayout(), mListViewFragment.newInstanceWithList(mRestaurantProfileList), TAG_LISTVIEW_FRAGMENT).commit();
                         configureToolbarTitle(2);
                     break;
                     case R.id.ic_onglet_workmates: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_3));
-                        getFragmentManager().beginTransaction().replace(getFragmentLayout(), new WorkmatesFragment().newInstanceWorkmates()).commit();
+                        getFragmentManager().beginTransaction().replace(getFragmentLayout(), new WorkmatesFragment().newInstanceWorkmates(), TAG_WORKMATES_FRAGMENT).commit();
                         configureToolbarTitle(3);
                     break;
                 }
@@ -141,6 +159,25 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_activity_main_search:
+                mToolbarEditText.setVisibility(View.VISIBLE);
+                mToolBarButton.setVisibility(View.VISIBLE);
+                mToolbarSeparator.setVisibility(View.VISIBLE);
+                return true;
+            default: return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @OnClick(R.id.toolbar_button)
+    public void hideSearchAutocomplete(){
+        mToolbarEditText.setVisibility(View.INVISIBLE);
+        mToolBarButton.setVisibility(View.INVISIBLE);
+        mToolbarSeparator.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -230,53 +267,109 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
+    // configure the listener of toolbar EditText
+    private void configureEditTextToolbarListener(){
+        this.mToolbarEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Fragment fragment = getFragmentManager().findFragmentByTag(TAG_LISTVIEW_FRAGMENT);
+                if (s.length() > 2) executePlacesWithExtractorPrediction(s.toString());
+                else if (s.length() < 2 && fragment != null){
+                    executePlacesWithExtractor(mCoordinates);
+                    getFragmentManager().beginTransaction()
+                            .replace(getFragmentLayout(), mListViewFragment.newInstanceWithList(mRestaurantProfileList), TAG_LISTVIEW_FRAGMENT).commit();
+                }
+                else executePlacesWithExtractor(mCoordinates);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+    }
+
     /**
      *  HTTP (RxJAVA)
      */
 
-    public void executePlacesWithExtractor(View view, final String coordinates){
-        this.mDisposable = GoogleStreams.streamListPlaces(coordinates,PARAMETER_PLACE_API_RADIUS, PARAMETER_PLACE_API_TYPE, PARAMETER_PLACE_API_KEY)
-                .subscribeWith(new DisposableObserver<List<Places>>() {
-                                   @Override
-                                   public void onNext(List<Places> places) {
-                                       mPlacesExtractor.setPlacesList(places);
-                                       mRestaurantProfileList = mPlacesExtractor.getRestaurantProfileList();
-                                       UserHelper.getAllUsers().get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                           @Override
-                                           public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                               if (task.isSuccessful()) {
-                                                   for (QueryDocumentSnapshot document : task.getResult()) {
-                                                       if (!document.getString(USER_DATE_CHOICE).equals(BLANK_ANSWER))
-                                                           if (!new ChoiceRestaurantCountdown(document.getString(USER_HOUR_CHOICE),
-                                                                       document.getString(USER_DATE_CHOICE)).getCountdownResult()) {
-                                                           for (int i = 0; i < mRestaurantProfileList.size(); i++) {
-                                                               if (document.getString(USER_RESTAURANT_CHOICE).equals(mRestaurantProfileList.get(i).getName())) {
-                                                                   int newNumber = mRestaurantProfileList.get(i).getNumberOfParticipant() + 1;
-                                                                   mRestaurantProfileList.get(i).setNumberOfParticipant(newNumber);
-                                                               }}}}}
-                                               mMainFragment.markersCreation(mRestaurantProfileList);
-                                           }
-                                       });
-                                   }
-                                   @Override
-                                   public void onError(Throwable e) {}
-                                   @Override
-                                   public void onComplete() {executePhotoWithExtractor(coordinates);}
-                               });
+    @Override
+    public void executePlacesCallback(View view, String coordinates) {
+        String toolbarText = mToolbarEditText.getText().toString();
+        if (toolbarText.length() < 2) executePlacesWithExtractor(coordinates);
+        else executePlacesWithExtractorPrediction(toolbarText);
     }
 
-    private void executePhotoWithExtractor(String coordinates){
-        this.mDisposable2 = GoogleStreams.streamListPhotos(coordinates,PARAMETER_PLACE_API_RADIUS, PARAMETER_PLACE_API_TYPE, PARAMETER_PLACE_API_KEY)
-                .subscribeWith(new DisposableObserver<List<String>>() {
+    // Observable with autocomplete api for places
+    private void executePlacesWithExtractorPrediction(String result){
+        this.mDisposable2 = GoogleStreams.streamListPlacesPrediction(result, mCoordinates, PARAMETER_PLACE_API_RADIUS, PARAMETER_AUTOCOMPLETE_TYPE, PARAMETER_PLACE_API_KEY)
+                .subscribeWith(new DisposableObserver<List<Places>>() {
                     @Override
-                    public void onNext(List<String> strings) {
-                        List<String> tempArrayList = new ArrayList<>(mPlacesExtractor.organisePhotoAndProfile(mRestaurantProfileList, strings));
-                        for (int i = 0 ; i < tempArrayList.size() ; i++) mRestaurantProfileList.get(i).setPhoto(tempArrayList.get(i));
+                    public void onNext(List<Places> places) {
+                        mPlacesExtractor.setPlacesList(places);
+                        mRestaurantProfileList = new ArrayList<>();
+                        mRestaurantProfileList = mPlacesExtractor.getRestaurantProfileList();
+                        UserHelper.getAllUsers().get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        if (!document.getString(USER_DATE_CHOICE).equals(BLANK_ANSWER))
+                                            if (!new ChoiceRestaurantCountdown(document.getString(USER_HOUR_CHOICE),
+                                                    document.getString(USER_DATE_CHOICE)).getCountdownResult()) {
+                                                for (int i = 0; i < mRestaurantProfileList.size(); i++) {
+                                                    if (document.getString(USER_RESTAURANT_CHOICE).equals(mRestaurantProfileList.get(i).getName())) {
+                                                        int newNumber = mRestaurantProfileList.get(i).getNumberOfParticipant() + 1;
+                                                        mRestaurantProfileList.get(i).setNumberOfParticipant(newNumber);
+                                                    }}}}}
+                                mMainFragment.markersCreation(mRestaurantProfileList);
+                                Fragment fragment = getFragmentManager().findFragmentByTag(TAG_LISTVIEW_FRAGMENT);
+                                if (fragment != null)
+                                    getFragmentManager().beginTransaction()
+                                            .replace(getFragmentLayout(), mListViewFragment.newInstanceWithList(mRestaurantProfileList), TAG_LISTVIEW_FRAGMENT).commit();
+                            }
+                        });
                     }
                     @Override
                     public void onError(Throwable e) {}
                     @Override
                     public void onComplete() {}
+                });
+    }
+
+    // Observable with NearbySearch api for places
+    public void executePlacesWithExtractor(final String coordinates){
+        mCoordinates = coordinates;
+        this.mDisposable = GoogleStreams.streamListPlaces(coordinates,PARAMETER_PLACE_API_RADIUS, PARAMETER_PLACE_API_TYPE, PARAMETER_PLACE_API_KEY)
+                .subscribeWith(new DisposableObserver<List<Places>>() {
+                    @Override
+                    public void onNext(List<Places> places) {
+                        mPlacesExtractor.setPlacesList(places);
+                        mRestaurantProfileList = new ArrayList<>();
+                        mRestaurantProfileList = mPlacesExtractor.getRestaurantProfileList();
+                        UserHelper.getAllUsers().get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        if (!document.getString(USER_DATE_CHOICE).equals(BLANK_ANSWER))
+                                            if (!new ChoiceRestaurantCountdown(document.getString(USER_HOUR_CHOICE),
+                                                    document.getString(USER_DATE_CHOICE)).getCountdownResult()) {
+                                            for (int i = 0; i < mRestaurantProfileList.size(); i++) {
+                                                if (document.getString(USER_RESTAURANT_CHOICE).equals(mRestaurantProfileList.get(i).getName())) {
+                                                    int newNumber = mRestaurantProfileList.get(i).getNumberOfParticipant() + 1;
+                                                    mRestaurantProfileList.get(i).setNumberOfParticipant(newNumber);
+                                                    }}}}}
+                                mMainFragment.markersCreation(mRestaurantProfileList);
+                            }
+                        });
+                    }
+                    @Override
+                    public void onError(Throwable e) {}
+                    @Override
+                    public void onComplete() {//executePhotoWithExtractor(coordinates);
+                         }
                 });
     }
 

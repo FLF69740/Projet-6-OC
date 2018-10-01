@@ -11,6 +11,11 @@ import io.reactivex.schedulers.Schedulers;
 
 public class GoogleStreams {
 
+    /**
+     *  simple stream
+     */
+
+    // request for map places localisation and general informations information
     public static Observable<NearbySearch> streamNearbySearch(String localisation, String radius, String type, String key){
         GoogleService googleService = GoogleService.retrofit.create(GoogleService.class);
         return googleService.getGoogleRequest(localisation, radius, type, key)
@@ -19,6 +24,7 @@ public class GoogleStreams {
                 .timeout(30, TimeUnit.SECONDS);
     }
 
+    // request for complete informations about a place
     public static Observable<Places> streamPlaces(String placeid, String key){
         GoogleService googleService = GoogleService.retrofit.create(GoogleService.class);
         return googleService.getPlaces(placeid, key)
@@ -27,7 +33,20 @@ public class GoogleStreams {
                 .timeout(30, TimeUnit.SECONDS);
     }
 
+    // request for a prediction
+    public static Observable<Prediction> streamPrediction(String input, String localisation, String radius, String type, final String key){
+        GoogleService googleService = GoogleService.retrofit.create(GoogleService.class);
+        return googleService.getPredictions(input, localisation, radius, type, key)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .timeout(30, TimeUnit.SECONDS);
+    }
 
+    /**
+     *  complex streams
+     */
+
+    // request for a list of complete informations about places
     public static Observable<List<Places>> streamListPlaces(String localisation, String radius, String type, final String key) {
         return streamNearbySearch(localisation, radius, type, key)
                 .flatMap(new Function<NearbySearch, ObservableSource<NearbySearch.Result>>() {
@@ -47,25 +66,24 @@ public class GoogleStreams {
 
     }
 
-    public static Observable<List<String>> streamListPhotos(String localisation, String radius, String type, final String key){
-        return streamNearbySearch(localisation, radius, type, key)
-                .flatMap(new Function<NearbySearch, ObservableSource<NearbySearch.Result>>() {
+    // request for a list of places with prediction
+    public static Observable<List<Places>> streamListPlacesPrediction(String input, String localisation, String radius, String type, final String key){
+        return streamPrediction(input, localisation, radius, type, key)
+                .flatMap(new Function<Prediction, ObservableSource<Prediction.Prediction_>>() {
                     @Override
-                    public ObservableSource<NearbySearch.Result> apply(NearbySearch nearbySearch) throws Exception {
-                        return Observable.fromIterable(nearbySearch.getResults());
+                    public ObservableSource<Prediction.Prediction_> apply(Prediction prediction) throws Exception {
+                        return Observable.fromIterable(prediction.getPredictions());
                     }
                 })
-                .map(new Function<NearbySearch.Result, String>() {
+                .flatMap(new Function<Prediction.Prediction_, ObservableSource<Places>>() {
                     @Override
-                    public String apply(NearbySearch.Result result) throws Exception {
-                        if (result.getPhotos() != null)
-                        return result.getName() + "#https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + result.getPhotos().get(0).getPhotoReference()
-                                + "&key=" + key;
-                        else return result.getName() + "#Empty";
+                    public ObservableSource<Places> apply(Prediction.Prediction_ prediction_) throws Exception {
+                        return streamPlaces(prediction_.getPlaceId(), key);
                     }
                 })
                 .toList()
                 .toObservable();
+
     }
 
 

@@ -32,6 +32,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected ImageView mImageViewProfile;
     protected TextView mTextViewName;
     protected TextView mTextViewEmail;
+    public static final String TAG_MAIN_FRAGMENT = "TAG_MAIN_FRAGMENT";
+    public static final String TAG_LISTVIEW_FRAGMENT = "TAG_LISTVIEW_FRAGMENT";
+    public static final String TAG_FILE_RESTAURANT_FRAGMENT = "TAG_FILE_RESTAURANT_FRAGMENT";
+    public static final String TAG_SETTINGS_FRAGMENT = "TAG_SETTINGS_FRAGMENT";
+    public static final String TAG_WORKMATES_FRAGMENT = "TAG_WORKMATES_FRAGMENT";
     public static final String USER_RESTAURANT_CHOICE = "restaurantChoice";
     public static final String USER_DATE_CHOICE = "dateChoice";
     public static final String USER_HOUR_CHOICE = "hourChoice";
@@ -68,7 +73,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void configureFragment(Bundle savedInstanceState) {
         if (savedInstanceState == null){
             getFragmentManager().beginTransaction()
-                    .add(getFragmentLayout(),newInstance())
+                    .add(getFragmentLayout(),newInstance(), getFragmentTag())
                     .commit();
         }
     }
@@ -78,6 +83,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     // Load the layout id
     protected abstract int getFragmentLayout();
+
+    // Load the fragment tag
+    protected abstract String getFragmentTag();
 
     /**
      * UTILS
