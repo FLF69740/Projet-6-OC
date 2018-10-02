@@ -3,10 +3,8 @@ package com.example.francoislf.go4lunch.controllers.activities;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
 import com.example.francoislf.go4lunch.R;
 import com.example.francoislf.go4lunch.controllers.fragments.WebViewFragment;
-
 
 public class WebViewActivity extends AppCompatActivity {
 

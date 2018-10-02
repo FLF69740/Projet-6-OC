@@ -20,12 +20,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import org.joda.time.DateTime;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.Nullable;
-
 
 public class FileRestaurantActivity extends BaseActivity implements FileRestaurantFragment.OnClicChoiceRestaurant{
 
@@ -138,8 +135,7 @@ public class FileRestaurantActivity extends BaseActivity implements FileRestaura
             like = 1;
             listOfParticipant = this.getCurrentUser().getUid() + ";";
             boolLike = true;
-        }
-        else {
+        } else {
             if (decision.equals(getString(R.string.LIKE))) {
                 boolLike = true;
                 listOfParticipant += getCurrentUser().getUid() + ";";
@@ -187,7 +183,4 @@ public class FileRestaurantActivity extends BaseActivity implements FileRestaura
             }
         });
     }
-
-
-
 }

@@ -26,7 +26,6 @@ public class WebViewFragment extends Fragment {
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         mWebView.setWebViewClient(new WebViewClient());
-
         return v;
     }
 

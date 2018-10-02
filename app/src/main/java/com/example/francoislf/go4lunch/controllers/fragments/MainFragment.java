@@ -170,9 +170,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public boolean onMarkerClick(Marker marker) {
         Integer markerTag = (Integer) marker.getTag();
-        if (markerTag != null){
-            mCallback.onResultMarkerTransmission(this.mView, marker.getTitle());
-        }
+        if (markerTag != null) mCallback.onResultMarkerTransmission(this.mView, marker.getTitle());
         return false;
     }
 

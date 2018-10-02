@@ -3,7 +3,6 @@ package com.example.francoislf.go4lunch.controllers.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
-
 import com.example.francoislf.go4lunch.R;
 import com.example.francoislf.go4lunch.api.UserHelper;
 import com.firebase.ui.auth.AuthUI;
@@ -11,7 +10,6 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -82,6 +80,7 @@ public class ConnectionActivity extends BaseActivity {
         }
     }
 
+    // create user in Firestore if this one have no registration
     private void createUserInFirestore(){
         if (this.getCurrentUser() != null){
             final String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;

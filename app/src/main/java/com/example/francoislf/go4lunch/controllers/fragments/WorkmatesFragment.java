@@ -1,6 +1,5 @@
 package com.example.francoislf.go4lunch.controllers.fragments;
 
-
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -17,26 +16,17 @@ import com.example.francoislf.go4lunch.api.UserHelper;
 import com.example.francoislf.go4lunch.models.User;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
-
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class WorkmatesFragment extends Fragment implements WorkmatesAdapter.Listener {
 
     @BindView(R.id.workmates_recyclerview)RecyclerView mRecyclerView;
     @BindView(R.id.workmates_list_empty)TextView mListEmptyTextView;
-
     private WorkmatesAdapter mWorkmatesAdapter;
     private View mView;
 
-    public static WorkmatesFragment newInstanceWorkmates(){
-        WorkmatesFragment workmatesFragment = new WorkmatesFragment();
-        return workmatesFragment;
-    }
+    public static WorkmatesFragment newInstanceWorkmates(){return new WorkmatesFragment();}
 
     private OnClickedAvatarItem mCallback;
 
@@ -44,15 +34,10 @@ public class WorkmatesFragment extends Fragment implements WorkmatesAdapter.List
         void onResultAvatarTransmission(View view, String title);
     }
 
-    public WorkmatesFragment() {
-        // Required empty public constructor
-    }
-
+    public WorkmatesFragment() {}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_workmates, container, false);
         ButterKnife.bind(this, mView);
         this.configureRecyclerView();
@@ -97,11 +82,8 @@ public class WorkmatesFragment extends Fragment implements WorkmatesAdapter.List
 
     //Parent activity will automatically subscribe to callback
     private void createCallbackToParentActivity(){
-        try {
-            mCallback = (WorkmatesFragment.OnClickedAvatarItem) getActivity();
-        } catch (ClassCastException e) {
-            throw new ClassCastException(e.toString()+ " must implement OnClickedResultMarker");
-        }
+        try {mCallback = (WorkmatesFragment.OnClickedAvatarItem) getActivity();}
+        catch (ClassCastException e) {throw new ClassCastException(e.toString()+ " must implement OnClickedResultMarker");}
     }
 
     @Override

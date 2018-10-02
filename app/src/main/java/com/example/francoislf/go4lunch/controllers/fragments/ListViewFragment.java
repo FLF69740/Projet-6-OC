@@ -25,19 +25,14 @@ import java.util.List;
 import javax.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.BLANK_ANSWER;
 import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.USER_DATE_CHOICE;
 import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.USER_HOUR_CHOICE;
 import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.USER_RESTAURANT_CHOICE;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ListViewFragment extends Fragment implements EventListener<QuerySnapshot> {
 
     @BindView(R.id.fragment_list_view_recycler_view)RecyclerView mRecyclerView;
-
     private List<RestaurantProfile> mRestaurantProfileList;
     private RestaurantAdapter mAdapter;
     private View mView;
@@ -56,10 +51,7 @@ public class ListViewFragment extends Fragment implements EventListener<QuerySna
         void onResultItemTransmission(View view, String title);
     }
 
-    public ListViewFragment() {
-        // Required empty public constructor
-    }
-
+    public ListViewFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -144,6 +136,4 @@ public class ListViewFragment extends Fragment implements EventListener<QuerySna
             this.configureRecyclerView();
         }
     }
-
-
 }

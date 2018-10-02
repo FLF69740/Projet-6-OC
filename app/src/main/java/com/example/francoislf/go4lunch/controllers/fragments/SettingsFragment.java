@@ -13,20 +13,15 @@ import com.example.francoislf.go4lunch.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.USER_NAME;
 import static com.example.francoislf.go4lunch.controllers.activities.BaseActivity.USER_UID;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class SettingsFragment extends Fragment {
 
     View mView;
     @BindView(R.id.profile_information)TextView mTextViewProfilInformation;
     @BindView(R.id.switch_notification)Switch mSwitchNotification;
     private static final String SWITCH_STATE = "SWITCH_STATE";
-
 
     private OnClickObjectFragmentSettings mCallback;
 
@@ -79,5 +74,4 @@ public class SettingsFragment extends Fragment {
             }
         });
     }
-
 }

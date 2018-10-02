@@ -13,7 +13,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-
 import com.example.francoislf.go4lunch.R;
 
 public class GPSTracker extends Service implements LocationListener{

@@ -48,7 +48,6 @@ import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 
-
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
         MainFragment.OnClickedResultMarker, ListViewFragment.OnClickedResultItem, WorkmatesFragment.OnClickedAvatarItem {
 
@@ -115,7 +114,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
 
     private void configureBottomNavigationView(){
-
         mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -237,7 +235,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         startActivity(new Intent(this, SettingsActivity.class));
     }
 
-
     // Callback from MainFragment when a listener from a marker is activated : launch FileRestaurantActivity
     @Override
     public void onResultMarkerTransmission(View view, String title) {
@@ -272,7 +269,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         this.mToolbarEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 Fragment fragment = getFragmentManager().findFragmentByTag(TAG_LISTVIEW_FRAGMENT);
@@ -284,7 +280,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 }
                 else executePlacesWithExtractor(mCoordinates);
             }
-
             @Override
             public void afterTextChanged(Editable s) {}
         });
@@ -368,8 +363,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     @Override
                     public void onError(Throwable e) {}
                     @Override
-                    public void onComplete() {//executePhotoWithExtractor(coordinates);
-                         }
+                    public void onComplete() {}
                 });
     }
 
@@ -379,6 +373,4 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (this.mDisposable != null && !this.mDisposable.isDisposed()) this.mDisposable.dispose();
         if (this.mDisposable2 != null && !this.mDisposable2.isDisposed()) this.mDisposable2.dispose();
     }
-
-
 }

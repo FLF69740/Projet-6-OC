@@ -14,13 +14,11 @@ import com.example.francoislf.go4lunch.api.UserHelper;
 import com.example.francoislf.go4lunch.controllers.fragments.SettingsFragment;
 import java.util.Calendar;
 
-
 public class SettingsActivity extends BaseActivity implements SettingsFragment.OnClickObjectFragmentSettings {
 
     private SettingsFragment mSettingsFragment;
     private SharedPreferences mSharedPreferences;
     private PendingIntent mPendingIntent;
-
     private static final String SWITCH_STATE = "SWITCH_STATE";
     public static final String UID_SETTINGS = "UID_SETTINGS";
     public static final int NOTIFICATION_CODE = 100;
@@ -98,9 +96,4 @@ public class SettingsActivity extends BaseActivity implements SettingsFragment.O
         alarmManager.cancel(mPendingIntent);
         Toast.makeText(this,"NOTIFICATION SYSTEM STOPPED", Toast.LENGTH_SHORT).show();
     }
-
-
-
-
-
 }

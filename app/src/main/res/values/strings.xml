@@ -73,4 +73,6 @@
     <string name="adress_notification">Adresse :</string>
     <string name="participation_notification">collègues :</string>
 
+    <string name="google_place_api_key" translatable="false">AIzaSyBop_LoznRWmdx8u9VjSFu0PVaAqO0mO8U</string>
+
 </resources>
