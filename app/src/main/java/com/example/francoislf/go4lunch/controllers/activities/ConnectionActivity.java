@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ConnectionActivity extends BaseActivity {
 
@@ -74,7 +75,7 @@ public class ConnectionActivity extends BaseActivity {
             }
             else {
                 if (idpResponse == null) Toast.makeText(this, R.string.connection_canceled, Toast.LENGTH_SHORT).show();
-                else if (idpResponse.getError().equals(ErrorCodes.NO_NETWORK)) Toast.makeText(this, R.string.error_no_internet, Toast.LENGTH_SHORT).show();
+                else if (Objects.equals(idpResponse.getError(), ErrorCodes.NO_NETWORK)) Toast.makeText(this, R.string.error_no_internet, Toast.LENGTH_SHORT).show();
                 else Toast.makeText(this, R.string.error_unknown_error, Toast.LENGTH_SHORT).show();
             }
         }

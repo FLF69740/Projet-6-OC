@@ -5,8 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.francoislf.go4lunch.R;
@@ -16,16 +14,11 @@ import com.example.francoislf.go4lunch.models.ChoiceRestaurantCountdown;
 import com.example.francoislf.go4lunch.models.RecyclerViewItemTransformer;
 import com.example.francoislf.go4lunch.models.RestaurantProfile;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.Nullable;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,8 +42,8 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.item_recyclerView_star_1)ImageView mYellowStarOne;
     @BindView(R.id.item_recyclerView_star_2)ImageView mYellowStarTwo;
     @BindView(R.id.item_recyclerView_star_3)ImageView mYellowStarThree;
-    View mItemView;
-    RecyclerViewItemTransformer mRecyclerViewItemTransformer;
+    private View mItemView;
+    private RecyclerViewItemTransformer mRecyclerViewItemTransformer;
 
     public RestaurantViewHolder(View itemView) {
         super(itemView);
@@ -108,7 +101,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
                 int numberOfLike = 0;
                 for (QueryDocumentSnapshot document : queryDocumentSnapshots){
                     if (restaurantProfile.getPlaceId().equals(document.getString(LIKE_PLACEID))){
-                        numberOfLike = document.getLong(LIKE_NUMBER_OF_LIKE).intValue();
+                        numberOfLike = Objects.requireNonNull(document.getLong(LIKE_NUMBER_OF_LIKE)).intValue();
                     }
                 }
 

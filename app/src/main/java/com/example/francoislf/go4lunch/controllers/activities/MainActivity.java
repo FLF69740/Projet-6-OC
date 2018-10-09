@@ -1,12 +1,16 @@
 package com.example.francoislf.go4lunch.controllers.activities;
 
+import android.Manifest;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -42,6 +46,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -51,6 +56,7 @@ import io.reactivex.observers.DisposableObserver;
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
         MainFragment.OnClickedResultMarker, ListViewFragment.OnClickedResultItem, WorkmatesFragment.OnClickedAvatarItem {
 
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private Toolbar mToolbar;
     @BindView(R.id.activity_main_nav_view) NavigationView mNavigationView;
     @BindView(R.id.activity_main_drawer_layout) DrawerLayout mDrawerLayout;
@@ -66,7 +72,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private static final String PARAMETER_AUTOCOMPLETE_TYPE = "establishment";
     private String PARAMETER_PLACE_API_KEY;
     private MainFragment mMainFragment;
-    private ListViewFragment mListViewFragment;
     private String mCoordinates;
 
     @Override
@@ -89,6 +94,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mPlacesExtractor = new PlacesExtractor(this);
         mToolbarEditText.setText("");
         configureToolbar();
+        this.askLocationPermission();
         this.configureDrawerLayout();
         this.configureNavigationView();
         this.configureBottomNavigationView();
@@ -123,12 +129,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                         configureToolbarTitle(1);
                     break;
                     case R.id.ic_onglet_list_view: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_2));
-                        mListViewFragment = new ListViewFragment();
-                        getFragmentManager().beginTransaction().replace(getFragmentLayout(), mListViewFragment.newInstanceWithList(mRestaurantProfileList), TAG_LISTVIEW_FRAGMENT).commit();
+                        getFragmentManager().beginTransaction().replace(getFragmentLayout(), ListViewFragment.newInstanceWithList(mRestaurantProfileList), TAG_LISTVIEW_FRAGMENT).commit();
                         configureToolbarTitle(2);
                     break;
                     case R.id.ic_onglet_workmates: Log.i(getString(R.string.Log_i),getString(R.string.bottom_item_3));
-                        getFragmentManager().beginTransaction().replace(getFragmentLayout(), new WorkmatesFragment().newInstanceWorkmates(), TAG_WORKMATES_FRAGMENT).commit();
+                        getFragmentManager().beginTransaction().replace(getFragmentLayout(), WorkmatesFragment.newInstanceWorkmates(), TAG_WORKMATES_FRAGMENT).commit();
                         configureToolbarTitle(3);
                     break;
                 }
@@ -218,10 +223,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     // Find the choice restaurant from user
     private void findChoiceRestaurant(){
-        UserHelper.getUser(getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        UserHelper.getUser(Objects.requireNonNull(getCurrentUser()).getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (!documentSnapshot.getString(USER_RESTAURANT_CHOICE).equals(BLANK_ANSWER)){
+                if (!Objects.equals(documentSnapshot.getString(USER_RESTAURANT_CHOICE), BLANK_ANSWER)){
                         if (!new ChoiceRestaurantCountdown(documentSnapshot.getString(USER_HOUR_CHOICE), documentSnapshot.getString(USER_DATE_CHOICE)).getCountdownResult())
                             onResultItemTransmission(getCurrentFocus(), documentSnapshot.getString(USER_RESTAURANT_CHOICE));
                         else Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.your_lunch), Toast.LENGTH_LONG).show();
@@ -276,13 +281,36 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 else if (s.length() < 2 && fragment != null){
                     executePlacesWithExtractor(mCoordinates);
                     getFragmentManager().beginTransaction()
-                            .replace(getFragmentLayout(), mListViewFragment.newInstanceWithList(mRestaurantProfileList), TAG_LISTVIEW_FRAGMENT).commit();
+                            .replace(getFragmentLayout(), ListViewFragment.newInstanceWithList(mRestaurantProfileList), TAG_LISTVIEW_FRAGMENT).commit();
                 }
                 else executePlacesWithExtractor(mCoordinates);
             }
             @Override
             public void afterTextChanged(Editable s) {}
         });
+    }
+
+    // getting location permissions
+    private void askLocationPermission() {
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE: {
+                    for (int i = 0; i < grantResults.length; i++) {
+                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                            getFragmentManager().beginTransaction()
+                                    .replace(getFragmentLayout(), newInstance(), TAG_MAIN_FRAGMENT).commit();
+                            return;
+                        }
+                    }
+                }}
     }
 
     /**
@@ -310,11 +338,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
-                                        if (!document.getString(USER_DATE_CHOICE).equals(BLANK_ANSWER))
+                                        if (!Objects.equals(document.getString(USER_DATE_CHOICE), BLANK_ANSWER))
                                             if (!new ChoiceRestaurantCountdown(document.getString(USER_HOUR_CHOICE),
                                                     document.getString(USER_DATE_CHOICE)).getCountdownResult()) {
                                                 for (int i = 0; i < mRestaurantProfileList.size(); i++) {
-                                                    if (document.getString(USER_RESTAURANT_CHOICE).equals(mRestaurantProfileList.get(i).getName())) {
+                                                    if (Objects.equals(document.getString(USER_RESTAURANT_CHOICE), mRestaurantProfileList.get(i).getName())) {
                                                         int newNumber = mRestaurantProfileList.get(i).getNumberOfParticipant() + 1;
                                                         mRestaurantProfileList.get(i).setNumberOfParticipant(newNumber);
                                                     }}}}}
@@ -322,7 +350,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                                 Fragment fragment = getFragmentManager().findFragmentByTag(TAG_LISTVIEW_FRAGMENT);
                                 if (fragment != null)
                                     getFragmentManager().beginTransaction()
-                                            .replace(getFragmentLayout(), mListViewFragment.newInstanceWithList(mRestaurantProfileList), TAG_LISTVIEW_FRAGMENT).commit();
+                                            .replace(getFragmentLayout(), ListViewFragment.newInstanceWithList(mRestaurantProfileList), TAG_LISTVIEW_FRAGMENT).commit();
                             }
                         });
                     }
@@ -348,11 +376,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
-                                        if (!document.getString(USER_DATE_CHOICE).equals(BLANK_ANSWER))
+                                        if (!Objects.equals(document.getString(USER_DATE_CHOICE), BLANK_ANSWER))
                                             if (!new ChoiceRestaurantCountdown(document.getString(USER_HOUR_CHOICE),
                                                     document.getString(USER_DATE_CHOICE)).getCountdownResult()) {
                                             for (int i = 0; i < mRestaurantProfileList.size(); i++) {
-                                                if (document.getString(USER_RESTAURANT_CHOICE).equals(mRestaurantProfileList.get(i).getName())) {
+                                                if (Objects.equals(document.getString(USER_RESTAURANT_CHOICE), mRestaurantProfileList.get(i).getName())) {
                                                     int newNumber = mRestaurantProfileList.get(i).getNumberOfParticipant() + 1;
                                                     mRestaurantProfileList.get(i).setNumberOfParticipant(newNumber);
                                                     }}}}}

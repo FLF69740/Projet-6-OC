@@ -62,15 +62,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     // Load the view
     protected abstract int getContentView();
 
-    // Link the fragment to the View
-    protected void configureFragment(Bundle savedInstanceState) {
-        if (savedInstanceState == null){
-            getFragmentManager().beginTransaction()
-                    .add(getFragmentLayout(),newInstance(), getFragmentTag())
-                    .commit();
-        }
-    }
-
     // Load the fragment
     protected abstract Fragment newInstance();
 
@@ -79,6 +70,15 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     // Load the fragment tag
     protected abstract String getFragmentTag();
+
+    // Link the fragment to the View
+    protected void configureFragment(Bundle savedInstanceState) {
+        if (savedInstanceState == null){
+            getFragmentManager().beginTransaction()
+                    .add(getFragmentLayout(),newInstance(), getFragmentTag())
+                    .commit();
+        }
+    }
 
     /**
      * UTILS
@@ -137,7 +137,4 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         };
     }
-
-
-
 }

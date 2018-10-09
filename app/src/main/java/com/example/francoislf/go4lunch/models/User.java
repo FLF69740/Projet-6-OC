@@ -14,7 +14,7 @@ public class User {
     private String mAdressRestaurant;
     @Nullable private String mUrlPicture;
 
-    public User(String uid, String username, String urlPicture){
+    public User(String uid, String username, @Nullable String urlPicture){
         this.mUid = uid;
         this.mUsername = username;
         this.mUrlPicture = urlPicture;

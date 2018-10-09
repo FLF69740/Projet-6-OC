@@ -3,7 +3,6 @@ package com.example.francoislf.go4lunch.Views;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-
 import com.example.francoislf.go4lunch.R;
 import com.example.francoislf.go4lunch.models.User;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;

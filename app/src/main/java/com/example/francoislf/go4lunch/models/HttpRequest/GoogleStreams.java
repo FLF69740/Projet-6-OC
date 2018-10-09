@@ -16,7 +16,7 @@ public class GoogleStreams {
      */
 
     // request for map places localisation and general informations information
-    public static Observable<NearbySearch> streamNearbySearch(String localisation, String radius, String type, String key){
+    private static Observable<NearbySearch> streamNearbySearch(String localisation, String radius, String type, String key){
         GoogleService googleService = GoogleService.retrofit.create(GoogleService.class);
         return googleService.getGoogleRequest(localisation, radius, type, key)
                 .subscribeOn(Schedulers.io())
@@ -25,7 +25,7 @@ public class GoogleStreams {
     }
 
     // request for complete informations about a place
-    public static Observable<Places> streamPlaces(String placeid, String key){
+    private static Observable<Places> streamPlaces(String placeid, String key){
         GoogleService googleService = GoogleService.retrofit.create(GoogleService.class);
         return googleService.getPlaces(placeid, key)
                 .subscribeOn(Schedulers.io())
@@ -34,7 +34,7 @@ public class GoogleStreams {
     }
 
     // request for a prediction
-    public static Observable<Prediction> streamPrediction(String input, String localisation, String radius, String type, final String key){
+    private static Observable<Prediction> streamPrediction(String input, String localisation, String radius, String type, final String key){
         GoogleService googleService = GoogleService.retrofit.create(GoogleService.class);
         return googleService.getPredictions(input, localisation, radius, type, key)
                 .subscribeOn(Schedulers.io())
@@ -51,13 +51,13 @@ public class GoogleStreams {
         return streamNearbySearch(localisation, radius, type, key)
                 .flatMap(new Function<NearbySearch, ObservableSource<NearbySearch.Result>>() {
                     @Override
-                    public ObservableSource<NearbySearch.Result> apply(NearbySearch nearbySearch) throws Exception {
+                    public ObservableSource<NearbySearch.Result> apply(NearbySearch nearbySearch) {
                         return Observable.fromIterable(nearbySearch.getResults());
                     }
                 })
                 .flatMap(new Function<NearbySearch.Result, ObservableSource<Places>>() {
                     @Override
-                    public ObservableSource<Places> apply(NearbySearch.Result result) throws Exception {
+                    public ObservableSource<Places> apply(NearbySearch.Result result) {
                         return streamPlaces(result.getPlaceId(), key);
                     }
                 })
@@ -71,13 +71,13 @@ public class GoogleStreams {
         return streamPrediction(input, localisation, radius, type, key)
                 .flatMap(new Function<Prediction, ObservableSource<Prediction.Prediction_>>() {
                     @Override
-                    public ObservableSource<Prediction.Prediction_> apply(Prediction prediction) throws Exception {
+                    public ObservableSource<Prediction.Prediction_> apply(Prediction prediction) {
                         return Observable.fromIterable(prediction.getPredictions());
                     }
                 })
                 .flatMap(new Function<Prediction.Prediction_, ObservableSource<Places>>() {
                     @Override
-                    public ObservableSource<Places> apply(Prediction.Prediction_ prediction_) throws Exception {
+                    public ObservableSource<Places> apply(Prediction.Prediction_ prediction_) {
                         return streamPlaces(prediction_.getPlaceId(), key);
                     }
                 })

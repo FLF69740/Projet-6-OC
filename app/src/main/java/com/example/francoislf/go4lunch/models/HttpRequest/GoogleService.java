@@ -1,6 +1,5 @@
 package com.example.francoislf.go4lunch.models.HttpRequest;
 
-import com.example.francoislf.go4lunch.models.HttpRequest.NearbySearch;
 import io.reactivex.Observable;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;

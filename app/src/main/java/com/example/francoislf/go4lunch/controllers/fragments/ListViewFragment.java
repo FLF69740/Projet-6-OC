@@ -22,6 +22,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import javax.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,7 +61,7 @@ public class ListViewFragment extends Fragment implements EventListener<QuerySna
         ButterKnife.bind(this, mView);
         this.mRestaurantProfileList = new ArrayList<>();
         mRestaurantProfileList = (List<RestaurantProfile>) getArguments().getSerializable("list");
-        if (mRestaurantProfileList.isEmpty()) this.setRestaurantProfileList(mRestaurantProfileList);
+        if (mRestaurantProfileList != null && mRestaurantProfileList.isEmpty()) this.setRestaurantProfileList(mRestaurantProfileList);
         this.configureRecyclerView();
         this.configureOnClickRecyclerView();
         return mView;
@@ -126,10 +128,10 @@ public class ListViewFragment extends Fragment implements EventListener<QuerySna
         if (queryDocumentSnapshots != null) {
             for (int i = 0; i < mRestaurantProfileList.size(); i++) mRestaurantProfileList.get(i).setNumberOfParticipant(0);
             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                if (!document.getString(USER_DATE_CHOICE).equals(BLANK_ANSWER)) {
+                if (!Objects.equals(document.getString(USER_DATE_CHOICE), BLANK_ANSWER)) {
                     if (!new ChoiceRestaurantCountdown(document.getString(USER_HOUR_CHOICE), document.getString(USER_DATE_CHOICE)).getCountdownResult()) {
                         for (int i = 0; i < mRestaurantProfileList.size(); i++) {
-                            if (document.getString(USER_RESTAURANT_CHOICE).equals(mRestaurantProfileList.get(i).getName())) {
+                            if (Objects.equals(document.getString(USER_RESTAURANT_CHOICE), mRestaurantProfileList.get(i).getName())) {
                                 int newNumber = mRestaurantProfileList.get(i).getNumberOfParticipant() + 1;
                                 mRestaurantProfileList.get(i).setNumberOfParticipant(newNumber);
                             }}}}}

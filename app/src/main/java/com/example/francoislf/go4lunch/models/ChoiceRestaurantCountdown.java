@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 
 public class ChoiceRestaurantCountdown {
 
-    String mHour, mDateChoice;
+    private String mHour, mDateChoice;
 
     public ChoiceRestaurantCountdown(String hour, String dateChoice){
         this.mHour = hour;

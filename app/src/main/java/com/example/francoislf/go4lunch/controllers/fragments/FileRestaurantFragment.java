@@ -88,8 +88,7 @@ public class FileRestaurantFragment extends Fragment {
 
     // get the name of restaurant choice from activity to fragment for button choice Restaurant setting
     public void setRestaurantChoiceForButton(String name){
-        if (mRestaurantName.getText().equals(name)) isRestaurantChosen = true;
-        else isRestaurantChosen = false;
+        isRestaurantChosen = mRestaurantName.getText().equals(name);
         setCircleLogoRestaurantChoice(isRestaurantChosen, false);
         mButtonChoiceRestaurant.setEnabled(true);
     }

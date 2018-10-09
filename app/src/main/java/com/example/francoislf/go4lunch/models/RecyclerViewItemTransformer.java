@@ -15,7 +15,7 @@ import java.util.List;
 
 public class RecyclerViewItemTransformer {
 
-    Context mContext;
+    private Context mContext;
     private Location mLocation;
 
     public RecyclerViewItemTransformer(){}
@@ -147,11 +147,11 @@ public class RecyclerViewItemTransformer {
 
         if (name.toCharArray().length < 29) return name;
         else {
-            String result = "";
+            StringBuilder result = new StringBuilder();
             char[] chars = name.toCharArray();
-            for (int i = 0 ; i < 29 ; i++) result += chars[i];
-            result += "...";
-            return result;
+            for (int i = 0 ; i < 29 ; i++) result.append(chars[i]);
+            result.append("...");
+            return result.toString();
         }
     }
 
