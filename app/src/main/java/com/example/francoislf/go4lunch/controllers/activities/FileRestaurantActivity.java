@@ -1,17 +1,13 @@
 package com.example.francoislf.go4lunch.controllers.activities;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Toast;
 import com.example.francoislf.go4lunch.R;
-import com.example.francoislf.go4lunch.Utils.MyAlarmReceiver;
+import com.example.francoislf.go4lunch.Utils.NotificationAlarmUtils;
 import com.example.francoislf.go4lunch.api.LikedHelper;
 import com.example.francoislf.go4lunch.api.UserHelper;
 import com.example.francoislf.go4lunch.controllers.fragments.FileRestaurantFragment;
@@ -28,7 +24,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import org.joda.time.DateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import javax.annotation.Nullable;
@@ -39,7 +34,6 @@ public class FileRestaurantActivity extends BaseActivity implements FileRestaura
     public static final String EXTRA_SNIPPET_MARKER = "EXTRA_SNIPPET_MARKER";
     private FileRestaurantFragment mFileRestaurantFragment;
     RestaurantProfile mRestaurantProfile;
-    private PendingIntent mPendingIntent;
     public static final String UID_SETTINGS = "UID_SETTINGS";
     public static final int NOTIFICATION_CODE = 100;
     SharedPreferences mPreferences;
@@ -130,21 +124,23 @@ public class FileRestaurantActivity extends BaseActivity implements FileRestaura
     @Override
     public void onResultChoiceTransmission(View view, String name, String adress, String placeId, int hour, int date) {
         final DateTime dt = new DateTime();
-        if (mIsNotificationActivated != null && mIsNotificationActivated) this.configureAlarmManager();
         if (!name.equals(BLANK_ANSWER)) {
             // add the restaurant choice to user Firestore dataBase
             UserHelper.updateRestaurantChoice(name, Objects.requireNonNull(getCurrentUser()).getUid()).addOnFailureListener(this.onFailureListener());
             UserHelper.updateHourChoice(String.valueOf(dt.getHourOfDay()), getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener());
             UserHelper.updateDateChoice(String.valueOf(dt.getDayOfYear()), getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener());
             UserHelper.updateAdressRestaurant(adress, getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener());
-            if (mIsNotificationActivated != null && mIsNotificationActivated) startAlarm();
-        }
-        else { // delete daily choice from user after retractation
+            if (mIsNotificationActivated != null && mIsNotificationActivated){
+                NotificationAlarmUtils.startAlarm(this, NotificationAlarmUtils.getAlarmManagerPendingIntent(getApplicationContext(), getCurrentUser().getUid()));
+            }
+        } else { // delete daily choice from user after retractation
             UserHelper.updateRestaurantChoice(BLANK_ANSWER, Objects.requireNonNull(getCurrentUser()).getUid()).addOnFailureListener(this.onFailureListener());
             UserHelper.updateDateChoice(BLANK_ANSWER, getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener());
             UserHelper.updateHourChoice(BLANK_ANSWER, getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener());
             UserHelper.updateAdressRestaurant(BLANK_ANSWER, getCurrentUser().getUid()).addOnFailureListener(this.onFailureListener());
-            if (mIsNotificationActivated != null && mIsNotificationActivated) stopAlarm();
+            if (mIsNotificationActivated != null && mIsNotificationActivated){
+                NotificationAlarmUtils.stopAlarm(this, NotificationAlarmUtils.getAlarmManagerPendingIntent(getApplicationContext(), getCurrentUser().getUid()));
+            }
         }
     }
 
@@ -201,43 +197,6 @@ public class FileRestaurantActivity extends BaseActivity implements FileRestaura
                         }
                     }
                     mFileRestaurantFragment.configureRecyclerView(userList);
-                }
-            }
-        });
-    }
-
-    /**
-     *  ALARM MANAGER
-     */
-
-    private void configureAlarmManager(){
-        Intent intent = new Intent(getApplicationContext(), MyAlarmReceiver.class);
-        intent.putExtra(UID_SETTINGS, Objects.requireNonNull(getCurrentUser()).getUid());
-        mPendingIntent = PendingIntent.getBroadcast(getApplicationContext(),0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    private void startAlarm(){
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 12);
-        calendar.set(Calendar.MINUTE, 0);
-
-        DateTime dt = new DateTime();
-        if (dt.getHourOfDay() > 11) calendar.add(Calendar.DAY_OF_YEAR, 1);
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        if (alarmManager != null){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), mPendingIntent);
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), mPendingIntent);
-            } else {
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), mPendingIntent); }
-        }
-    }
-
-    private void stopAlarm(){
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        if (alarmManager != null) alarmManager.cancel(mPendingIntent);
+                }}});
     }
 }

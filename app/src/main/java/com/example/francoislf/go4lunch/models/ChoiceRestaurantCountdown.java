@@ -19,7 +19,7 @@ public class ChoiceRestaurantCountdown {
         DateTime dt = new DateTime();
         int yesterday = dt.getDayOfYear() - 1;
 
-        if (date == dt.getDayOfYear() && hour < 12 && dt.getHourOfDay() >= 12) result = true;
+        if (date == dt.getDayOfYear() && hour < 12 && dt.getHourOfDay() >= 13) result = true;
         if (date == yesterday && dt.getHourOfDay() >= 13) result = true;
         if (date < yesterday) result = true;
 
